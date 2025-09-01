@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PET重建算法系统 - 基于深度学习的正电子发射断层成像重建解决方案</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .metadata {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: #2c2c2c;
+        }
+
+        .project-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .project-authors {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .main-image {
+            text-align: center;
+            margin: 2.5rem 0;
+            background: #fafafa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .main-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .main-image img:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-caption {
+            text-align: center;
+            color: #555;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            font-weight: 500;
+            background: #f0f0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2c2c2c;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .section h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.8rem 0;
+            color: #333;
+        }
+
+        .section p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .section ul, .section ol {
+            margin: 1rem 0 1rem 2rem;
+            color: #444;
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .highlight-box h4 {
+            color: #007bff;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .tech-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #007bff;
+        }
+
+        .feature-card h3 {
+            color: #007bff;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+
+        .feature-card ul {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+
+        .feature-card li {
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
+            color: #495057;
+        }
+
+        .performance-table {
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .performance-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .performance-table th {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .performance-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            color: #495057;
+        }
+
+        .performance-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .performance-table tr:hover {
+            background: #e3f2fd;
+        }
+
+        .performance-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .architecture-diagram {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .architecture-diagram h3 {
+            color: #007bff;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            text-align: center;
+        }
+
+        .diagram-container {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .diagram-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s ease;
+        }
+
+        .diagram-image:hover {
+            transform: scale(1.02);
+        }
+
+        .official-version {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .official-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #007bff;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid #007bff;
+            white-space: nowrap;
+        }
+
+        .official-btn:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        }
+
+        .official-btn.secondary {
+            background: #f8f9fa;
+            color: #333;
+            border-color: #dee2e6;
+        }
+
+        .official-btn.secondary:hover {
+            background: #e9ecef;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 4rem;
+        }
+
+        .nav-box {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .nav-box:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-arrow {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top {
+            text-align: center;
+            margin: 4rem 0 2rem 0;
+        }
+
+        .back-to-top a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-to-top a:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .timeline {
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #007bff;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 60px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            background: #007bff;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 3px #007bff;
+        }
+
+        .timeline-date {
+            font-weight: 600;
+            color: #007bff;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-content {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid #007bff;
+        }
+
+        .comparison-chart {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .comparison-chart h3 {
+            color: #007bff;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            text-align: center;
+        }
+
+        .chart-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .chart-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            text-align: center;
+        }
+
+        .chart-item h4 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .chart-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #007bff;
+            margin-bottom: 0.5rem;
+        }
+
+        .chart-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .project-title {
+                font-size: 2rem;
+            }
+
+            .navigation {
+                grid-template-columns: 1fr;
+            }
+
+            .official-version {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .chart-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回链接 -->
+    <a href="../projects.html" class="back-link">
+        ← 返回项目列表
+    </a>
+
+    <!-- 项目元信息 -->
+    <div class="metadata">
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+            <span>DEC 28, 2024</span>
+        </div>
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span>10 MIN READ</span>
+        </div>
+    </div>
+
+    <header class="header">
+        <h1 class="project-title">PET重建算法系统</h1>
+        <p class="project-subtitle">基于深度学习的正电子发射断层成像重建解决方案</p>
+        <div class="project-authors">
+            Author: Y Jason Young
+        </div>
+    </header>
+
+    <div class="section">
+        <h2>项目概述</h2>
+        <p>
+            正电子发射断层成像（Positron Emission Tomography, PET）是一种重要的核医学成像技术，通过检测正电子与电子湮灭产生的γ光子对来重建体内放射性示踪剂的分布。PET成像在肿瘤学、心脏病学、神经科学等领域具有重要应用价值，能够提供分子水平的功能信息。
+        </p>
+        <p>
+            本项目开发了一套基于深度学习的PET重建算法系统，旨在解决传统重建方法在低信噪比数据下的性能瓶颈问题。系统集成了数据预处理、深度学习重建和后处理优化三个核心模块，通过创新的网络架构和训练策略，实现高质量、高效率的PET图像重建。
+        </p>
+
+        <div class="highlight-box">
+            <h4>🎯 核心价值</h4>
+            <p>相比传统方法，重建图像的信噪比提升2-3倍，伪影减少60%以上，重建时间控制在5秒以内，满足临床实时性要求，为患者提供更准确、更安全的诊断服务。</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>系统架构图</h2>
+        <div class="main-image">
+            <img src="GE0uo6nyPmWW5jj6XC0MMho4u8jTGN.png" alt="PET重建算法系统架构图" style="max-width: 100%; height: auto; border-radius: 8px;">
+            <div class="image-caption">
+                <strong>图1:</strong> PET重建算法系统完整架构，展示从数据预处理到最终重建图像的完整流程
+            </div>
+        </div>
+        <div class="main-image">
+            <img src="image.png" alt="PET重建效果示例" style="max-width: 100%; height: auto; border-radius: 8px;">
+            <div class="image-caption">
+                <strong>图2:</strong> PET重建效果示例（更高信噪比、伪影显著降低）
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>技术挑战</h2>
+        <h3>数据质量挑战</h3>
+        <ul>
+            <li><strong>低计数数据</strong>: 为了减少患者辐射剂量，临床实践中常采用低剂量扫描，导致数据噪声增大</li>
+            <li><strong>散射事件</strong>: γ光子在传播过程中发生康普顿散射，产生错误的符合事件</li>
+            <li><strong>随机符合</strong>: 不同衰变事件产生的γ光子可能被误认为符合事件</li>
+            <li><strong>死时间损失</strong>: 探测器在高计数率下的响应延迟导致数据丢失</li>
+        </ul>
+
+        <h3>算法性能挑战</h3>
+        <ul>
+            <li><strong>重建质量</strong>: 传统算法在低信噪比条件下重建质量下降明显</li>
+            <li><strong>计算效率</strong>: 迭代重建算法计算量大，难以满足临床实时性要求</li>
+            <li><strong>参数敏感性</strong>: 算法性能对参数设置敏感，需要经验丰富的操作人员</li>
+            <li><strong>伪影控制</strong>: 重建过程中容易产生条纹伪影和振铃效应</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>技术架构</h2>
+        <div class="tech-features">
+            <div class="feature-card">
+                <h3>🔧 数据预处理模块</h3>
+                <ul>
+                    <li>符合事件数据校正</li>
+                    <li>散射和随机事件校正</li>
+                    <li>死时间损失补偿</li>
+                    <li>数据归一化和滤波</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>🧠 深度学习重建模块</h3>
+                <ul>
+                    <li>端到端重建网络</li>
+                    <li>多尺度特征提取</li>
+                    <li>注意力机制集成</li>
+                    <li>物理约束融合</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>✨ 后处理优化模块</h3>
+                <ul>
+                    <li>图像去噪</li>
+                    <li>边缘增强</li>
+                    <li>伪影抑制</li>
+                    <li>质量评估</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>核心算法特点</h3>
+        <ul>
+            <li><strong>端到端学习</strong>: 直接从原始数据学习重建映射，避免中间步骤的误差累积</li>
+            <li><strong>多尺度融合</strong>: 采用多分辨率特征提取和融合策略，充分利用不同尺度的空间信息</li>
+            <li><strong>注意力机制</strong>: 引入空间和通道注意力模块，突出重要特征，抑制噪声干扰</li>
+            <li><strong>对抗训练</strong>: 使用生成对抗网络（GAN）提升重建图像的视觉质量和细节保真度</li>
+            <li><strong>物理约束</strong>: 在损失函数中融入PET成像的物理先验知识，确保重建结果的物理合理性</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>性能指标对比</h2>
+        <div class="comparison-chart">
+            <h3>与传统方法性能对比</h3>
+            <div class="chart-container">
+                <div class="chart-item">
+                    <h4>信噪比提升</h4>
+                    <div class="chart-value">2-3×</div>
+                    <div class="chart-label">相比传统方法</div>
+                </div>
+                <div class="chart-item">
+                    <h4>伪影减少</h4>
+                    <div class="chart-value">60%</div>
+                    <div class="chart-label">显著改善</div>
+                </div>
+                <div class="chart-item">
+                    <h4>重建时间</h4>
+                    <div class="chart-value">&lt;5s</div>
+                    <div class="chart-label">实时性要求</div>
+                </div>
+                <div class="chart-item">
+                    <h4>鲁棒性</h4>
+                    <div class="chart-value">高</div>
+                    <div class="chart-label">适应性大幅提升</div>
+                </div>
+            </div>
+        </div>
+
+        <h3>详细性能指标</h3>
+        <div class="performance-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>性能参数</th>
+                        <th>传统方法</th>
+                        <th>本系统</th>
+                        <th>提升幅度</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>信噪比</strong></td>
+                        <td>基准</td>
+                        <td>+2-3倍</td>
+                        <td>100-200%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>伪影减少</strong></td>
+                        <td>基准</td>
+                        <td>-60%</td>
+                        <td>显著改善</td>
+                    </tr>
+                    <tr>
+                        <td><strong>重建时间</strong></td>
+                        <td>基准</td>
+                        <td>&lt;5秒</td>
+                        <td>实时性</td>
+                    </tr>
+                    <tr>
+                        <td><strong>鲁棒性</strong></td>
+                        <td>基准</td>
+                        <td>高适应性</td>
+                        <td>大幅提升</td>
+                    </tr>
+                    <tr>
+                        <td><strong>参数敏感性</strong></td>
+                        <td>高</td>
+                        <td>低</td>
+                        <td>显著改善</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>应用场景</h2>
+        <h3>临床诊断</h3>
+        <p>
+            为肿瘤早期筛查、分期评估、疗效监测等提供高质量的PET图像，提升诊断准确性和临床决策支持能力。系统的高重建质量和快速重建速度能够满足临床实时诊断需求。
+        </p>
+
+        <h3>科研应用</h3>
+        <p>
+            支持药物研发、疾病机制研究等科研活动，为分子影像学研究提供可靠的技术平台。高质量的图像重建有助于发现微小的病理变化和药物作用效果。
+        </p>
+
+        <h3>教育培训</h3>
+        <p>
+            为医学影像专业学生和临床医生提供PET重建技术培训，促进先进技术的推广应用。系统提供可视化的重建过程和结果对比，便于教学演示。
+        </p>
+
+        <h3>工业应用</h3>
+        <p>
+            在药物研发、医疗器械测试等领域，提供高精度的PET成像支持，加速产品开发和验证过程。
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>技术优势</h2>
+        <div class="tech-features">
+            <div class="feature-card">
+                <h3>🚀 创新性</h3>
+                <ul>
+                    <li>首次将深度学习与PET物理约束深度融合</li>
+                    <li>创新的多尺度特征融合策略</li>
+                    <li>物理约束的损失函数设计</li>
+                    <li>端到端的学习架构</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>⚡ 实用性</h3>
+                <ul>
+                    <li>满足临床实时性要求</li>
+                    <li>自动化的参数优化</li>
+                    <li>标准化的接口设计</li>
+                    <li>易于部署和维护</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>🔧 可扩展性</h3>
+                <ul>
+                    <li>模块化设计支持持续优化</li>
+                    <li>支持新算法的快速集成</li>
+                    <li>灵活的配置选项</li>
+                    <li>多平台兼容性</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>技术路线</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-date">第一阶段</div>
+                <div class="timeline-content">
+                    <strong>基础算法开发</strong><br>
+                    数据预处理流程设计、基础重建网络架构、损失函数设计
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">第二阶段</div>
+                <div class="timeline-content">
+                    <strong>算法优化</strong><br>
+                    注意力机制集成、多尺度特征融合、物理约束优化
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">第三阶段</div>
+                <div class="timeline-content">
+                    <strong>系统集成</strong><br>
+                    用户界面开发、性能测试验证、临床验证部署
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>预期成果</h2>
+        <p>
+            项目完成后将形成一套完整的PET重建算法系统，包括核心算法实现、用户界面、技术文档和测试数据集。系统将在多个临床中心进行验证测试，评估其在实际应用中的性能和可靠性。
+        </p>
+        <p>
+            通过本项目的实施，预期能够显著提升PET成像的临床应用效果，为患者提供更准确、更安全的诊断服务，同时推动我国在医学影像技术领域的技术进步和产业升级。
+        </p>
+
+        <h3>具体成果</h3>
+        <ul>
+            <li><strong>完整的PET重建算法系统</strong>: 包含所有核心模块和功能</li>
+            <li><strong>高质量技术文档</strong>: 详细的使用说明和技术规范</li>
+            <li><strong>测试数据集和验证报告</strong>: 全面的性能评估和验证结果</li>
+            <li><strong>临床应用指南</strong>: 针对不同应用场景的操作指南</li>
+            <li><strong>培训材料和演示</strong>: 便于技术推广和培训</li>
+        </ul>
+    </div>
+
+    <!-- 项目链接按钮 -->
+    <div class="official-version">
+        <a href="https://github.com/yourusername/pet-reconstruction" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+            GitHub
+        </a>
+        <a href="README.md" class="official-btn secondary">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+            </svg>
+            技术文档
+        </a>
+        <a href="abstract.md" class="official-btn secondary">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+            </svg>
+            英文摘要
+        </a>
+    </div>
+
+    <!-- 导航 -->
+    <div class="navigation">
+        <a href="../projects.html" class="nav-box">
+            <div class="nav-label">← 返回</div>
+            <div class="nav-title">项目列表</div>
+            <div class="nav-arrow">←</div>
+        </a>
+        <a href="../projects.html" class="nav-box">
+            <div class="nav-label">下一个项目 →</div>
+            <div class="nav-title">AFDM波形分析系统</div>
+            <div class="nav-arrow">→</div>
+        </a>
+    </div>
+
+    <!-- 返回顶部 -->
+    <div class="back-to-top">
+        <a href="#">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/>
+            </svg>
+            返回顶部
+        </a>
+    </div>
+</body>
+</html> 

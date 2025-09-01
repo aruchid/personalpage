@@ -1,0 +1,5 @@
+# Project Abstract
+
+Please draw a BioRender-style framework diagram for an electromagnetic radiation detection circuit optimization system for academic paper publication. Requirements are as follows:
+ 
+This project addresses the issues of large signal fluctuations and unstable measurement accuracy in electromagnetic radiation detection circuits. Based on the Nuvoton 8-bit microcontroller platform, the system employs Kalman filtering algorithms to smooth detection signals, effectively improving signal stability. The project encompasses detection circuit design and debugging, LCD dot matrix display driver transplantation, embedded algorithm development, and establishes a comprehensive testing and validation framework. Through a 4-month development cycle, the system successfully resolves detection circuit performance issues, achieves precise electromagnetic radiation measurement, and lays the technical foundation for commercialization of related products. 

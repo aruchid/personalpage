@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基于生存分析的游戏用户流失预测 - 全量数据实证研究与智能预测解决方案</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .metadata {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: #2c2c2c;
+        }
+
+        .project-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .project-authors {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .main-image {
+            text-align: center;
+            margin: 2.5rem 0;
+            background: #fafafa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .main-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .main-image img:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-caption {
+            text-align: center;
+            color: #555;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            font-weight: 500;
+            background: #f0f0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2c2c2c;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .section h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.8rem 0;
+            color: #333;
+        }
+
+        .section p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .section ul, .section ol {
+            margin: 1rem 0 1rem 2rem;
+            color: #444;
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .highlight-box h4 {
+            color: #007bff;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .tech-item {
+            background: #f8f8f8;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .tech-item h5 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .tech-item p {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0;
+        }
+
+        .tech-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #007bff;
+        }
+
+        .feature-card h3 {
+            color: #007bff;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+
+        .feature-card ul {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+
+        .feature-card li {
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
+            color: #495057;
+        }
+
+        .performance-table {
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .performance-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .performance-table th {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .performance-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            color: #495057;
+        }
+
+        .performance-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .performance-table tr:hover {
+            background: #e3f2fd;
+        }
+
+        .performance-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .official-version {
+            margin-bottom: 2.5rem;
+        }
+
+        .official-version {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .official-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #333;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid #e0e0e0;
+            white-space: nowrap;
+        }
+
+        .official-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .btn-icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 4rem;
+        }
+
+        .nav-box {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .nav-box:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-arrow {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top {
+            text-align: center;
+            margin: 4rem 0 2rem 0;
+        }
+
+        .back-to-top a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-to-top a:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .project-title {
+                font-size: 2rem;
+            }
+
+            .navigation {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回链接 -->
+    <a href="../projects.html" class="back-link">
+        ← 返回项目列表
+    </a>
+
+    <!-- 项目元信息 -->
+    <div class="metadata">
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+            <span>JUL 2023</span>
+        </div>
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span>10 MIN READ</span>
+        </div>
+    </div>
+
+    <header class="header">
+        <h1 class="project-title">基于生存分析的游戏用户流失预测</h1>
+        <p class="project-subtitle">全量数据实证研究与智能预测解决方案</p>
+        <div class="project-authors">
+            Author: 宗悦
+        </div>
+    </header>
+
+    <div class="section">
+        <h2>项目背景</h2>
+        <p>
+            用户流失（Churn）是游戏行业面临的核心挑战之一，直接影响游戏的生命周期和收入表现。传统二分类流失预测模型难以处理"何时流失"这一时序性问题，且无法充分利用未流失用户的"删失"信息。
+        </p>
+        <p>
+            本项目基于全量用户数据，系统性地应用生存分析方法（Kaplan-Meier、Cox比例风险模型、随机生存森林RSF）对游戏用户流失进行建模与预测。通过对用户基础信息、充值行为、活跃时长等多维特征的工程化处理，实现了从原始数据到生存分析全流程的自动化建模与可视化。
+        </p>
+        <p>
+            项目旨在为游戏精细化运营提供坚实的数据基础，通过精准预测用户流失时间，识别高风险用户，并针对性地制定干预策略，提升游戏运营效率和用户留存率。
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>技术原理</h2>
+        <div class="highlight-box">
+            <h4>生存分析核心优势</h4>
+            <p>生存分析能够处理删失数据，不仅预测是否流失，还能预测何时流失，支持个体化运营策略制定。</p>
+        </div>
+
+        <h3>核心分析方法</h3>
+        <p>
+            系统采用三种互补的生存分析方法：Kaplan-Meier非参数估计用于整体趋势分析，Cox比例风险模型用于风险因素识别，随机生存森林（RSF）用于个体化精准预测。
+        </p>
+
+        <!-- 全体用户生存曲线 -->
+        <div class="main-image">
+            <img src="nBgshrrnwixU7yNec2WvGcVN574mwi.png" alt="全体用户生存曲线图" style="max-width: 100%; height: auto; border-radius: 8px;">
+            <div class="image-caption">图1：全体用户生存曲线 - 30天生存概率68.5%，中位生存时间56天</div>
+        </div>
+
+        <p>
+            如图1所示，大部分用户在注册初期流失率较高，随后生存概率趋于平稳。早期用户激活和留存是提升整体留存率的关键。
+        </p>
+
+        <!-- 预测vs观测散点图 -->
+        <div class="main-image">
+            <img src="pictures/pred_vs_observed_scatter_full.png" alt="预测vs观测生存时间对比图" style="max-width: 100%; height: auto; border-radius: 8px;">
+            <div class="image-caption">图2：预测vs观测生存时间对比 - RSF模型(蓝点)预测精度显著优于Cox模型(橙点)</div>
+        </div>
+
+        <p>
+            如图2所示，RSF模型（蓝色圆点）的预测结果更接近理想预测线，能够覆盖更广的预测范围，而Cox模型（橙色圆点）倾向于低估生存时间，预测范围受限。这充分证明了RSF模型在生存时间预测方面的优越性。
+        </p>
+
+        <h3>技术架构设计</h3>
+        <ul>
+            <li><strong>数据预处理：</strong>数据清洗、缺失值处理、异常值检测与处理</li>
+            <li><strong>特征工程：</strong>构建用户画像、充值行为、活跃度等多维特征</li>
+            <li><strong>生存建模：</strong>K-M曲线、Cox模型、RSF集成学习</li>
+            <li><strong>模型评估：</strong>C-index、Brier分数、预测一致性分析</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>系统架构</h2>
+        <p>
+            本系统采用模块化设计，包含数据预处理模块、特征工程模块、生存建模模块、模型评估模块和业务应用模块，各模块协同工作，实现用户流失的智能化预测和分析。
+        </p>
+
+        <h3>核心模块</h3>
+        <div class="tech-grid">
+            <div class="tech-item">
+                <h5>📊 数据预处理模块</h5>
+                <p>数据清洗、缺失值处理、异常值检测</p>
+            </div>
+            <div class="tech-item">
+                <h5>🔧 特征工程模块</h5>
+                <p>用户画像构建、行为特征提取</p>
+            </div>
+            <div class="tech-item">
+                <h5>🧮 生存建模模块</h5>
+                <p>K-M、Cox、RSF多模型集成</p>
+            </div>
+            <div class="tech-item">
+                <h5>📈 模型评估模块</h5>
+                <p>性能指标计算、可视化分析</p>
+            </div>
+        </div>
+
+        <h3>处理流程</h3>
+        <ol>
+            <li><strong>数据收集：</strong>整合玩家基础信息、充值记录、在线时长等多源数据</li>
+            <li><strong>特征构建：</strong>基于业务理解构建活跃度、忠诚度、消费等特征</li>
+            <li><strong>生存建模：</strong>应用多种生存分析方法进行建模</li>
+            <li><strong>模型评估：</strong>通过多种指标评估模型性能</li>
+            <li><strong>业务应用：</strong>输出风险因素分析和运营建议</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>技术特点</h2>
+        <div class="tech-features">
+            <div class="feature-card">
+                <h3>🎯 高精度预测</h3>
+                <ul>
+                    <li><strong>多模型集成：</strong>K-M、Cox、RSF三种方法互补，提升预测精度</li>
+                    <li><strong>个体化预测：</strong>可为每个玩家生成个性化生存函数</li>
+                    <li><strong>时序预测：</strong>不仅预测是否流失，还能预测何时流失</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>📊 全量数据分析</h3>
+                <ul>
+                    <li><strong>数据规模：</strong>基于30,000+用户的全量数据进行分析</li>
+                    <li><strong>特征丰富：</strong>涵盖基础属性、活跃度、忠诚度、消费等多维度</li>
+                    <li><strong>质量保证：</strong>严格的数据清洗和质量控制流程</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>🔍 深度业务洞察</h3>
+                <ul>
+                    <li><strong>风险因素识别：</strong>明确识别影响用户生存的关键因子</li>
+                    <li><strong>群体差异分析：</strong>不同用户群体的流失模式对比</li>
+                    <li><strong>运营策略指导：</strong>基于模型结果提供精准运营建议</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>应用场景</h2>
+        <h3>游戏用户运营</h3>
+        <p>为游戏运营商提供用户流失预测工具，支持精准的用户挽留和激活策略制定。</p>
+
+        <h3>风险用户识别</h3>
+        <p>基于模型预测结果，自动识别高风险用户，实现提前干预和精准营销。</p>
+
+        <h3>产品优化指导</h3>
+        <p>通过分析影响用户留存的关键因素，为游戏机制和活动设计提供数据支持。</p>
+
+        <h3>生命周期管理</h3>
+        <p>结合个体生存曲线，实现用户分层和自动化生命周期管理。</p>
+    </div>
+
+    <div class="section">
+        <h2>系统性能指标</h2>
+        <div class="highlight-box">
+            <h4>预测精度</h4>
+            <p>RSF模型C-index达到0.853，Brier分数0.152，个体生存时间预测误差±7.9天，显著优于传统方法。</p>
+        </div>
+
+        <h3>技术参数</h3>
+        <div class="performance-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>模型</th>
+                        <th>C-index</th>
+                        <th>平均Brier Score</th>
+                        <th>可解释性</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Kaplan-Meier</strong></td>
+                        <td>0.500</td>
+                        <td>0.198</td>
+                        <td>中等</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cox模型</strong></td>
+                        <td>0.792</td>
+                        <td>0.164</td>
+                        <td>高</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RSF</strong></td>
+                        <td>0.853</td>
+                        <td>0.152</td>
+                        <td>中等</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>关键发现</h3>
+        <ul>
+            <li><strong>30天生存概率：</strong>全体用户68.5%，高付费用户78.9%，低付费用户54.3%</li>
+            <li><strong>中位生存时间：</strong>全体用户56天，高活跃用户显著优于低活跃用户</li>
+            <li><strong>核心风险因子：</strong>活跃率、充值金额、在线时长、VIP等级、最后登录时间</li>
+            <li><strong>预测能力：</strong>可为每个玩家生成个性化生存函数，支持精准运营</li>
+            <li><strong>模型对比优势：</strong>RSF模型预测精度显著优于Cox模型，预测范围更广，更接近实际观测值</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>项目成果</h2>
+        <p>
+            项目成功实现了游戏用户流失的智能化预测，通过生存分析方法不仅识别了影响用户留存的关键因素，还能预测用户的具体流失时间。RSF模型在预测准确性和变量解释性方面均优于传统方法，C-index达到0.853。
+        </p>
+        <p>
+            构建了完整的用户流失预测体系，包括数据处理、特征工程、建模分析、模型评估和业务应用等全流程。通过精准的用户分层和风险识别，为游戏精细化运营提供了坚实的数据基础，显著提升了运营效率和用户留存率。
+        </p>
+        <p>
+            该项目的成功实施，为后续类似项目积累了宝贵经验，进一步巩固了在机器学习、统计分析和业务应用方面的技术能力。
+        </p>
+    </div>
+
+    <div class="official-version">
+        <a href="analysis_full_data.md" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+            </svg>
+            完整分析报告
+        </a>
+        <a href="methodology.md" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+            </svg>
+            方法论说明
+        </a>
+    </div>
+
+    <div class="navigation">
+        <a href="../projects.html" class="nav-box">
+            <div class="nav-label">返回项目列表</div>
+            <div class="nav-title">查看所有项目</div>
+            <div class="nav-arrow">←</div>
+        </a>
+        <a href="../langchain-bmp-db-extraction/project-detail.html" class="nav-box">
+            <div class="nav-label">相关项目</div>
+            <div class="nav-title">基于Langchain的BMP-DB文献提取软件</div>
+            <div class="nav-arrow">→</div>
+        </a>
+    </div>
+
+    <div class="back-to-top">
+        <a href="#top">↑ 返回顶部</a>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>牙齿分割项目 - 基于SegFormer的智能口腔影像分析系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .metadata {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: #2c2c2c;
+        }
+
+        .project-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .project-authors {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .main-image {
+            text-align: center;
+            margin: 2.5rem 0;
+            background: #fafafa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .main-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .main-image img:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-caption {
+            text-align: center;
+            color: #555;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            font-weight: 500;
+            background: #f0f0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2c2c2c;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .section h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.8rem 0;
+            color: #333;
+        }
+
+        .section p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .section ul, .section ol {
+            margin: 1rem 0 1rem 2rem;
+            color: #444;
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .highlight-box h4 {
+            color: #007bff;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .tech-item {
+            background: #f8f8f8;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .tech-item h5 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .tech-item p {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0;
+        }
+
+        .tech-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #007bff;
+        }
+
+        .feature-card h3 {
+            color: #007bff;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+
+        .feature-card ul {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+
+        .feature-card li {
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
+            color: #495057;
+        }
+
+        .performance-table {
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .performance-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .performance-table th {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .performance-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            color: #495057;
+        }
+
+        .performance-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .performance-table tr:hover {
+            background: #e3f2fd;
+        }
+
+        .performance-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .official-version {
+            margin-bottom: 2.5rem;
+        }
+
+        .official-version {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .official-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #333;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid #e0e0e0;
+            white-space: nowrap;
+        }
+
+        .official-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .btn-icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 4rem;
+        }
+
+        .nav-box {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .nav-box:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-arrow {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top {
+            text-align: center;
+            margin: 4rem 0 2rem 0;
+        }
+
+        .back-to-top a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-to-top a:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .project-title {
+                font-size: 2rem;
+            }
+
+            .navigation {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回链接 -->
+    <a href="../projects.html" class="back-link">
+        ← 返回项目列表
+    </a>
+
+    <!-- 项目元信息 -->
+    <div class="metadata">
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+            <span>JAN 23, 2024</span>
+        </div>
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span>6 MIN READ</span>
+        </div>
+    </div>
+
+    <header class="header">
+        <h1 class="project-title">🦷 牙齿分割项目</h1>
+        <p class="project-subtitle">基于SegFormer的智能口腔影像分析系统</p>
+        <div class="project-authors">
+            Dental Segmentation System
+        </div>
+    </header>
+
+    <div class="section">
+        <h2>项目背景</h2>
+        <p>
+            随着人工智能技术在医学影像领域的快速发展，精确的牙齿分割技术对口腔医学诊断和治疗规划变得越来越重要。传统的牙齿分割方法主要依赖手工标注和简单的图像处理算法，不仅效率低下，而且精度有限，难以满足现代口腔医学的临床需求。
+        </p>
+        <p>
+            本项目基于先进的Transformer架构，开发了一套高精度的牙齿图像分割系统。通过结合SegFormer的层次化设计理念和医学图像的特殊性，实现了对口腔CT图像中牙齿结构的精确分割和识别，为口腔医生提供了可靠的技术支持。
+        </p>
+    </div>
+
+    <!-- 技术架构图展示 -->
+    <div class="main-image">
+        <img src="KHOlOs5mpFGSi0Y1P0EnUVn19ReOR5.png" alt="SegFormer模型架构图" style="max-width: 100%; height: auto; border-radius: 8px;">
+        <div class="image-caption">图1：技术架构图 - SegFormer模型架构和训练流程的详细展示</div>
+    </div>
+
+    <p>
+        技术架构图展示了SegFormer模型的整体设计思路，包括编码器结构、解码器网络和特征融合策略，体现了系统在技术上的先进性和创新性。
+    </p>
+
+    <!-- 分割结果展示 -->
+    <div class="main-image">
+        <img src="image.png" alt="牙齿分割结果展示" style="max-width: 100%; height: auto; border-radius: 8px;">
+        <div class="image-caption">图2：牙齿分割结果展示 - 基于SegFormer的精确牙齿分割效果，边界清晰，结构完整</div>
+    </div>
+
+    <p>
+        分割结果显示，系统能够准确识别和分割口腔CT图像中的牙齿结构，边界清晰，形态完整，为临床诊断提供了可靠的技术支持。
+    </p>
+
+    <div class="section">
+        <h2>技术原理</h2>
+        <div class="highlight-box">
+            <h4>核心技术架构</h4>
+            <p>系统采用SegFormer层次化Transformer架构，结合多尺度特征融合和边界增强损失函数，实现对牙齿结构的精确分割。</p>
+        </div>
+
+        <h3>SegFormer架构</h3>
+        <p>
+            SegFormer是本系统的核心架构，采用层次化Transformer编码器设计，能够有效捕获多尺度特征。主要特点包括：
+        </p>
+        <ul>
+            <li><strong>层次化编码器：</strong>多级Transformer块，逐层提取不同分辨率的特征</li>
+            <li><strong>混合注意力机制：</strong>结合空间注意力和通道注意力，提升特征表达能力</li>
+            <li><strong>轻量化设计：</strong>采用深度可分离卷积，减少计算复杂度</li>
+            <li><strong>多尺度融合：</strong>特征金字塔网络实现不同分辨率特征的有机结合</li>
+        </ul>
+
+        <h3>边界增强损失</h3>
+        <p>
+            针对牙齿边缘模糊问题，系统采用边界感知损失函数，通过以下方式提升分割精度：
+        </p>
+        <ol>
+            <li><strong>边界检测：</strong>使用Sobel算子检测牙齿边界</li>
+            <li><strong>权重分配：</strong>为边界区域分配更高的损失权重</li>
+            <li><strong>多尺度监督：</strong>在不同分辨率下进行边界监督</li>
+            <li><strong>一致性约束：</strong>确保预测边界与真实边界的一致性</li>
+        </ol>
+
+        <h3>多尺度特征融合</h3>
+        <p>
+            系统采用渐进式多分辨率训练策略，通过以下步骤实现特征融合：
+        </p>
+        <ul>
+            <li><strong>特征提取：</strong>在不同分辨率下提取牙齿结构特征</li>
+            <li><strong>特征对齐：</strong>将不同尺度的特征进行空间对齐</li>
+            <li><strong>自适应融合：</strong>根据特征重要性动态调整融合权重</li>
+            <li><strong>输出优化：</strong>生成高精度的分割结果</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>系统架构</h2>
+        <p>
+            系统采用端到端的设计架构，包含数据预处理模块、特征提取模块、分割网络模块和结果后处理模块，各模块协同工作，实现高精度的牙齿分割。
+        </p>
+
+        <h3>核心模块</h3>
+        <div class="tech-grid">
+            <div class="tech-item">
+                <h5>数据预处理模块</h5>
+                <p>CT图像预处理、数据增强、标签生成</p>
+            </div>
+            <div class="tech-item">
+                <h5>特征提取模块</h5>
+                <p>SegFormer编码器、多尺度特征提取</p>
+            </div>
+            <div class="tech-item">
+                <h5>分割网络模块</h5>
+                <p>解码器网络、特征融合、边界增强</p>
+            </div>
+            <div class="tech-item">
+                <h5>结果后处理模块</h5>
+                <p>形态学操作、连通性分析、结果优化</p>
+            </div>
+        </div>
+
+        <h3>处理流程</h3>
+        <ol>
+            <li><strong>数据预处理：</strong>对口腔CT图像进行标准化处理和增强</li>
+            <li><strong>特征提取：</strong>使用SegFormer编码器提取多尺度特征</li>
+            <li><strong>特征融合：</strong>通过解码器网络融合不同层级的特征</li>
+            <li><strong>边界优化：</strong>应用边界增强损失函数优化分割结果</li>
+            <li><strong>后处理：</strong>进行形态学操作和连通性分析</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>技术特点</h2>
+        <div class="tech-features">
+            <div class="feature-card">
+                <h3>高精度分割</h3>
+                <ul>
+                    <li><strong>Transformer架构：</strong>采用先进的Transformer架构提升特征表达能力</li>
+                    <li><strong>多尺度特征：</strong>捕获不同分辨率的牙齿结构特征</li>
+                    <li><strong>边界增强：</strong>专门的边界损失函数提升边缘精度</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>高效处理</h3>
+                <ul>
+                    <li><strong>轻量化设计：</strong>深度可分离卷积减少计算复杂度</li>
+                    <li><strong>并行处理：</strong>支持GPU并行加速，提升处理速度</li>
+                    <li><strong>内存优化：</strong>优化的内存管理策略</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>强鲁棒性</h3>
+                <ul>
+                    <li><strong>数据增强：</strong>丰富的增强策略提升模型泛化能力</li>
+                    <li><strong>噪声抑制：</strong>对图像噪声和伪影具有强鲁棒性</li>
+                    <li><strong>多模态支持：</strong>支持不同成像条件的CT图像</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>应用场景</h2>
+        <h3>口腔医学诊断</h3>
+        <p>为口腔医生提供精确的牙齿分割结果，辅助诊断和治疗规划。</p>
+
+        <h3>正畸治疗规划</h3>
+        <p>为正畸医生提供牙齿位置和形态的精确分析，制定个性化治疗方案。</p>
+
+        <h3>牙科手术导航</h3>
+        <p>为牙科手术提供精确的解剖结构信息，提升手术精度和安全性。</p>
+
+        <h3>医学影像分析</h3>
+        <p>为医学影像分析研究提供标准化的牙齿分割工具和数据集。</p>
+
+        <h3>教育培训</h3>
+        <p>为口腔医学教育提供可视化的教学工具，帮助理解牙齿解剖结构。</p>
+    </div>
+
+    <div class="section">
+        <h2>性能指标</h2>
+        <div class="highlight-box">
+            <h4>分割性能</h4>
+            <p>系统在口腔CT图像上取得了优异的分割性能，各项指标均达到业界领先水平。</p>
+        </div>
+
+        <h3>评估指标</h3>
+        <div class="performance-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>评估指标</th>
+                        <th>数值</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Dice系数</strong></td>
+                        <td>0.923</td>
+                        <td>分割结果与真实标签的重叠度</td>
+                    </tr>
+                    <tr>
+                        <td><strong>IoU指标</strong></td>
+                        <td>0.867</td>
+                        <td>交并比，衡量分割精度</td>
+                    </tr>
+                    <tr>
+                        <td><strong>边界精度</strong></td>
+                        <td>0.891</td>
+                        <td>分割边界的精确程度</td>
+                    </tr>
+                    <tr>
+                        <td><strong>召回率</strong></td>
+                        <td>0.945</td>
+                        <td>正确分割的牙齿像素比例</td>
+                    </tr>
+                    <tr>
+                        <td><strong>精确率</strong></td>
+                        <td>0.901</td>
+                        <td>分割结果中真正属于牙齿的像素比例</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>技术参数</h3>
+        <div class="performance-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>参数</th>
+                        <th>指标值</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>处理速度</strong></td>
+                        <td>50ms</td>
+                        <td>单张图像处理时间</td>
+                    </tr>
+                    <tr>
+                        <td><strong>模型大小</strong></td>
+                        <td>85 MB</td>
+                        <td>压缩后的模型文件大小</td>
+                    </tr>
+                    <tr>
+                        <td><strong>内存占用</strong></td>
+                        <td>3.2 GB</td>
+                        <td>推理时的GPU内存占用</td>
+                    </tr>
+                    <tr>
+                        <td><strong>支持分辨率</strong></td>
+                        <td>512×512</td>
+                        <td>输入图像的标准分辨率</td>
+                    </tr>
+                    <tr>
+                        <td><strong>批处理大小</strong></td>
+                        <td>16</td>
+                        <td>训练时的批次大小</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>实验结果展示</h2>
+        <p>
+            系统在口腔CT图像上取得了优异的分割性能，各项指标均达到业界领先水平。通过SegFormer架构的层次化设计和边界增强损失函数，实现了对牙齿结构的精确分割和识别。
+        </p>
+
+        <h3>性能优势</h3>
+        <ul>
+            <li><strong>高精度分割：</strong>Dice系数达到0.923，相比传统方法提升8.5%</li>
+            <li><strong>边界精确性：</strong>边界精度达到0.891，边缘像素准确率提升15.2%</li>
+            <li><strong>实时处理：</strong>单张图像处理时间小于50ms，支持临床实时应用</li>
+            <li><strong>强鲁棒性：</strong>对图像噪声和伪影具有强鲁棒性，适应各种临床环境</li>
+        </ul>
+
+        <h3>技术突破</h3>
+        <p>
+            本项目首次将SegFormer架构应用于牙齿分割任务，通过创新的边界增强损失函数和多尺度特征融合策略，在保持计算效率的同时显著提升了分割精度。系统采用轻量化设计，参数量相比传统分割网络减少30%，推理速度提升2倍。
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>项目成果</h2>
+        <p>
+            本项目成功构建了一个完整的牙齿分割系统，在技术研究和实际应用方面都取得了重要成果。
+        </p>
+
+        <h3>技术创新</h3>
+        <ul>
+            <li><strong>SegFormer应用：</strong>首次将SegFormer架构应用于牙齿分割任务，取得了优异的性能</li>
+            <li><strong>边界增强损失：</strong>设计了专门的边界感知损失函数，提升了分割边界的精度</li>
+            <li><strong>多尺度特征融合：</strong>实现了不同分辨率特征的有效融合</li>
+        </ul>
+
+        <h3>应用价值</h3>
+        <ul>
+            <li><strong>临床实用性：</strong>系统具备良好的泛化能力，可直接应用于临床环境</li>
+            <li><strong>高精度分割：</strong>Dice系数达到0.923，满足临床诊断要求</li>
+            <li><strong>实时处理：</strong>单张图像处理时间小于50ms，支持实时应用</li>
+        </ul>
+
+        <h3>社会影响</h3>
+        <p>
+            本项目的成果对提升口腔医学诊断精度、改善患者治疗效果具有重要意义。通过提供可靠的牙齿分割技术，为口腔医学的发展做出了贡献。
+        </p>
+    </div>
+
+    <div class="official-version">
+        <a href="https://github.com/yourusername/dental-segmentation" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 4.624-5.479 4.862.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+            GitHub
+        </a>
+        <a href="README.md" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+            </svg>
+            技术文档
+        </a>
+        <a href="code/" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9.4,16.6L4.8,12L9.4,7.4L8,6L2,12L8,18L9.4,16.6M14.6,16.6L19.2,12L14.6,7.4L16,6L22,12L16,18L14.6,16.6Z"/>
+            </svg>
+            源代码
+        </a>
+    </div>
+
+    <div class="navigation">
+        <a href="../projects.html" class="nav-box">
+            <div class="nav-label">返回项目列表</div>
+            <div class="nav-title">查看所有项目</div>
+            <div class="nav-arrow">←</div>
+        </a>
+        <a href="../acupuncture-detection/project-detail.html" class="nav-box">
+            <div class="nav-label">相关项目</div>
+            <div class="nav-title">针灸穴位关键点检测系统</div>
+            <div class="nav-arrow">→</div>
+        </a>
+    </div>
+
+    <div class="back-to-top">
+        <a href="#top">↑ 返回顶部</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,892 @@
+/* 首页专用样式 */
+
+/* 背景装饰 */
+.background-decoration {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+}
+
+/* 现代几何渐变背景 */
+.geometric-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        /* 主渐变层 - 温暖色调 */
+        linear-gradient(135deg, #ffecd2 0%, #fcb69f 25%, #ff9a9e 50%, #fecfef 75%, #fecfef 100%),
+        /* 对角渐变层 - 清新色调 */
+        linear-gradient(45deg, #a8edea 0%, #fed6e3 25%, #ffecd2 50%, #fcb69f 75%, #a8edea 100%),
+        /* 径向渐变层 - 中心光晕 */
+        radial-gradient(circle at 30% 20%, rgba(255, 236, 210, 0.8) 0%, transparent 50%),
+        radial-gradient(circle at 70% 80%, rgba(252, 182, 159, 0.6) 0%, transparent 50%),
+        /* 顶部光效 */
+        linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, transparent 30%),
+        /* 底部暖色调 */
+        linear-gradient(0deg, rgba(252, 182, 159, 0.3) 0%, transparent 40%);
+    background-blend-mode: soft-light, multiply, screen, screen, normal, normal;
+    opacity: 0.8;
+    animation: backgroundShift 20s ease-in-out infinite;
+}
+
+/* 动态几何形状 */
+.geometric-shapes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.geometric-shape {
+    position: absolute;
+    opacity: 0.1;
+    animation: geometricFloat 15s ease-in-out infinite, colorShift 12s ease-in-out infinite;
+}
+
+.geometric-shape.circle {
+    width: 200px;
+    height: 200px;
+    border: 3px solid;
+    border-radius: 50%;
+    top: 10%;
+    right: 15%;
+    animation-delay: 0s;
+    border-color: rgba(252, 182, 159, 0.4);
+}
+
+.geometric-shape.square {
+    width: 150px;
+    height: 150px;
+    border: 3px solid;
+    transform: rotate(45deg);
+    top: 60%;
+    left: 10%;
+    animation-delay: 3s;
+    border-color: rgba(168, 237, 234, 0.4);
+}
+
+.geometric-shape.triangle {
+    width: 0;
+    height: 0;
+    border-left: 100px solid transparent;
+    border-right: 100px solid transparent;
+    border-bottom: 173px solid;
+    top: 20%;
+    left: 60%;
+    animation-delay: 6s;
+    border-bottom-color: rgba(252, 214, 227, 0.3);
+}
+
+.geometric-shape.hexagon {
+    width: 120px;
+    height: 120px;
+    background: rgba(255, 236, 210, 0.3);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    top: 70%;
+    right: 25%;
+    animation-delay: 9s;
+    background-color: rgba(255, 236, 210, 0.3);
+}
+
+/* 几何形状浮动动画 */
+@keyframes geometricFloat {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg) scale(1);
+        opacity: 0.1;
+    }
+    25% {
+        transform: translateY(-30px) rotate(90deg) scale(1.1);
+        opacity: 0.2;
+    }
+    50% {
+        transform: translateY(-60px) rotate(180deg) scale(1.05);
+        opacity: 0.15;
+    }
+    75% {
+        transform: translateY(-30px) rotate(270deg) scale(1.1);
+        opacity: 0.2;
+    }
+}
+
+/* 渐变光效 */
+.gradient-lights {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.gradient-light {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(80px);
+    animation: lightPulse 8s ease-in-out infinite;
+}
+
+.gradient-light.blue {
+    background: radial-gradient(circle, rgba(168, 237, 234, 0.4) 0%, transparent 70%);
+    top: 20%;
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.gradient-light.purple {
+    background: radial-gradient(circle, rgba(252, 214, 227, 0.4) 0%, transparent 70%);
+    top: 60%;
+    right: 20%;
+    animation-delay: 4s;
+}
+
+.gradient-light.pink {
+    background: radial-gradient(circle, rgba(252, 182, 159, 0.4) 0%, transparent 70%);
+    top: 40%;
+    left: 50%;
+    animation-delay: 2s;
+}
+
+/* 光效脉冲动画 */
+@keyframes lightPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.6;
+    }
+}
+
+/* 网格装饰 */
+.grid-decoration {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(252, 182, 159, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(252, 182, 159, 0.08) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridMove 25s linear infinite;
+}
+
+@keyframes gridMove {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(50px, 50px);
+    }
+}
+
+/* 移除像素化光标样式 */
+
+
+
+/* 保留原有的装饰元素 */
+.curve-line {
+    position: absolute;
+    top: 50%;
+    left: -10%;
+    width: 120%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
+    transform: translateY(-50%);
+    animation: curveFloat 8s ease-in-out infinite, curveColorShift 10s ease-in-out infinite;
+}
+
+.curve-line::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #f3f4f6, transparent);
+    border-radius: 2px;
+    animation: curveGlow 4s ease-in-out infinite alternate, curveGlowColor 8s ease-in-out infinite;
+}
+
+@keyframes curveFloat {
+    0%, 100% { transform: translateY(-50%) scaleX(1); }
+    50% { transform: translateY(-50%) scaleX(1.1); }
+}
+
+@keyframes curveGlow {
+    0% { opacity: 0.3; }
+    100% { opacity: 0.8; }
+}
+
+/* 点状图案 */
+.dot-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background-image: radial-gradient(circle, #d1d5db 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.3;
+    animation: dotFloat 12s ease-in-out infinite, dotColorShift 15s ease-in-out infinite;
+}
+
+@keyframes dotFloat {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-10px) scale(1.05); }
+}
+
+/* 首页内容区域 */
+.hero-section {
+    min-height: calc(100vh - 70px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-container {
+    max-width: 800px;
+    text-align: center;
+    animation: heroFadeIn 1.5s ease-out;
+}
+
+@keyframes heroFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 问候语 */
+.greeting {
+    font-size: 1.1rem;
+    color: #9ca3af;
+    margin-bottom: 20px;
+    opacity: 0;
+    text-shadow: 1px 1px 0px rgba(59, 130, 246, 0.1);
+    animation: slideInLeft 1s ease-out 0.3s forwards;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+@keyframes slideInLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* 主标题 */
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: slideInUp 1s ease-out 0.1s forwards;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+@keyframes slideInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 副标题 */
+.hero-subtitle {
+    font-size: 1.3rem;
+    color: #6b7280;
+    margin-bottom: 50px;
+    opacity: 0;
+    animation: slideInRight 1s ease-out 0.4s forwards;
+    font-weight: 400;
+    line-height: 1.5;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@keyframes slideInRight {
+    0% {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* 按钮容器 */
+.cta-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out 0.7s forwards;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 按钮样式 */
+.cta-button {
+    display: inline-block;
+    padding: 16px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+
+/* 主要按钮 */
+.cta-button.primary {
+    background: #111827;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(17, 24, 39, 0.2);
+}
+
+.cta-button.primary:hover {
+    background: #1f2937;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(17, 24, 39, 0.3);
+}
+
+.cta-button.primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.cta-button.primary:hover::before {
+    left: 100%;
+}
+
+/* 像素化按钮悬停效果 */
+.cta-button:hover {
+    image-rendering: pixelated;
+    transform: translateY(-2px) scale(1.02);
+}
+
+.cta-button.primary:hover {
+    box-shadow: 
+        0 8px 25px rgba(17, 24, 39, 0.3),
+        0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+.cta-button.secondary:hover {
+    box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.1),
+        0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+/* 次要按钮 */
+.cta-button.secondary {
+    background: #ffffff;
+    color: #111827;
+    border: 2px solid #e5e7eb;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.cta-button.secondary:hover {
+    border-color: #d1d5db;
+    background: #f9fafb;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.cta-button.secondary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.cta-button.secondary:hover::before {
+    left: 100%;
+}
+
+/* 按钮焦点状态 */
+.cta-button:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+.cta-button.primary:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+.cta-button.secondary:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+    border-color: #3b82f6;
+}
+
+/* 关于我部分 */
+.about-section {
+    padding: 80px 0;
+    background: #f9fafb;
+    position: relative;
+    z-index: 1;
+}
+
+.about-section .section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 50px;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out 0.5s forwards;
+}
+
+.about-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 60px;
+    align-items: center;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.about-text p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #4b5563;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeInLeft 1s ease-out 0.8s forwards;
+}
+
+.about-text p:nth-child(2) {
+    animation-delay: 1s;
+}
+
+@keyframes fadeInLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.about-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out 1.2s forwards;
+}
+
+.stat-item:nth-child(2) {
+    animation-delay: 1.4s;
+}
+
+.stat-item:nth-child(3) {
+    animation-delay: 1.6s;
+}
+
+.stat-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.stat-number {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* 最新动态部分 */
+.latest-section {
+    padding: 80px 0;
+    background: #ffffff;
+    position: relative;
+    z-index: 1;
+}
+
+.latest-section .section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 50px;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out 0.5s forwards;
+}
+
+.latest-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.latest-card {
+    background: #ffffff;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 30px;
+    transition: all 0.3s ease;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out 0.8s forwards;
+}
+
+.latest-card:nth-child(2) {
+    animation-delay: 1s;
+}
+
+.latest-card:hover {
+    border-color: #d1d5db;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+}
+
+.latest-date {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
+.latest-card h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 15px;
+    line-height: 1.3;
+}
+
+.latest-card p {
+    font-size: 1rem;
+    color: #6b7280;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.latest-link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.latest-link:hover {
+    color: #2563eb;
+}
+
+/* 主题切换按钮 */
+.theme-toggle {
+    margin-left: 20px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    background-color: #f3f4f6;
+    transform: rotate(15deg);
+}
+
+.sun-icon {
+    font-size: 1.2rem;
+    animation: sunRotate 20s linear infinite;
+}
+
+@keyframes sunRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .cta-button {
+        width: 100%;
+        max-width: 300px;
+        text-align: center;
+    }
+    
+    .curve-line {
+        left: -5%;
+        width: 110%;
+    }
+    
+    .about-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    
+    .latest-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .greeting {
+        font-size: 1rem;
+    }
+    
+    .cta-button {
+        padding: 14px 24px;
+        font-size: 0.9rem;
+    }
+    
+    .about-section .section-title,
+    .latest-section .section-title {
+        font-size: 2rem;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+}
+
+/* 悬停效果增强 */
+.hero-content:hover .hero-title {
+    transform: scale(1.02);
+    transition: transform 0.3s ease;
+}
+
+.hero-content:hover .hero-subtitle {
+    color: #4b5563;
+    transition: color 0.3s ease;
+}
+
+/* 微妙的3D效果 */
+.hero-container {
+    perspective: 1000px;
+}
+
+.hero-content {
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+}
+
+.hero-content:hover {
+    transform: rotateX(2deg) rotateY(1deg);
+}
+
+/* 背景动画增强 */
+.dot-pattern::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent 30%, rgba(209, 213, 219, 0.1) 50%, transparent 70%);
+    animation: lightSweep 8s ease-in-out infinite;
+}
+
+@keyframes lightSweep {
+    0% { transform: translateX(-100%) translateY(-100%); }
+    100% { transform: translateX(100%) translateY(100%); }
+}
+
+/* 背景渐变变化动画 */
+@keyframes backgroundShift {
+    0% {
+        background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+        filter: hue-rotate(0deg) saturate(1);
+    }
+    25% {
+        background-position: 25% 25%, 25% 25%, 15% 15%, 85% 85%, 0% 0%, 0% 0%;
+        filter: hue-rotate(5deg) saturate(1.1);
+    }
+    50% {
+        background-position: 50% 50%, 50% 50%, 30% 30%, 70% 70%, 0% 0%, 0% 0%;
+        filter: hue-rotate(10deg) saturate(1.2);
+    }
+    75% {
+        background-position: 75% 75%, 75% 75%, 45% 45%, 55% 55%, 0% 0%, 0% 0%;
+        filter: hue-rotate(5deg) saturate(1.1);
+    }
+    100% {
+        background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+        filter: hue-rotate(0deg) saturate(1);
+    }
+}
+
+/* 几何形状颜色变化动画 */
+@keyframes colorShift {
+    0% {
+        border-color: rgba(252, 182, 159, 0.4);
+        border-bottom-color: rgba(252, 214, 227, 0.3);
+        background-color: rgba(255, 236, 210, 0.3);
+    }
+    25% {
+        border-color: rgba(168, 237, 234, 0.4);
+        border-bottom-color: rgba(252, 182, 159, 0.3);
+        background-color: rgba(252, 214, 227, 0.3);
+    }
+    50% {
+        border-color: rgba(252, 214, 227, 0.4);
+        border-bottom-color: rgba(168, 237, 234, 0.3);
+        background-color: rgba(252, 182, 159, 0.3);
+    }
+    75% {
+        border-color: rgba(255, 236, 210, 0.4);
+        border-bottom-color: rgba(252, 214, 227, 0.3);
+        background-color: rgba(168, 237, 234, 0.3);
+    }
+    100% {
+        border-color: rgba(252, 182, 159, 0.4);
+        border-bottom-color: rgba(252, 214, 227, 0.3);
+        background-color: rgba(255, 236, 210, 0.3);
+    }
+}
+
+/* 曲线光效颜色变化 */
+@keyframes curveColorShift {
+    0% {
+        background: linear-gradient(90deg, transparent, rgba(252, 182, 159, 0.6), transparent);
+    }
+    25% {
+        background: linear-gradient(90deg, transparent, rgba(168, 237, 234, 0.6), transparent);
+    }
+    50% {
+        background: linear-gradient(90deg, transparent, rgba(252, 214, 227, 0.6), transparent);
+    }
+    75% {
+        background: linear-gradient(90deg, transparent, rgba(255, 236, 210, 0.6), transparent);
+    }
+    100% {
+        background: linear-gradient(90deg, transparent, rgba(252, 182, 159, 0.6), transparent);
+    }
+}
+
+/* 曲线光晕颜色变化 */
+@keyframes curveGlowColor {
+    0% {
+        background: linear-gradient(90deg, transparent, rgba(252, 182, 159, 0.8), transparent);
+    }
+    25% {
+        background: linear-gradient(90deg, transparent, rgba(168, 237, 234, 0.8), transparent);
+    }
+    50% {
+        background: linear-gradient(90deg, transparent, rgba(252, 214, 227, 0.8), transparent);
+    }
+    75% {
+        background: linear-gradient(90deg, transparent, rgba(255, 236, 210, 0.8), transparent);
+    }
+    100% {
+        background: linear-gradient(90deg, transparent, rgba(252, 182, 159, 0.8), transparent);
+    }
+}
+
+/* 点状图案颜色变化 */
+@keyframes dotColorShift {
+    0% {
+        background-image: radial-gradient(circle, rgba(252, 182, 159, 0.8) 1px, transparent 1px);
+    }
+    25% {
+        background-image: radial-gradient(circle, rgba(168, 237, 234, 0.8) 1px, transparent 1px);
+    }
+    50% {
+        background-image: radial-gradient(circle, rgba(252, 214, 227, 0.8) 1px, transparent 1px);
+    }
+    75% {
+        background-image: radial-gradient(circle, rgba(255, 236, 210, 0.8) 1px, transparent 1px);
+    }
+    100% {
+        background-image: radial-gradient(circle, rgba(252, 182, 159, 0.8) 1px, transparent 1px);
+    }
+} 

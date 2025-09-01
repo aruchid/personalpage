@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>双摄实时拼接算法 - 行车记录仪全景视野增强系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .metadata {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: #2c2c2c;
+        }
+
+        .project-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .project-authors {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .main-image {
+            text-align: center;
+            margin: 2.5rem 0;
+            background: #fafafa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .main-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .main-image img:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-caption {
+            text-align: center;
+            color: #555;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            font-weight: 500;
+            background: #f0f0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2c2c2c;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .section h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.8rem 0;
+            color: #333;
+        }
+
+        .section p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .section ul, .section ol {
+            margin: 1rem 0 1rem 2rem;
+            color: #444;
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .highlight-box h4 {
+            color: #007bff;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .tech-item {
+            background: #f8f8f8;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .tech-item h5 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .tech-item p {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0;
+        }
+
+        .tech-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #007bff;
+        }
+
+        .feature-card h3 {
+            color: #007bff;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+
+        .feature-card ul {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+
+        .feature-card li {
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
+            color: #495057;
+        }
+
+        .performance-table {
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .performance-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .performance-table th {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .performance-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            border-right: 1px solid #e9ecef;
+            color: #495057;
+        }
+
+        .performance-table th:last-child,
+        .performance-table td:last-child {
+            border-right: none;
+        }
+
+        .performance-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .performance-table tr:hover {
+            background: #e3f2fd;
+        }
+
+        .performance-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .official-version {
+            margin-bottom: 2.5rem;
+        }
+
+        .official-version {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .official-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #333;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid #e0e0e0;
+            white-space: nowrap;
+        }
+
+        .official-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .btn-icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 4rem;
+        }
+
+        .nav-box {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .nav-box:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-arrow {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top {
+            text-align: center;
+            margin: 4rem 0 2rem 0;
+        }
+
+        .back-to-top a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-to-top a:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .project-title {
+                font-size: 2rem;
+            }
+
+            .navigation {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回链接 -->
+    <a href="../projects.html" class="back-link">
+        ← 返回项目列表
+    </a>
+
+    <!-- 项目元信息 -->
+    <div class="metadata">
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+            <span>DEC 2017 - MAY 2018</span>
+        </div>
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span>8 MIN READ</span>
+        </div>
+    </div>
+
+    <header class="header">
+        <h1 class="project-title">双摄实时拼接算法</h1>
+        <p class="project-subtitle">行车记录仪全景视野增强系统</p>
+        <div class="project-authors">
+            Author: 宗悦
+        </div>
+    </header>
+
+    <div class="section">
+        <h2>项目背景</h2>
+        <p>
+            行车记录仪作为汽车安全的重要设备，其视野覆盖范围直接影响驾驶安全性。传统的单摄像头系统存在视野盲区，无法为驾驶员提供完整的周围环境信息。本项目旨在通过双摄像头实时拼接技术，为行车记录仪提供360度全景视野，显著提升驾驶安全性和监控覆盖范围。
+        </p>
+        <p>
+            系统采用前后双摄像头配置，通过先进的计算机视觉技术和实时图像处理算法，将两个视频流自动合成为无缝的全景视图。该技术不仅适用于行车记录仪，还可扩展到汽车安全、监控系统和高级驾驶辅助系统（ADAS）等多个应用领域。
+        </p>
+        <p>
+            项目在VS开发平台上使用C++和OpenCV实现，成功将算法移植到移动设备端，实现了与硬件的高效对接，提升了产品的性能和市场竞争力。
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>技术原理</h2>
+        <div class="highlight-box">
+            <h4>实时拼接核心优势</h4>
+            <p>通过双摄像头同步采集和多线程并行处理，实现毫秒级延迟的全景视频合成，为驾驶员提供实时的360度环境感知。</p>
+        </div>
+
+        <h3>核心算法流程</h3>
+        <p>
+            系统采用多阶段图像处理流水线：特征提取与匹配、几何变换计算、图像对齐与融合、无缝拼接优化。每个阶段都经过精心优化，确保在资源受限的移动设备上实现实时性能。
+        </p>
+
+        <!-- 系统架构图 -->
+        <div class="main-image">
+            <img src="6h6b0aRvOoEZGvzvC47HIywDcRKVXJ.png" alt="双摄实时拼接系统架构图" style="max-width: 100%; height: auto; border-radius: 8px;">
+            <div class="image-caption">图1：双摄实时拼接系统架构 - 多摄像头同步、实时拼接、智能融合</div>
+        </div>
+
+        <p>
+            如图1所示，系统采用模块化设计，包含图像采集、预处理、特征匹配、几何变换、图像融合和输出显示等核心模块，各模块协同工作实现实时全景拼接。
+        </p>
+
+        <h3>关键技术突破</h3>
+        <ul>
+            <li><strong>特征提取优化：</strong>SURF/SIFT特征提取算法优化，提升特征点检测精度和速度</li>
+            <li><strong>匹配算法改进：</strong>KNN搜索和RANSAC模型估计优化，提高匹配准确性和鲁棒性</li>
+            <li><strong>几何变换计算：</strong>LM优化算法应用，实现高精度投影变换矩阵计算</li>
+            <li><strong>图像融合技术：</strong>最大生成树、投影变换、最大流图割法和Pyramid融合技术</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>系统架构</h2>
+        <p>
+            本系统采用分层架构设计，包含硬件接口层、算法处理层、优化控制层和用户交互层，各层之间通过标准接口进行通信，确保系统的模块化和可扩展性。
+        </p>
+
+        <h3>核心模块</h3>
+        <div class="tech-grid">
+            <div class="tech-item">
+                <h5>📹 图像采集模块</h5>
+                <p>双摄像头同步采集、图像预处理、格式转换</p>
+            </div>
+            <div class="tech-item">
+                <h5>🔍 特征处理模块</h5>
+                <p>SURF/SIFT特征提取、特征匹配、几何变换</p>
+            </div>
+            <div class="tech-item">
+                <h5>🧮 拼接算法模块</h5>
+                <p>图像对齐、无缝融合、输出优化</p>
+            </div>
+            <div class="tech-item">
+                <h5>⚡ 性能优化模块</h5>
+                <p>多线程处理、内存管理、实时调度</p>
+            </div>
+        </div>
+
+        <h3>处理流程</h3>
+        <ol>
+            <li><strong>图像采集：</strong>双摄像头同步采集前后视野图像，确保时间同步性</li>
+            <li><strong>特征提取：</strong>使用SURF/SIFT算法提取图像特征点，为后续匹配做准备</li>
+            <li><strong>特征匹配：</strong>通过KNN搜索找到对应特征点，使用RANSAC算法估计几何变换</li>
+            <li><strong>图像变换：</strong>计算投影变换矩阵，对图像进行几何校正和对齐</li>
+            <li><strong>无缝融合：</strong>使用Pyramid融合技术实现图像的无缝拼接和过渡</li>
+            <li><strong>输出显示：</strong>生成全景视频流，实时显示给用户</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>技术特点</h2>
+        <div class="tech-features">
+            <div class="feature-card">
+                <h3>🚀 实时性能</h3>
+                <ul>
+                    <li><strong>低延迟处理：</strong>毫秒级图像拼接延迟，满足实时应用需求</li>
+                    <li><strong>多线程优化：</strong>并行处理多个图像帧，提升系统吞吐量</li>
+                    <li><strong>硬件加速：</strong>针对移动设备硬件特性进行算法优化</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>🎯 高精度拼接</h3>
+                <ul>
+                    <li><strong>特征匹配：</strong>SURF/SIFT特征点精确定位和匹配</li>
+                    <li><strong>几何校正：</strong>RANSAC算法估计高精度变换矩阵</li>
+                    <li><strong>无缝融合：</strong>Pyramid融合技术消除拼接痕迹</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>🔧 系统优化</h3>
+                <ul>
+                    <li><strong>内存管理：</strong>高效的内存分配和释放策略</li>
+                    <li><strong>算法优化：</strong>针对移动平台的特殊优化</li>
+                    <li><strong>功耗控制：</strong>平衡性能和功耗的智能调度</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>应用场景</h2>
+        <h3>行车记录仪</h3>
+        <p>为驾驶员提供360度全景视野，消除盲区，提升驾驶安全性。</p>
+
+        <h3>汽车监控系统</h3>
+        <p>全方位监控车辆周围环境，适用于车队管理和安全监控。</p>
+
+        <h3>高级驾驶辅助系统（ADAS）</h3>
+        <p>为自动驾驶和辅助驾驶提供完整的环境感知信息。</p>
+
+        <h3>安防监控</h3>
+        <p>扩展应用到其他需要全景视野的监控场景。</p>
+    </div>
+
+    <div class="section">
+        <h2>系统性能指标</h2>
+        <div class="highlight-box">
+            <h4>实时性能</h4>
+            <p>系统在移动设备上实现毫秒级延迟的全景拼接，支持多种分辨率和帧率，满足实时应用需求。</p>
+        </div>
+
+        <h3>技术参数</h3>
+        <div class="performance-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>性能指标</th>
+                        <th>技术规格</th>
+                        <th>优化效果</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>处理延迟</strong></td>
+                        <td>< 50ms</td>
+                        <td>满足实时应用需求</td>
+                    </tr>
+                    <tr>
+                        <td><strong>拼接精度</strong></td>
+                        <td>像素级对齐</td>
+                        <td>无缝融合效果</td>
+                    </tr>
+                    <tr>
+                        <td><strong>支持分辨率</strong></td>
+                        <td>720p - 4K</td>
+                        <td>适应多种应用场景</td>
+                    </tr>
+                    <tr>
+                        <td><strong>特征匹配</strong></td>
+                        <td>SURF/SIFT</td>
+                        <td>高精度特征定位</td>
+                    </tr>
+                    <tr>
+                        <td><strong>几何变换</strong></td>
+                        <td>RANSAC + LM</td>
+                        <td>鲁棒性变换估计</td>
+                    </tr>
+                    <tr>
+                        <td><strong>图像融合</strong></td>
+                        <td>Pyramid融合</td>
+                        <td>消除拼接痕迹</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>关键创新</h3>
+        <ul>
+            <li><strong>算法优化：</strong>SURF/SIFT特征提取、KNN搜索、RANSAC模型估计和LM优化</li>
+            <li><strong>融合技术：</strong>最大生成树、投影变换、最大流图割法和Pyramid融合技术</li>
+            <li><strong>移动端移植：</strong>成功将算法移植到移动设备，实现与硬件的高效对接</li>
+            <li><strong>工厂校准：</strong>设计并实施工厂校准方案，确保产品出厂性能</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>项目成果</h2>
+        <p>
+            项目成功实现了双摄像头实时拼接算法，通过算法优化涉及SURF/SIFT特征提取、KNN搜索、RANSAC模型估计和LM优化，显著提升了拼接效果和算法速度。创新性地应用最大生成树、投影变换、最大流图割法和Pyramid融合技术，解决了图像拼接中的复杂问题。
+        </p>
+        <p>
+            成功将算法移植到移动端，实现了与硬件的高效对接，提升了产品的性能和市场竞争力。通过工厂校准方案的实施，确保产品在出厂前达到最佳性能，为后续的产品化奠定了坚实基础。
+        </p>
+        <p>
+            该项目的成功实施，不仅解决了行车记录仪视野盲区的问题，还为汽车安全、监控系统和ADAS等领域提供了技术支撑，进一步巩固了在计算机视觉和嵌入式算法开发方面的技术能力。
+        </p>
+    </div>
+
+    <div class="official-version">
+        <a href="abstract.md" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+            </svg>
+            项目概述
+        </a>
+        <a href="../projects.html" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+            </svg>
+            返回项目列表
+        </a>
+    </div>
+
+    <div class="navigation">
+        <a href="../projects.html" class="nav-box">
+            <div class="nav-label">返回项目列表</div>
+            <div class="nav-title">查看所有项目</div>
+            <div class="nav-arrow">←</div>
+        </a>
+        <a href="../game-theory-control-optimization/project-detail.html" class="nav-box">
+            <div class="nav-label">相关项目</div>
+            <div class="nav-title">基于生存分析的游戏用户流失预测</div>
+            <div class="nav-arrow">→</div>
+        </a>
+    </div>
+
+    <div class="back-to-top">
+        <a href="#top">↑ 返回顶部</a>
+    </div>
+</body>
+</html> 

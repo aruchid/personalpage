@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M²激光测量系统 - 激光束质量分析与测量解决方案</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .metadata {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: #2c2c2c;
+        }
+
+        .project-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .project-authors {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .main-image {
+            text-align: center;
+            margin: 2.5rem 0;
+            background: #fafafa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .main-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .main-image img:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-caption {
+            text-align: center;
+            color: #555;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            font-weight: 500;
+            background: #f0f0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2c2c2c;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .section h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.8rem 0;
+            color: #333;
+        }
+
+        .section p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .section ul, .section ol {
+            margin: 1rem 0 1rem 2rem;
+            color: #444;
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .highlight-box h4 {
+            color: #007bff;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .tech-item {
+            background: #f8f8f8;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .tech-item h5 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .tech-item p {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0;
+        }
+
+        .tech-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #007bff;
+        }
+
+        .feature-card h3 {
+            color: #007bff;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+
+        .feature-card ul {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+
+        .feature-card li {
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
+            color: #495057;
+        }
+
+        .performance-table {
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .performance-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .performance-table th {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .performance-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            color: #495057;
+        }
+
+        .performance-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .performance-table tr:hover {
+            background: #e3f2fd;
+        }
+
+        .performance-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .official-version {
+            margin-bottom: 2.5rem;
+        }
+
+        .official-version {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .official-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #333;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid #e0e0e0;
+            white-space: nowrap;
+        }
+
+        .official-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .btn-icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 4rem;
+        }
+
+        .nav-box {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .nav-box:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-arrow {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top {
+            text-align: center;
+            margin: 4rem 0 2rem 0;
+        }
+
+        .back-to-top a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-to-top a:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .project-title {
+                font-size: 2rem;
+            }
+
+            .navigation {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回链接 -->
+    <a href="../projects.html" class="back-link">
+        ← 返回项目列表
+    </a>
+
+    <!-- 项目元信息 -->
+    <div class="metadata">
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+            <span>DEC 28, 2024</span>
+        </div>
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span>6 MIN READ</span>
+        </div>
+    </div>
+
+    <header class="header">
+        <h1 class="project-title">M²激光测量系统</h1>
+        <p class="project-subtitle">激光束质量分析与测量解决方案</p>
+        <div class="project-authors">
+            Author: Y Jason Young
+        </div>
+    </header>
+
+    <div class="section">
+        <h2>项目背景</h2>
+        <p>
+            激光束质量是激光系统性能评估的关键指标，直接影响激光在工业加工、科学研究、医疗设备等领域的应用效果。M²因子（光束质量因子）是衡量激光束质量的核心参数，它描述了实际激光束与理想高斯光束的接近程度。
+        </p>
+        <p>
+            传统的激光束质量测量方法主要依赖手动测量和简单的数据分析，存在测量精度低、操作复杂、数据处理繁琐等问题。随着激光技术的快速发展和应用领域的不断扩展，对激光束质量测量的精度、效率和自动化程度提出了更高要求。
+        </p>
+        <p>
+            本项目旨在开发一套基于ISO 11146标准的M²激光测量系统，通过先进的光学设计、精确的机械控制和智能的数据处理算法，实现激光束质量的自动化、高精度测量，为激光系统的研发、生产和应用提供可靠的质量评估工具。
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>技术原理</h2>
+        <div class="highlight-box">
+            <h4>M²因子定义</h4>
+            <p>M²因子定义为实际激光束的束腰半径与发散角的乘积与理想高斯光束的比值，M² = 1表示理想高斯光束，M² > 1表示实际光束质量低于理想情况。</p>
+        </div>
+
+        <h3>测量原理</h3>
+        <p>
+            系统基于激光束传播理论，通过测量激光束在不同传播距离处的束宽，拟合得到光束传播方程，从而计算出M²因子、束腰半径、发散角和瑞利长度等关键参数。
+        </p>
+
+        <!-- M²光束质量测量原理图 -->
+        <div class="main-image">
+            <img src="ChatGPT Image 2025年8月18日 13_10_28.png" alt="M²光束质量测量原理图" style="max-width: 100%; height: auto; border-radius: 8px;">
+            <div class="image-caption">图1：M²光束质量测量 - 透镜后多平面采样原理图</div>
+        </div>
+
+        <p>
+            如图1所示，激光束通过聚焦透镜后，在焦点前后多个位置进行采样测量。系统通过CCD探测器在不同z位置测量光束宽度w(z)，然后拟合光束传播方程，得到M²因子、束腰半径W₀、发散角θ和瑞利长度Z_R等参数。
+        </p>
+
+        <!-- 光传播时间质量测量系统图 -->
+        <div class="main-image">
+            <img src="ChatGPT Image 2025年8月18日 12_49_11.png" alt="光传播时间质量测量系统原理图" style="max-width: 100%; height: auto; border-radius: 8px;">
+            <div class="image-caption">图2：光传播时间质量测量系统原理图</div>
+        </div>
+
+        <p>
+            图2展示了系统的整体架构，包括激光源、分束器、干涉仪腔体、光电探测器和数据采集系统。激光束被分束器分为两路：一路作为参考光直接进入光电探测器，另一路进入包含测试质量的干涉仪腔体，通过测量光传播时间的变化来推断质量信息。
+        </p>
+
+        <h3>光学系统设计</h3>
+        <ul>
+            <li><strong>激光源：</strong>支持多种波长和功率的激光器</li>
+            <li><strong>聚焦透镜：</strong>高精度双凸透镜，实现光束聚焦</li>
+            <li><strong>分束器：</strong>将激光束分为测量光束和参考光束</li>
+            <li><strong>光电探测器：</strong>高灵敏度CCD探测器，实现光束强度分布测量</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>系统架构</h2>
+        <p>
+            本系统采用模块化设计，包含光学测量模块、机械控制模块、数据采集模块和数据分析模块，各模块协同工作，实现激光束质量的自动化测量。
+        </p>
+
+        <h3>核心模块</h3>
+        <div class="tech-grid">
+            <div class="tech-item">
+                <h5>🔬 光学测量模块</h5>
+                <p>激光束聚焦、分束和强度分布测量</p>
+            </div>
+            <div class="tech-item">
+                <h5>⚙️ 机械控制模块</h5>
+                <p>探测器平移台控制，实现多平面采样</p>
+            </div>
+            <div class="tech-item">
+                <h5>📊 数据采集模块</h5>
+                <p>CCD图像采集和信号处理</p>
+            </div>
+            <div class="tech-item">
+                <h5>🧮 数据分析模块</h5>
+                <p>光束传播拟合和M²因子计算</p>
+            </div>
+        </div>
+
+        <h3>测量流程</h3>
+        <ol>
+            <li><strong>光束聚焦：</strong>激光束通过聚焦透镜，在焦点处形成最小束腰</li>
+            <li><strong>多平面采样：</strong>在聚焦透镜前后多个位置测量光束宽度</li>
+            <li><strong>数据采集：</strong>CCD探测器采集各采样平面的光束强度分布</li>
+            <li><strong>束宽计算：</strong>基于ISO 11146标准计算各位置的光束宽度</li>
+            <li><strong>参数拟合：</strong>拟合光束传播方程，计算M²因子等参数</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>技术特点</h2>
+        <div class="tech-features">
+            <div class="feature-card">
+                <h3>🎯 高精度测量</h3>
+                <ul>
+                    <li><strong>光学精度：</strong>采用高精度光学元件，确保测量精度优于±2%</li>
+                    <li><strong>机械精度：</strong>精密平移台控制，定位精度达到微米级</li>
+                    <li><strong>数据处理：</strong>先进的拟合算法，提高参数计算精度</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>🤖 自动化程度高</h3>
+                <ul>
+                    <li><strong>自动测量：</strong>支持一键式自动测量，减少人工操作</li>
+                    <li><strong>智能控制：</strong>自动调节曝光时间和增益参数</li>
+                    <li><strong>结果输出：</strong>自动生成测量报告和数据分析图表</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>📋 标准兼容性</h3>
+                <ul>
+                    <li><strong>ISO 11146标准：</strong>完全符合国际激光束测量标准</li>
+                    <li><strong>可追溯性：</strong>测量结果可溯源到国家计量标准</li>
+                    <li><strong>认证支持：</strong>支持激光产品认证和质量评估</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>应用场景</h2>
+        <h3>激光器研发与生产</h3>
+        <p>为激光器制造商提供产品质量检测工具，确保出厂激光器满足性能指标要求。</p>
+
+        <h3>激光应用系统集成</h3>
+        <p>支持激光切割、焊接、打标等工业应用系统的性能评估和优化。</p>
+
+        <h3>科研与教育</h3>
+        <p>为激光物理研究、光学工程教育提供专业的测量设备和实验平台。</p>
+
+        <h3>质量检测与认证</h3>
+        <p>支持第三方检测机构进行激光产品质量检测和认证服务。</p>
+    </div>
+
+    <div class="section">
+        <h2>系统性能指标</h2>
+        <div class="highlight-box">
+            <h4>测量精度</h4>
+            <p>M²因子测量精度：±2%，束腰半径测量精度：±1%，发散角测量精度：±1%</p>
+        </div>
+
+        <h3>技术参数</h3>
+        <div class="performance-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>参数</th>
+                        <th>指标值</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>波长范围</strong></td>
+                        <td>400nm - 2000nm</td>
+                        <td>覆盖可见光到近红外</td>
+                    </tr>
+                    <tr>
+                        <td><strong>功率范围</strong></td>
+                        <td>1mW - 100W</td>
+                        <td>支持低功率到高功率激光器</td>
+                    </tr>
+                    <tr>
+                        <td><strong>测量时间</strong></td>
+                        <td>< 30秒</td>
+                        <td>单次完整测量周期</td>
+                    </tr>
+                    <tr>
+                        <td><strong>采样平面数</strong></td>
+                        <td>≥10个</td>
+                        <td>确保测量精度和可靠性</td>
+                    </tr>
+                    <tr>
+                        <td><strong>工作环境</strong></td>
+                        <td>20±5℃, 45-75%</td>
+                        <td>标准实验室环境要求</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>预期成果</h2>
+        <p>
+            项目完成后将形成一套完整的M²激光测量系统，包括硬件设备、控制软件、技术文档和测试报告。系统将在多个激光器制造商和科研机构进行验证测试，评估其在实际应用中的性能和可靠性。
+        </p>
+        <p>
+            通过本项目的实施，预期能够显著提升激光束质量测量的技术水平，为激光产业的发展提供可靠的质量保障工具，同时推动我国在激光测量技术领域的技术进步和标准化建设。
+        </p>
+    </div>
+
+    <div class="official-version">
+        <a href="https://github.com/yourusername/m2-beam-quality-analysis" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 4.624-5.479 4.862.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+            GitHub
+        </a>
+        <a href="README.md" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+            </svg>
+            技术文档
+        </a>
+    </div>
+
+    <div class="navigation">
+        <a href="../projects.html" class="nav-box">
+            <div class="nav-label">返回项目列表</div>
+            <div class="nav-title">查看所有项目</div>
+            <div class="nav-arrow">←</div>
+        </a>
+        <a href="../pet-reconstruction/project-detail.html" class="nav-box">
+            <div class="nav-label">相关项目</div>
+            <div class="nav-title">PET重建算法系统</div>
+            <div class="nav-arrow">→</div>
+        </a>
+    </div>
+
+    <div class="back-to-top">
+        <a href="#top">↑ 返回顶部</a>
+    </div>
+</body>
+</html> 

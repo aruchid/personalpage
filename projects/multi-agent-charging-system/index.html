@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Agent Charging System - 项目详情</title>
+    <link rel="stylesheet" href="../../css/project-detail.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* 采用与 xray-detection 相同的简洁详情页样式 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #fff;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .metadata {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: #2c2c2c;
+        }
+
+        .abstract-section, .tldr-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .abstract-section h2, .tldr-section h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2c2c2c;
+        }
+
+        .abstract-section p, .tldr-section p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .abstract-section p:last-child, .tldr-section p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 系统架构图样式，与 xray 页面一致 */
+        .framework-diagram {
+            margin: 4rem 0 2rem 0;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+        }
+
+        .framework-diagram h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #2c2c2c;
+            text-align: center;
+        }
+
+        .diagram-container {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .framework-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 1px solid #e0e0e0;
+        }
+
+        .diagram-caption {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .diagram-caption strong {
+            color: #333;
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 4rem;
+        }
+
+        .nav-box {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .nav-box:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-arrow {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top {
+            text-align: center;
+            margin: 4rem 0 2rem 0;
+        }
+
+        .back-to-top a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-to-top a:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .project-title { font-size: 2rem; }
+            .navigation { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回链接 -->
+    <a href="../projects.html" class="back-link">
+        ← Back to projects
+    </a>
+
+    <!-- 元信息，与 xray 页面对齐 -->
+    <div class="metadata">
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+            <span>DEC 28, 2024</span>
+        </div>
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span>~4 MIN READ</span>
+        </div>
+    </div>
+
+    <!-- 标题 -->
+    <h1 class="project-title">Multi-Agent Charging System</h1>
+
+    <!-- 系统架构图（用项目图片替代） -->
+    <div class="framework-diagram">
+        <h2>System Architecture Diagram</h2>
+        <div class="diagram-container">
+            <img src="L4o5z5oXPNLnK5GCKdgXNhvxDPHpkr.png" alt="Multi-Agent Charging System 架构图" class="framework-image">
+        </div>
+        <div class="diagram-caption">
+            <p><strong>Figure 1:</strong> Multi-Agent Reinforcement Learning (MARL) based charging station location optimization system. The workflow includes satellite image analysis, candidate site generation, MARL-based ranking/selection, and hybrid optimization via GA + Integer Programming.</p>
+        </div>
+    </div>
+
+    <!-- 摘要（与 xray 的 Abstract 结构一致） -->
+    <div class="abstract-section">
+        <h2>Abstract:</h2>
+        <p>本项目提出了一种基于深度学习的智能充电站选址优化系统。系统结合卷积神经网络对卫星图像进行区域识别，与多智能体强化学习（MARL）对候选站点进行交互式评分和排序，并在覆盖、距离、成本与环境影响等多目标下进行综合优化，最终通过遗传算法与整数规划获得可行最优解。</p>
+        <p>This research presents a MARL-based charging station location optimization system integrating CNN-based satellite image analysis, multi-objective optimization (distance, coverage, cost, environmental impact), and hybrid search (genetic algorithms and integer programming) to provide data-driven planning insights.</p>
+    </div>
+
+    <!-- TLDR -->
+    <div class="tldr-section">
+        <h2>TLDR:</h2>
+        <p>利用 CNN + MARL + GA/IP 的混合框架，对候选站点进行自动评分、排序与优化，兼顾覆盖、距离、成本与环境约束，生成高质量充电站选址方案。</p>
+    </div>
+
+    <!-- 导航（复用 xray 样式，但链接保持站内逻辑） -->
+    <div class="navigation">
+        <a href="../projects.html" class="nav-box">
+            <div class="nav-label">BACK</div>
+            <div class="nav-title">All Projects</div>
+            <div class="nav-arrow">←</div>
+        </a>
+        <a href="../index.html" class="nav-box">
+            <div class="nav-label">HOME</div>
+            <div class="nav-title">Personal Homepage</div>
+            <div class="nav-arrow">→</div>
+        </a>
+    </div>
+
+    <!-- 返回顶部 -->
+    <div class="back-to-top">
+        <a href="#">↑ Back to Top</a>
+    </div>
+</body>
+</html> 

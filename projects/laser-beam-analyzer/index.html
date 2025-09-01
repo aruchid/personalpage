@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>激光光束质量分析仪实现方案 - aruchidzong</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #fff;
+        }
+
+        /* 返回链接样式 */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        /* 元信息样式 */
+        .metadata {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        /* 项目标题和作者 */
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: #2c2c2c;
+        }
+
+        .project-authors {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        /* 系统架构图展示区域 */
+        .framework-diagram {
+            margin: 4rem 0 2rem 0;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+        }
+
+        .framework-diagram h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #2c2c2c;
+            text-align: center;
+        }
+
+        .diagram-container {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .framework-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 1px solid #e0e0e0;
+        }
+
+        .diagram-caption {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .diagram-caption strong {
+            color: #333;
+        }
+
+        /* 技术特点部分 */
+        .features-section {
+            margin: 3rem 0;
+        }
+
+        .features-section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #2c2c2c;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .feature-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: #2c2c2c;
+        }
+
+        .feature-card p {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* 性能指标表格 */
+        .performance-section {
+            margin: 3rem 0;
+        }
+
+        .performance-section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #2c2c2c;
+        }
+
+        .performance-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .performance-table th,
+        .performance-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .performance-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c2c2c;
+        }
+
+        .performance-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* 应用场景部分 */
+        .applications-section {
+            margin: 3rem 0;
+        }
+
+        .applications-section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #2c2c2c;
+        }
+
+        .applications-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .applications-list li {
+            background: #f8f9fa;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 6px;
+            border-left: 4px solid #007bff;
+            font-size: 1rem;
+            color: #444;
+        }
+
+        /* 项目链接按钮 */
+        .official-version {
+            margin: 3rem 0;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .official-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #333;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid #e0e0e0;
+            white-space: nowrap;
+        }
+
+        .official-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .official-btn .btn-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        /* TLDR部分 */
+        .tldr-section {
+            margin: 3rem 0;
+        }
+
+        .tldr-section h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2c2c2c;
+        }
+
+        .tldr-section p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .tldr-section p:last-child {
+            margin-bottom: 0;
+        }
+
+        .diagram-caption strong {
+            color: #333;
+        }
+
+        /* 导航部分 */
+        .navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 4rem;
+        }
+
+        .nav-box {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .nav-box:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-arrow {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        /* 返回顶部 */
+        .back-to-top {
+            text-align: center;
+            margin: 4rem 0 2rem 0;
+        }
+
+        .back-to-top a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-to-top a:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .project-title {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .app-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .navigation {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回链接 -->
+    <a href="../projects.html" class="back-link">
+        ← Back to projects
+    </a>
+
+    <!-- 项目元信息 -->
+    <div class="metadata">
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+            <span>DEC 28, 2024</span>
+        </div>
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span>8 MIN READ</span>
+        </div>
+    </div>
+
+    <!-- 项目标题 -->
+            <h1 class="project-title">激光光束质量分析仪实现方案</h1>
+
+    <!-- 项目作者 -->
+            <div class="project-authors">
+                Authors: aruchidzong
+            </div>
+
+        <!-- 系统架构图展示区域 -->
+        <div class="framework-diagram">
+        <h2>系统架构图</h2>
+            <div class="diagram-container">
+                <img src="btvQbs74qmCkWA4pycA3HnOfDYPAuP.png" alt="激光光束质量分析仪系统架构图" style="max-width: 100%; height: auto; border-radius: 8px;">
+            </div>
+            <div class="diagram-caption">
+            <p><strong>图 1:</strong> 激光光束质量分析仪系统架构图，展示了从激光源到数据采集、处理、分析的完整流程，包括光束整形、功率监测、光束质量评估等核心模块。</p>
+            </div>
+        </div>
+
+    <!-- 技术特点部分 -->
+    <div class="features-section">
+        <h2>技术特点</h2>
+            <div class="features-grid">
+            <div class="feature-card">
+                <h3>高精度测量</h3>
+                <p>采用先进的光电探测技术，实现激光功率、能量、脉冲宽度等参数的高精度测量，测量精度达到±1%。</p>
+                </div>
+            <div class="feature-card">
+                <h3>实时监测</h3>
+                <p>具备实时数据采集和处理能力，可连续监测激光光束质量变化，及时发现异常情况。</p>
+                </div>
+            <div class="feature-card">
+                <h3>多参数分析</h3>
+                <p>支持激光功率、能量、脉冲宽度、重复频率、光束质量因子M²等多个参数的同时测量和分析。</p>
+                </div>
+            <div class="feature-card">
+                <h3>智能诊断</h3>
+                <p>集成智能诊断算法，能够自动识别激光器工作状态，提供维护建议和故障预警。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Abstract部分 -->
+        <div class="abstract-section">
+            <h2>Abstract:</h2>
+            <p>本项目提出了一套基于单相机的激光光束质量分析仪实现方案，旨在通过图像处理方法测量和分析激光光束的关键质量参数，包括M²因子、光束直径、光束轮廓、椭圆度和指向稳定性等。</p>
+
+            <p>系统采用高分辨率CCD/CMOS相机作为核心探测器，配合精密光学组件和智能图像处理算法，在宽波长范围（400nm-2000nm）和功率范围（1μW-10W）内实现准确可靠的光束特性表征。</p>
+
+            <p>硬件架构简洁高效，集成高分辨率相机、精密光学组件和数据处理单元，软件平台提供实时图像处理、自动化测量工作流程和全面的分析报告功能。</p>
+
+            <p>系统的主要技术优势包括：</p>
+            <ul>
+                <li>M²因子测量精度达到±5%，光束直径测量精度达到±2%</li>
+                <li>单相机设计，结构简单，操作便捷，成本效益高</li>
+                <li>适用于激光加工、激光通信、科研实验和质量控制等应用场景</li>
+                <li>为各种工业和科研环境中的激光光束表征和优化提供可靠解决方案</li>
+            </ul>
+        </div>
+
+        <!-- 性能指标表格 -->
+    <div class="performance-section">
+        <h2>性能指标</h2>
+        <table class="performance-table">
+                <thead>
+                    <tr>
+                    <th>参数</th>
+                    <th>指标值</th>
+                    <th>单位</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                    <td>功率测量范围</td>
+                    <td>1mW - 100W</td>
+                    <td>W</td>
+                    </tr>
+                    <tr>
+                    <td>功率测量精度</td>
+                    <td>±1%</td>
+                    <td>-</td>
+                    </tr>
+                    <tr>
+                    <td>能量测量范围</td>
+                    <td>1μJ - 1J</td>
+                    <td>J</td>
+                    </tr>
+                    <tr>
+                    <td>脉冲宽度测量</td>
+                    <td>10fs - 1ms</td>
+                    <td>s</td>
+                    </tr>
+                    <tr>
+                    <td>重复频率</td>
+                    <td>1Hz - 1MHz</td>
+                    <td>Hz</td>
+                    </tr>
+                    <tr>
+                    <td>响应时间</td>
+                    <td>&lt;1ms</td>
+                    <td>ms</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    <!-- 应用场景部分 -->
+    <div class="applications-section">
+            <h2>应用场景</h2>
+        <ul class="applications-list">
+            <li>激光器研发和生产过程中的质量检测</li>
+            <li>激光加工设备的性能评估和校准</li>
+            <li>科研院所激光实验的参数测量</li>
+            <li>激光医疗设备的性能验证</li>
+            <li>激光通信系统的功率监测</li>
+            <li>激光雷达系统的性能测试</li>
+        </ul>
+        </div>
+
+        <!-- 项目链接按钮 -->
+        <div class="official-version">
+            <a href="https://github.com/yourusername/laser-beam-analyzer" class="official-btn">
+                <i class="fab fa-github"></i>
+                GitHub
+            </a>
+            <a href="https://gitee.com/yourusername/laser-beam-analyzer" class="official-btn">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M11.984 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.016 0zm6.09 5.333c.328 0 .593.266.593.593v1.482a.594.594 0 0 1-.593.593H9.777c-.982 0-1.778.796-1.778 1.778v5.63c0 .982.796 1.778 1.778 1.778h8.296c.982 0 1.778-.796 1.778-1.778V9.778c0-.982-.796-1.778-1.778-1.778H9.777c-.328 0-.593-.266-.593-.593V7.704c0-.328.266-.593.593-.593h8.296z"/>
+                </svg>
+                Gitee
+            </a>
+            <a href="abstract.md" class="official-btn">
+                <i class="fas fa-download"></i>
+                下载项目摘要
+            </a>
+        </div>
+
+        <!-- TLDR部分 -->
+        <div class="tldr-section">
+            <h2>TLDR:</h2>
+        <p>高精度激光光束质量分析仪系统，采用先进的光电探测技术和智能诊断算法，实现激光功率、能量、脉冲宽度等多参数的同时测量。系统具备实时监测能力，测量精度达到±1%，响应时间小于1ms，广泛应用于激光器研发、激光加工、科研实验、医疗设备等领域。</p>
+        </div>
+
+        <!-- 前后导航 -->
+        <div class="navigation">
+        <a href="../TransReconstruct-SegTransformer-Neutrino-Event/index.html" class="nav-box">
+                <div class="nav-label">PREV</div>
+            <div class="nav-title">TransReconstruct: SegTransformer-based Neutrino Event Reconstruction</div>
+                <div class="nav-arrow">←</div>
+            </a>
+            <a href="#" class="nav-box">
+                <div class="nav-label">NEXT</div>
+            <div class="nav-title">Computer Vision Applications</div>
+                <div class="nav-arrow">→</div>
+            </a>
+        </div>
+
+        <!-- 返回顶部 -->
+        <div class="back-to-top">
+            <a href="#">
+                ↑ Back to Top
+            </a>
+    </div>
+</body>
+</html> 

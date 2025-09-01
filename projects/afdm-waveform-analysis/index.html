@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIMO-AFDM-ISAC系统：双色散信道下的先进波形设计 - 基于啁啾调制的集成感知通信系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .metadata {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: #2c2c2c;
+        }
+
+        .project-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .project-authors {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .main-image {
+            text-align: center;
+            margin: 2.5rem 0;
+            background: #fafafa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .main-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .main-image img:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-caption {
+            text-align: center;
+            color: #555;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            font-weight: 500;
+            background: #f0f0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2c2c2c;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .section h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.8rem 0;
+            color: #333;
+        }
+
+        .section p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .section ul, .section ol {
+            margin: 1rem 0 1rem 2rem;
+            color: #444;
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .highlight-box h4 {
+            color: #007bff;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .tech-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #007bff;
+        }
+
+        .feature-card h3 {
+            color: #007bff;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+
+        .feature-card ul {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+
+        .feature-card li {
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
+            color: #495057;
+        }
+
+        .performance-table {
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .performance-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .performance-table th {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .performance-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            color: #495057;
+        }
+
+        .performance-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .performance-table tr:hover {
+            background: #e3f2fd;
+        }
+
+        .performance-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .math-formula {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Times New Roman', serif;
+            text-align: center;
+        }
+
+        .math-formula h4 {
+            color: #007bff;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .math-formula p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #495057;
+            margin: 0;
+        }
+
+        .official-version {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .official-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #007bff;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid #007bff;
+            white-space: nowrap;
+        }
+
+        .official-btn:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        }
+
+        .official-btn.secondary {
+            background: #f8f9fa;
+            color: #333;
+            border-color: #dee2e6;
+        }
+
+        .official-btn.secondary:hover {
+            background: #e9ecef;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 4rem;
+        }
+
+        .nav-box {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .nav-box:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-arrow {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top {
+            text-align: center;
+            margin: 4rem 0 2rem 0;
+        }
+
+        .back-to-top a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-to-top a:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .timeline {
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #007bff;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 60px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            background: #007bff;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 3px #007bff;
+        }
+
+        .timeline-date {
+            font-weight: 600;
+            color: #007bff;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-content {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid #007bff;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .project-title {
+                font-size: 2rem;
+            }
+
+            .navigation {
+                grid-template-columns: 1fr;
+            }
+
+            .official-version {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回链接 -->
+    <a href="../projects.html" class="back-link">
+        ← 返回项目列表
+    </a>
+
+    <!-- 项目元信息 -->
+    <div class="metadata">
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+            <span>JAN 15, 2024</span>
+        </div>
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span>10 MIN READ</span>
+        </div>
+    </div>
+
+    <header class="header">
+        <h1 class="project-title">MIMO-AFDM-ISAC系统</h1>
+        <p class="project-subtitle">双色散信道下的先进波形设计 - 基于啁啾调制的集成感知通信系统</p>
+        <div class="project-authors">
+            Author: aruchidzong
+        </div>
+    </header>
+
+    <div class="section">
+        <h2>项目概述</h2>
+        <p>
+            本项目实现了多输入多输出仿射频分复用集成感知与通信（MIMO-AFDM-ISAC）系统，专门针对双色散信道环境进行深度优化。相比传统OFDM系统，本AFDM实现在高多普勒频移和时延扩展共存的极端双色散信道中展现出显著的性能优势。
+        </p>
+        <p>
+            系统采用基于啁啾的AFDM调制技术，通过离散仿射傅里叶变换（DAFT）处理，在高多普勒条件下维持信号完整性。集成感知与通信能力提供3D联合估计（角度、距离、速度），实现亚度级角度分辨率、厘米级距离分辨率和高精度速度估计。
+        </p>
+
+        <div class="highlight-box">
+            <h4>🎯 核心价值</h4>
+            <p>相比OFDM在双色散信道下实现10-15 dB SNR性能增益，在高速移动场景（500 km/h）下BER保持在10^-3量级，为极端信道环境下的通信感知一体化应用提供了创新的技术解决方案。</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>系统架构图</h2>
+        <div class="main-image">
+            <img src="VzLJmBnFkDb1KURyC0CqpaQrwCDnpo.png" alt="MIMO-AFDM-ISAC系统架构图" class="main-image">
+            <div class="image-caption">
+                <strong>图1:</strong> MIMO-AFDM-ISAC系统完整架构，展示双色散信道下的先进波形设计和集成感知通信能力
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>双色散信道特性</h2>
+        <p>
+            系统设计考虑了以下信道特性，这些特性在高速移动和复杂多径环境中尤为重要：
+        </p>
+        <ul>
+            <li><strong>多普勒扩展</strong>: 最大500公里/小时移动速度，对应2000 Hz多普勒频移</li>
+            <li><strong>时延扩展</strong>: 最大5μs多径传播，RMS时延扩展适应性强</li>
+            <li><strong>时频选择性衰落</strong>: 对正交性的影响及补偿策略</li>
+            <li><strong>信道相干时间</strong>: 可适应0.5ms短相干时间环境</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>技术特点</h2>
+        <div class="tech-features">
+            <div class="feature-card">
+                <h3>🌊 AFDM波形设计</h3>
+                <ul>
+                    <li>基于啁啾的AFDM调制</li>
+                    <li>参数(c1, c2)优化实现双色散信道鲁棒性</li>
+                    <li>离散仿射傅里叶变换(DAFT)处理</li>
+                    <li>高多普勒条件下维持信号完整性</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>📡 集成感知与通信</h3>
+                <ul>
+                    <li>单一AFDM波形同时实现目标检测和数据传输</li>
+                    <li>3D联合估计(角度、距离、速度)</li>
+                    <li>多目标分辨能力</li>
+                    <li>通信感知性能权衡优化</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>🔄 MIMO空域处理</h3>
+                <ul>
+                    <li>多种波束形成算法：常规、MVDR、零陷导向</li>
+                    <li>频域空间预编码</li>
+                    <li>ULA阵列几何优化(λ/2天线间距)</li>
+                    <li>自适应天线选择</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>核心算法实现</h2>
+        <h3>离散仿射傅里叶变换（DAFT）</h3>
+        <p>
+            DAFT变换的核心实现，通过啁啾参数优化实现双色散信道的鲁棒性：
+        </p>
+
+        <div class="math-formula">
+            <h4>DAFT变换矩阵构造</h4>
+            <p>F_DAFT = Λ_c2 × F × Λ_c1</p>
+            <p>其中：</p>
+            <p>Λ_c1 = diag(exp(-jπc1n²)) - 发射端啁啾矩阵</p>
+            <p>Λ_c2 = diag(exp(-jπc2n²)) - 接收端啁啾矩阵</p>
+            <p>F = DFT矩阵 - 标准DFT矩阵</p>
+        </div>
+
+        <h3>啁啾参数优化理论</h3>
+        <p>
+            基于双色散信道的参数设计，通过理论分析确定最优啁啾参数：
+        </p>
+
+        <div class="math-formula">
+            <h4>理论最优啁啾参数</h4>
+            <p>c₁ = (2(α_max + k_v) + 1) / (2N_c)</p>
+            <p>c₂ = β × c₁</p>
+            <p>其中：</p>
+            <p>α_max = f_d,max × T_s - 最大归一化多普勒频移</p>
+            <p>k_v = floor(2α_max) + 1 - 多普勒间隔因子</p>
+            <p>β ∈ [0.5, 1.0] - 性能调节因子</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>性能指标</h2>
+        <h3>通信性能</h3>
+        <div class="performance-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>性能参数</th>
+                        <th>指标值</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>BER性能</strong></td>
+                        <td>10⁻⁴量级</td>
+                        <td>高速移动场景下(15 dB SNR)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>EVM指标</strong></td>
+                        <td>&lt;5%</td>
+                        <td>复杂多径环境下误差矢量幅度</td>
+                    </tr>
+                    <tr>
+                        <td><strong>频谱效率</strong></td>
+                        <td>6 bits/s/Hz</td>
+                        <td>采用高阶调制时实现</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SNR性能增益</strong></td>
+                        <td>10-15 dB</td>
+                        <td>相比OFDM在双色散信道下</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>感知性能</h3>
+        <div class="performance-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>感知参数</th>
+                        <th>指标值</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>角度分辨率</strong></td>
+                        <td>亚度级</td>
+                        <td>±60°视场内实现</td>
+                    </tr>
+                    <tr>
+                        <td><strong>距离精度</strong></td>
+                        <td>厘米级</td>
+                        <td>1000米探测范围内</td>
+                    </tr>
+                    <tr>
+                        <td><strong>速度估计</strong></td>
+                        <td>RMSE &lt;1 km/h</td>
+                        <td>500公里/小时高速目标</td>
+                    </tr>
+                    <tr>
+                        <td><strong>多目标处理</strong></td>
+                        <td>10+目标</td>
+                        <td>并行跟踪能力</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>鲁棒性指标</h3>
+        <div class="performance-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>鲁棒性参数</th>
+                        <th>指标值</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>多普勒容忍度</strong></td>
+                        <td>2000 Hz</td>
+                        <td>最大多普勒频移</td>
+                    </tr>
+                    <tr>
+                        <td><strong>时延扩展适应性</strong></td>
+                        <td>5 μs</td>
+                        <td>RMS时延扩展下保持性能</td>
+                    </tr>
+                    <tr>
+                        <td><strong>信道相干时间</strong></td>
+                        <td>0.5 ms</td>
+                        <td>短相干时间环境适应</td>
+                    </tr>
+                    <tr>
+                        <td><strong>移动速度支持</strong></td>
+                        <td>500 km/h</td>
+                        <td>高速移动场景下BER保持</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>应用场景</h2>
+        <h3>高速移动通信</h3>
+        <p>
+            适用于高铁、航空等高速移动场景，在500公里/小时移动速度下仍能保持稳定的通信质量和感知精度。
+        </p>
+
+        <h3>车联网与自动驾驶</h3>
+        <p>
+            为车联网提供高精度感知能力，实现车辆间通信与周围环境感知的一体化，支持自动驾驶的安全决策。
+        </p>
+
+        <h3>无人机通信</h3>
+        <p>
+            支持无人机在复杂环境下的通信与感知需求，实现高精度定位和环境感知，适用于物流、监控等应用。
+        </p>
+
+        <h3>军事通信</h3>
+        <p>
+            在复杂电磁环境和高速移动条件下，提供可靠的通信保障和高精度目标感知能力。
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>技术优势</h2>
+        <h3>相比OFDM的优势</h3>
+        <ul>
+            <li><strong>载波间干扰抑制</strong>: 通过啁啾调制有效抑制ICI，提高信号质量</li>
+            <li><strong>高移动场景鲁棒性</strong>: 在高速移动下保持符号定时同步</li>
+            <li><strong>双色散信道适应性</strong>: 专门针对多普勒和时延扩展优化</li>
+            <li><strong>性能增益显著</strong>: 实现10-15 dB SNR性能提升</li>
+        </ul>
+
+        <h3>集成感知通信优势</h3>
+        <ul>
+            <li><strong>硬件复用</strong>: 单一波形同时实现通信和感知功能</li>
+            <li><strong>性能协同</strong>: 通信和感知性能相互促进</li>
+            <li><strong>成本降低</strong>: 减少硬件投入和系统复杂度</li>
+            <li><strong>应用灵活</strong>: 支持多种应用场景需求</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>项目结构</h2>
+        <p>
+            项目采用模块化设计，包含完整的仿真框架和算法实现：
+        </p>
+        <ul>
+            <li><strong>MATLAB/</strong>: 主要源代码目录</li>
+            <li><strong>system_config.m</strong>: 系统配置参数</li>
+            <li><strong>simulation_config.m</strong>: 仿真参数设置</li>
+            <li><strong>data_generation/</strong>: 数据生成模块</li>
+            <li><strong>run_simulation_optimized.m</strong>: 主仿真入口</li>
+        </ul>
+
+        <h3>输出文件</h3>
+        <p>
+            系统生成丰富的性能分析数据和可视化结果：
+        </p>
+        <ul>
+            <li><strong>通信性能</strong>: BER、EVM、容量等指标</li>
+            <li><strong>感知性能</strong>: 角度、距离、速度估计精度</li>
+            <li><strong>波束形成</strong>: 多种算法的方向图对比</li>
+            <li><strong>综合分析</strong>: 通信感知权衡分析</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>开发进展</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-date">2024年1月</div>
+                <div class="timeline-content">
+                    <strong>系统设计</strong><br>
+                    架构设计、技术选型、核心算法设计
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">2024年2月</div>
+                <div class="timeline-content">
+                    <strong>核心开发</strong><br>
+                    AFDM调制实现、DAFT变换、信道建模
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">2024年3月</div>
+                <div class="timeline-content">
+                    <strong>功能集成</strong><br>
+                    MIMO处理、ISAC集成、性能优化
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">2024年4月</div>
+                <div class="timeline-content">
+                    <strong>测试验证</strong><br>
+                    性能测试、对比分析、文档完善
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 项目链接按钮 -->
+    <div class="official-version">
+        <a href="https://github.com/aruchidzong/afdm-waveform-analysis" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+            GitHub
+        </a>
+        <a href="README (1).md" class="official-btn secondary">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+            </svg>
+            项目文档
+        </a>
+        <a href="abstract.md" class="official-btn secondary">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+            </svg>
+            英文摘要
+        </a>
+    </div>
+
+    <!-- 导航 -->
+    <div class="navigation">
+        <a href="../projects.html" class="nav-box">
+            <div class="nav-label">← 返回</div>
+            <div class="nav-title">项目列表</div>
+            <div class="nav-arrow">←</div>
+        </a>
+        <a href="../projects.html" class="nav-box">
+            <div class="nav-label">下一个项目 →</div>
+            <div class="nav-title">TrainSphere分布式训练系统</div>
+            <div class="nav-arrow">→</div>
+        </a>
+    </div>
+
+    <!-- 返回顶部 -->
+    <div class="back-to-top">
+        <a href="#">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/>
+            </svg>
+            返回顶部
+        </a>
+    </div>
+</body>
+</html> 

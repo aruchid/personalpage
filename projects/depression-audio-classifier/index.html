@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>抑郁症检测系统 - 基于多模态深度学习的智能心理健康评估解决方案</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .metadata {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: #2c2c2c;
+        }
+
+        .project-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .project-authors {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .main-image {
+            text-align: center;
+            margin: 2.5rem 0;
+            background: #fafafa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .main-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .main-image img:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-caption {
+            text-align: center;
+            color: #555;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            font-weight: 500;
+            background: #f0f0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2c2c2c;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .section h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.8rem 0;
+            color: #333;
+        }
+
+        .section p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .section ul, .section ol {
+            margin: 1rem 0 1rem 2rem;
+            color: #444;
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .highlight-box h4 {
+            color: #007bff;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .tech-item {
+            background: #f8f8f8;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .tech-item h5 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .tech-item p {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0;
+        }
+
+        .tech-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #007bff;
+        }
+
+        .feature-card h3 {
+            color: #007bff;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+
+        .feature-card ul {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+
+        .feature-card li {
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
+            color: #495057;
+        }
+
+        .performance-table {
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .performance-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .performance-table th {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .performance-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            color: #495057;
+        }
+
+        .performance-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .performance-table tr:hover {
+            background: #e3f2fd;
+        }
+
+        .performance-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .official-version {
+            margin-bottom: 2.5rem;
+        }
+
+        .official-version {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .official-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #333;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid #e0e0e0;
+            white-space: nowrap;
+        }
+
+        .official-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .btn-icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 4rem;
+        }
+
+        .nav-box {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .nav-box:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-arrow {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top {
+            text-align: center;
+            margin: 4rem 0 2rem 0;
+        }
+
+        .back-to-top a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-to-top a:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #495057;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .project-title {
+                font-size: 2rem;
+            }
+
+            .navigation {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回链接 -->
+    <a href="../projects.html" class="back-link">
+        ← 返回项目列表
+    </a>
+
+    <!-- 项目元信息 -->
+    <div class="metadata">
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+            <span>DEC 28, 2024</span>
+        </div>
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span>8 MIN READ</span>
+        </div>
+    </div>
+
+    <header class="header">
+        <h1 class="project-title">抑郁症检测系统</h1>
+        <p class="project-subtitle">基于多模态深度学习的智能心理健康评估解决方案</p>
+        <div class="project-authors">
+            Author: 心理健康AI研究团队
+        </div>
+    </header>
+
+    <div class="section">
+        <h2>项目背景</h2>
+        <p>
+            抑郁症是一种常见的心理健康问题，影响着全球数亿人口的生活质量。传统的抑郁症诊断主要依赖医生的临床经验和主观判断，存在诊断标准不统一、早期识别困难、评估效率低下等问题。随着人工智能技术的发展，基于多模态数据的智能心理健康评估系统为抑郁症的早期识别和精准诊断提供了新的技术手段。
+        </p>
+        <p>
+            本项目实现了一个基于深度学习的抑郁症检测系统，通过分析语音和文本等多模态数据，能够客观、准确地评估个体的心理健康状态。系统采用先进的自然语言处理和语音分析技术，结合机器学习算法，为心理健康评估提供科学化的辅助工具。
+        </p>
+        <p>
+            通过本系统的应用，可以显著提高抑郁症诊断的准确性和效率，为心理健康服务的普及化和标准化提供技术支撑，同时为心理健康领域的科研和临床实践注入新的活力。
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>技术原理</h2>
+        <div class="highlight-box">
+            <h4>多模态深度学习原理</h4>
+            <p>系统基于BERT和Wav2Vec2模型，通过语音和文本特征融合，实现对抑郁症的精确检测和评估。</p>
+        </div>
+
+        <h3>核心算法</h3>
+        <p>
+            系统采用基于多模态深度学习的端到端检测方法，通过分析语音的声学特征和文本的语义特征，学习抑郁症在语音和语言表达中的特征模式。结合集成学习算法，融合多种模型的预测结果，提高检测精度和鲁棒性。
+        </p>
+
+        <!-- 系统架构图 -->
+        <div class="main-image">
+            <img src="EwWSLyuxd2vIL4FsCiUiTAxhg1VkA5.png" alt="抑郁症检测系统架构图" class="main-image">
+            <div class="image-caption">图1：抑郁症检测系统架构图 - 多模态深度学习框架</div>
+        </div>
+
+        <p>
+            如图1所示，系统包含数据预处理、特征提取、多模态融合、分类预测和结果输出五个主要模块。通过语音和文本数据的协同分析，实现对抑郁症状态的精确评估。
+        </p>
+
+        <h3>技术架构</h3>
+        <ul>
+            <li><strong>语音处理模型：</strong>基于Wav2Vec2的语音特征提取，支持多种音频格式</li>
+            <li><strong>文本分析模型：</strong>基于BERT的语义理解，深度分析语言表达特征</li>
+            <li><strong>多模态融合：</strong>集成学习算法融合语音和文本特征</li>
+            <li><strong>实时处理：</strong>支持实时音频和文本输入分析</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>系统架构</h2>
+        <p>
+            本系统采用模块化设计，包含数据预处理模块、特征提取模块、多模态融合模块、分类预测模块和结果输出模块，各模块协同工作，实现抑郁症的智能检测。
+        </p>
+
+        <h3>核心模块</h3>
+        <div class="tech-grid">
+            <div class="tech-item">
+                <h5>🎯 数据预处理模块</h5>
+                <p>音频预处理、文本清洗和特征标准化</p>
+            </div>
+            <div class="tech-item">
+                <h5>🔍 特征提取模块</h5>
+                <p>语音声学特征和文本语义特征提取</p>
+            </div>
+            <div class="tech-item">
+                <h5>🔄 多模态融合模块</h5>
+                <p>语音和文本特征的融合与集成</p>
+            </div>
+            <div class="tech-item">
+                <h5>📊 分类预测模块</h5>
+                <p>抑郁症状态分类和风险评估</p>
+            </div>
+        </div>
+
+        <h3>工作流程</h3>
+        <ol>
+            <li><strong>数据收集：</strong>收集语音和文本数据，进行预处理和标注</li>
+            <li><strong>特征提取：</strong>使用BERT和Wav2Vec2模型提取特征</li>
+            <li><strong>多模态融合：</strong>融合语音和文本特征，构建综合表示</li>
+            <li><strong>模型训练：</strong>训练集成学习模型，优化分类性能</li>
+            <li><strong>预测评估：</strong>输出抑郁症检测结果和置信度</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>技术特点</h2>
+        <div class="tech-features">
+            <div class="feature-card">
+                <h3>🚀 多模态分析</h3>
+                <ul>
+                    <li><strong>语音分析：</strong>基于Wav2Vec2的声学特征提取，支持多种音频格式</li>
+                    <li><strong>文本分析：</strong>基于BERT的语义理解，深度分析语言表达特征</li>
+                    <li><strong>特征融合：</strong>集成学习算法融合多模态特征，提升检测精度</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>🎯 高精度检测</h3>
+                <ul>
+                    <li><strong>检测精度：</strong>抑郁症检测准确率达到较高水平，支持多种评估指标</li>
+                    <li><strong>实时性能：</strong>支持实时音频和文本分析，响应速度快</li>
+                    <li><strong>鲁棒性：</strong>对噪声和变体具有良好的适应性，检测结果稳定可靠</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>💡 易用性设计</h3>
+                <ul>
+                    <li><strong>一键训练：</strong>支持一键式模型训练，简化操作流程</li>
+                    <li><strong>批量处理：</strong>支持批量音频和文本预测，提高工作效率</li>
+                    <li><strong>实时检测：</strong>支持实时语音输入分析，满足即时评估需求</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>应用场景</h2>
+        <h3>心理健康筛查</h3>
+        <p>为医疗机构和心理咨询机构提供抑郁症早期筛查工具，提高心理健康服务的覆盖面和效率，实现大规模人群的快速筛查。</p>
+
+        <h3>临床辅助诊断</h3>
+        <p>为精神科医生和心理咨询师提供辅助诊断工具，提高抑郁症诊断的准确性和客观性，减少误诊和漏诊。</p>
+
+        <h3>科研与开发</h3>
+        <p>为心理健康相关科研项目提供数据采集和分析工具，推动心理健康技术发展，支持新算法的研究和验证。</p>
+
+        <h3>远程医疗支持</h3>
+        <p>为远程心理健康服务提供技术支持，实现异地心理健康评估和监测，扩大心理健康服务的覆盖范围。</p>
+    </div>
+
+    <div class="section">
+        <h2>系统性能指标</h2>
+        <div class="highlight-box">
+            <h4>核心性能</h4>
+            <p>抑郁症检测准确率较高，支持实时音频和文本分析，多模态特征融合</p>
+        </div>
+
+        <h3>技术参数</h3>
+        <div class="performance-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>参数</th>
+                        <th>指标值</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>检测准确率</strong></td>
+                        <td>较高水平</td>
+                        <td>抑郁症检测准确率，支持多种评估指标</td>
+                    </tr>
+                    <tr>
+                        <td><strong>处理速度</strong></td>
+                        <td>实时处理</td>
+                        <td>支持实时音频和文本分析，响应速度快</td>
+                    </tr>
+                    <tr>
+                        <td><strong>支持格式</strong></td>
+                        <td>多种格式</td>
+                        <td>音频：WAV/MP3，文本：TXT/JSON</td>
+                    </tr>
+                    <tr>
+                        <td><strong>模型架构</strong></td>
+                        <td>多模态融合</td>
+                        <td>BERT+Wav2Vec2+集成学习</td>
+                    </tr>
+                    <tr>
+                        <td><strong>数据来源</strong></td>
+                        <td>EATD数据集</td>
+                        <td>中文语音和文本数据集</td>
+                    </tr>
+                    <tr>
+                        <td><strong>部署方式</strong></td>
+                        <td>云端/本地</td>
+                        <td>支持云端部署和本地部署</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>使用方法</h2>
+        <p>
+            系统提供了多种使用方式，满足不同场景的需求。用户可以通过简单的操作完成抑郁症检测任务，系统会自动处理音频和文本数据，输出检测结果和置信度。
+        </p>
+
+        <h3>支持功能</h3>
+        <ul>
+            <li><strong>单次预测：</strong>对单次音频和文本进行抑郁症检测，适合个人用户使用</li>
+            <li><strong>批量预测：</strong>对多个音频和文本文件进行批量处理，适合机构用户使用</li>
+            <li><strong>实时检测：</strong>通过麦克风进行实时语音分析，支持即时评估</li>
+            <li><strong>多模态融合：</strong>结合语音和文本特征进行综合分析，提升检测精度</li>
+        </ul>
+
+        <h3>操作流程</h3>
+        <ol>
+            <li><strong>数据输入：</strong>上传音频文件或输入文本内容</li>
+            <li><strong>自动处理：</strong>系统自动进行特征提取和分析</li>
+            <li><strong>结果输出：</strong>显示检测结果、置信度和详细分析</li>
+            <li><strong>结果导出：</strong>支持多种格式的结果导出</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>项目成果</h2>
+        <p>
+            项目成功实现了基于多模态深度学习的抑郁症检测系统，通过语音和文本数据的协同分析，显著提升了抑郁症检测的准确性和效率。系统在多个数据集上进行了验证，表现出良好的检测性能和鲁棒性。
+        </p>
+        <p>
+            构建了完整的抑郁症检测技术框架，包括数据预处理、特征提取、多模态融合、模型训练和预测评估等模块。该项目的成功实施，为心理健康AI技术的发展提供了新的技术路径，同时为后续相关研究积累了宝贵经验。
+        </p>
+        <p>
+            通过本项目的实施，预期能够显著提升抑郁症检测的技术水平，为心理健康服务提供可靠的技术支撑，同时推动我国在心理健康AI技术领域的技术进步和标准化建设。
+        </p>
+    </div>
+
+    <div class="official-version">
+        <a href="https://github.com/yourusername/depression-detection-system" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 4.624-5.479 4.862.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+            GitHub
+        </a>
+        <a href="README.md" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+            </svg>
+            技术文档
+        </a>
+    </div>
+
+    <div class="navigation">
+        <a href="../projects.html" class="nav-box">
+            <div class="nav-label">返回项目列表</div>
+            <div class="nav-title">查看所有项目</div>
+            <div class="nav-arrow">←</div>
+        </a>
+        <a href="../MADDPG/index.html" class="nav-box">
+            <div class="nav-label">相关项目</div>
+            <div class="nav-title">PER-MADDPG算法</div>
+            <div class="nav-arrow">→</div>
+        </a>
+    </div>
+
+    <div class="back-to-top">
+        <a href="#top">↑ 返回顶部</a>
+    </div>
+</body>
+</html>

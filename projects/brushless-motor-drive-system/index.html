@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多台无刷电机驱动控制系统 - 基于FreeRTOS的实时控制解决方案</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .metadata {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: #2c2c2c;
+        }
+
+        .project-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .project-authors {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .main-image {
+            text-align: center;
+            margin: 2.5rem 0;
+            background: #fafafa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .main-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .main-image img:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-caption {
+            text-align: center;
+            color: #555;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            font-weight: 500;
+            background: #f0f0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2c2c2c;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .section h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.8rem 0;
+            color: #333;
+        }
+
+        .section p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .section ul, .section ol {
+            margin: 1rem 0 1rem 2rem;
+            color: #444;
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .highlight-box h4 {
+            color: #007bff;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .tech-item {
+            background: #f8f8f8;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .tech-item h5 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .tech-item p {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0;
+        }
+
+        .tech-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #007bff;
+        }
+
+        .feature-card h3 {
+            color: #007bff;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+
+        .feature-card ul {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+
+        .feature-card li {
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
+            color: #495057;
+        }
+
+        .performance-table {
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .performance-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .performance-table th {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .performance-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            border-right: 1px solid #e9ecef;
+            color: #495057;
+        }
+
+        .performance-table th:last-child,
+        .performance-table td:last-child {
+            border-right: none;
+        }
+
+        .performance-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .performance-table tr:hover {
+            background: #e3f2fd;
+        }
+
+        .performance-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .official-version {
+            margin-bottom: 2.5rem;
+        }
+
+        .official-version {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .official-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #333;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid #e0e0e0;
+            white-space: nowrap;
+        }
+
+        .official-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .official-btn .btn-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 4rem;
+        }
+
+        .nav-box {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .nav-box:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-arrow {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top {
+            text-align: center;
+            margin: 4rem 0 2rem 0;
+        }
+
+        .back-to-top a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-to-top a:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .project-title {
+                font-size: 2rem;
+            }
+
+            .navigation {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回链接 -->
+    <a href="../projects.html" class="back-link">
+        ← Back to projects
+    </a>
+
+    <!-- 项目元信息 -->
+    <div class="metadata">
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+            <span>DEC 28, 2024</span>
+        </div>
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span>8 MIN READ</span>
+        </div>
+    </div>
+
+    <!-- 项目标题 -->
+    <div class="header">
+        <h1 class="project-title">多台无刷电机驱动控制系统</h1>
+        <div class="project-subtitle">基于FreeRTOS实时操作系统的多电机并发控制解决方案</div>
+        <div class="project-authors">Authors: aruchidzong</div>
+    </div>
+
+    <!-- 主图片 -->
+    <div class="main-image">
+        <img src="ChatGPT Image 2025年8月21日 01_43_22.png" alt="多台无刷电机驱动控制系统架构图" class="main-image">
+        <div class="image-caption">系统整体架构设计 - 基于FreeRTOS的多电机并发控制系统</div>
+    </div>
+
+    <!-- 项目概述 -->
+    <div class="section">
+        <h2>项目概述</h2>
+        <p>本项目设计了一套基于FreeRTOS实时操作系统的多台无刷电机驱动控制系统，能够同时驱动三台无刷电机，具备并发控制能力。系统采用混合控制策略，集成传统六步换相控制和先进FOC（磁场定向控制）技术，为不同电机应用场景提供最优控制解决方案。</p>
+
+        <p>硬件架构采用STM32F4系列微控制器，配合三相桥式功率驱动电路、霍尔传感器、编码器和其他传感器模块，以及CAN总线和RS485通信接口。软件架构基于FreeRTOS多线程设计，实现核心任务包括电机控制、通信处理、系统监控和人机交互，确保1ms控制周期和±0.1%速度控制精度。</p>
+
+        <div class="highlight-box">
+            <h4>🎯 核心目标</h4>
+            <p>实现三台无刷电机的并发控制，通过混合控制策略提供高精度、高效率的电机驱动解决方案，适用于工业自动化、机器人控制等高端应用场景。</p>
+        </div>
+    </div>
+
+    <!-- 技术特点 -->
+    <div class="section">
+        <h2>核心技术特点</h2>
+
+        <div class="tech-features">
+            <div class="feature-card">
+                <h3>⚡ 多电机并发控制</h3>
+                <ul>
+                    <li>同时驱动三台无刷电机</li>
+                    <li>高精度同步控制</li>
+                    <li>复杂多轴运动控制</li>
+                    <li>实时协调运动</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>🔄 混合控制策略</h3>
+                <ul>
+                    <li>六步换相控制（高速应用）</li>
+                    <li>FOC磁场定向控制（高精度）</li>
+                    <li>自动策略选择</li>
+                    <li>平滑模式切换</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>🖥️ 实时操作系统</h3>
+                <ul>
+                    <li>FreeRTOS多线程设计</li>
+                    <li>1ms控制周期</li>
+                    <li>实时响应能力</li>
+                    <li>任务优先级管理</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>🎯 高精度控制</h3>
+                <ul>
+                    <li>速度精度±0.1%</li>
+                    <li>位置精度±0.01°</li>
+                    <li>PID控制算法</li>
+                    <li>自适应控制</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 硬件架构 -->
+    <div class="section">
+        <h2>硬件架构设计</h2>
+
+        <div class="tech-grid">
+            <div class="tech-item">
+                <h5>🖥️ 主控制器</h5>
+                <p>STM32F4系列微控制器，168MHz主频，1MB Flash，192KB RAM，支持浮点运算单元</p>
+            </div>
+
+            <div class="tech-item">
+                <h5>⚡ 功率驱动</h5>
+                <p>三相桥式功率驱动电路，集成IGBT模块，支持400V工作电压，具备全面保护功能</p>
+            </div>
+
+            <div class="tech-item">
+                <h5>🔍 传感器系统</h5>
+                <p>霍尔传感器检测转子位置，光电编码器提供高精度位置反馈，温度传感器监控状态</p>
+            </div>
+
+            <div class="tech-item">
+                <h5>📡 通信接口</h5>
+                <p>CAN总线高速通信，RS485接口Modbus协议，以太网远程监控和配置</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 性能指标 -->
+    <div class="section">
+        <h2>关键性能指标</h2>
+
+        <div class="performance-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>性能参数</th>
+                        <th>指标值</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>控制周期</strong></td>
+                        <td>1ms</td>
+                        <td>FreeRTOS实时控制，确保系统响应性</td>
+                    </tr>
+                    <tr>
+                        <td><strong>速度精度</strong></td>
+                        <td>±0.1%</td>
+                        <td>高精度速度控制，满足精密工业应用</td>
+                    </tr>
+                    <tr>
+                        <td><strong>位置精度</strong></td>
+                        <td>±0.01°</td>
+                        <td>高精度位置控制，支持精密定位</td>
+                    </tr>
+                    <tr>
+                        <td><strong>并发控制</strong></td>
+                        <td>3台电机</td>
+                        <td>同时控制三台无刷电机</td>
+                    </tr>
+                    <tr>
+                        <td><strong>工作电压</strong></td>
+                        <td>400V</td>
+                        <td>支持高电压工业应用</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PWM频率</strong></td>
+                        <td>50kHz</td>
+                        <td>高频率PWM控制，减少噪声振动</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 应用场景 -->
+    <div class="section">
+        <h2>应用场景</h2>
+
+        <div class="tech-features">
+            <div class="feature-card">
+                <h3>🏭 工业自动化</h3>
+                <ul>
+                    <li>生产线自动化设备</li>
+                    <li>包装机械</li>
+                    <li>纺织机械</li>
+                    <li>印刷机械</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>🤖 机器人控制</h3>
+                <ul>
+                    <li>工业机器人</li>
+                    <li>服务机器人</li>
+                    <li>协作机器人</li>
+                    <li>多关节控制</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>🔬 精密仪器</h3>
+                <ul>
+                    <li>光学仪器</li>
+                    <li>测量设备</li>
+                    <li>精密加工设备</li>
+                    <li>高精度定位</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>📐 数控设备</h3>
+                <ul>
+                    <li>数控机床</li>
+                    <li>激光切割机</li>
+                    <li>3D打印机</li>
+                    <li>多轴同步控制</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 项目链接按钮 -->
+    <div class="official-version">
+        <a href="https://github.com/yourusername/brushless-motor-drive-system" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+            GitHub
+        </a>
+        <a href="https://gitee.com/yourusername/brushless-motor-drive-system" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.984 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.016 0zm6.09 5.333c.328 0 .593.266.593.593v1.482a.594.594 0 0 1-.593.593H9.777c-.982 0-1.778.796-1.778 1.778v5.63c0 .982.796 1.778 1.778 1.778h8.296c.982 0 1.778-.796 1.778-1.778V9.778c0-.982-.796-1.778-1.778-1.778H9.777c-.328 0-.593-.266-.593-.593V7.704c0-.328.266-.593.593-.593h8.296z"/>
+            </svg>
+            Gitee
+        </a>
+        <a href="多台无刷电机驱动系统设计方案.md" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM14 3v5h5M16 13H8M16 17H8M10 9H8"/>
+            </svg>
+            下载项目文档
+        </a>
+    </div>
+
+    <!-- 前后导航 -->
+    <div class="navigation">
+        <a href="../hyperspectral-seed-sorting-device/index.html" class="nav-box">
+            <div class="nav-label">PREV</div>
+            <div class="nav-title">高光谱智能分选系统</div>
+            <div class="nav-arrow">←</div>
+        </a>
+        <a href="#" class="nav-box">
+            <div class="nav-label">NEXT</div>
+            <div class="nav-title">Advanced AI Systems</div>
+            <div class="nav-arrow">→</div>
+        </a>
+    </div>
+
+    <!-- 返回顶部 -->
+    <div class="back-to-top">
+        <a href="#">
+            ↑ Back to Top
+        </a>
+    </div>
+</body>
+</html> 

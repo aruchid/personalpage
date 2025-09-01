@@ -1,0 +1,16 @@
+# X-ray Detection System Framework Diagram Generator Dependencies
+
+# 主要依赖
+Pillow>=9.0.0
+pathlib2>=2.3.7
+
+# SVG转PNG/JPG的依赖 (选择其中一个)
+cairosvg>=2.7.0
+
+# 备选方案
+svglib>=1.5.1
+reportlab>=3.6.0
+
+# 可选：用于更好的图像处理
+numpy>=1.21.0
+opencv-python>=4.5.0 

@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>路径规划VLM系统 - 智能路径规划与视觉语言模型集成解决方案</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .metadata {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: #2c2c2c;
+        }
+
+        .project-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .project-authors {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .main-image {
+            text-align: center;
+            margin: 2.5rem 0;
+            background: #fafafa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .main-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .main-image img:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-caption {
+            text-align: center;
+            color: #555;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            font-weight: 500;
+            background: #f0f0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2c2c2c;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .section h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.8rem 0;
+            color: #333;
+        }
+
+        .section p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .section ul, .section ol {
+            margin: 1rem 0 1rem 2rem;
+            color: #444;
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .highlight-box h4 {
+            color: #007bff;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .tech-item {
+            background: #f8f8f8;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .tech-item h5 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .tech-item p {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0;
+        }
+
+        .tech-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #007bff;
+        }
+
+        .feature-card h3 {
+            color: #007bff;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+
+        .feature-card ul {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+
+        .feature-card li {
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
+            color: #495057;
+        }
+
+        .performance-table {
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .performance-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .performance-table th {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .performance-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            color: #495057;
+        }
+
+        .performance-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .performance-table tr:hover {
+            background: #e3f2fd;
+        }
+
+        .performance-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .official-version {
+            margin-bottom: 2.5rem;
+        }
+
+        .official-version {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .official-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #333;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid #e0e0e0;
+            white-space: nowrap;
+        }
+
+        .official-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .btn-icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 4rem;
+        }
+
+        .nav-box {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .nav-box:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-arrow {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top {
+            text-align: center;
+            margin: 4rem 0 2rem 0;
+        }
+
+        .back-to-top a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-to-top a:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .project-title {
+                font-size: 2rem;
+            }
+
+            .navigation {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回链接 -->
+    <a href="../projects.html" class="back-link">
+        ← 返回项目列表
+    </a>
+
+    <!-- 项目元信息 -->
+    <div class="metadata">
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+            <span>JAN 15, 2025</span>
+        </div>
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span>8 MIN READ</span>
+        </div>
+    </div>
+
+    <header class="header">
+        <h1 class="project-title">路径规划VLM系统</h1>
+        <p class="project-subtitle">智能路径规划与视觉语言模型集成解决方案</p>
+        <div class="project-authors">
+            Author: Aruchid
+        </div>
+    </header>
+
+    <div class="section">
+        <h2>项目背景</h2>
+        <p>
+            随着人工智能技术的快速发展，视觉语言模型（Vision Language Model, VLM）在路径规划领域展现出巨大的潜力。传统的路径规划算法虽然在特定场景下表现良好，但在复杂环境、动态障碍物和多目标优化等方面仍存在局限性，特别是在安全性、平滑度、效率和转向合理性等关键指标上需要进一步提升。
+        </p>
+        <p>
+            本研究创新性地提出了"算法计算+VLM识别"的融合评估方法，将传统路径规划算法的数值计算能力与VLM的视觉智能识别能力有机结合，构建了一个更加全面、准确、智能的路径评估体系。这种融合方法不仅保留了算法计算的精确性，还增强了VLM的语义理解能力，实现了1+1>2的协同效果。
+        </p>
+        <p>
+            本项目开发了一套集成了ESDF-RRT、Hybrid A*、经典A*等多种算法的综合系统，通过8轮迭代优化、双图对比分析和自适应融合等创新方法，形成了"算法生成-智能评估-反馈优化"的闭环系统，为智能交通、机器人导航和工业自动化等领域提供先进的解决方案。
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>技术原理</h2>
+        <div class="highlight-box">
+            <h4>VLM集成路径规划原理</h4>
+            <p>系统通过视觉语言模型对路径图像进行智能分析，结合传统算法的数值计算结果，实现多维度、多层次的路径质量评估和优化。</p>
+        </div>
+
+        <h3>核心算法</h3>
+        <p>
+            系统集成了ESDF-RRT、Hybrid A*、经典A*等多种路径规划算法，每种算法都有其独特的优势和适用场景。ESDF-RRT算法通过集成欧几里得符号距离场信息显著提升RRT算法的性能，Hybrid A*算法专门为具有运动学约束的车辆设计，经典A*算法提供快速启发式搜索能力。通过算法管理器的统一调度和VLM的智能评估，系统能够根据具体环境和任务需求选择最优的算法组合。
+        </p>
+
+        <!-- 系统架构图 -->
+        <div class="main-image">
+            <img src="dfoTYM7rM5kdeRQG5PG1dVeRrhDVqc.png" alt="路径规划VLM系统架构图" style="max-width: 100%; height: auto; border-radius: 12px;">
+            <div class="image-caption">图1：路径规划VLM系统架构图 - 多层次集成与智能化工作流程</div>
+        </div>
+
+        <p>
+            如图1所示，系统采用多层次集成架构，从输入层开始，经过VLM集成、自适应融合、算法层处理，最终在评估层输出优化结果。整个流程形成了完整的闭环优化系统，确保路径规划的质量和效率。
+        </p>
+
+        <h3>VLM集成技术</h3>
+        <ul>
+            <li><strong>多模态输入：</strong>支持图像、文本和数值数据的综合处理，实现跨模态信息融合</li>
+            <li><strong>智能评估：</strong>基于AI视觉理解的路径质量分析，从安全性、平滑度、效率、转向合理性四个维度全面评估</li>
+            <li><strong>迭代优化：</strong>8轮智能优化确保路径质量，通过精细参数调整实现渐进式改进</li>
+            <li><strong>自适应融合：</strong>动态平衡传统算法和AI模型的结果，实现算法计算与VLM识别的有机结合</li>
+            <li><strong>双图对比：</strong>智能对比分析两条路径的优劣，提供详细的理由说明和优化建议</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>系统架构</h2>
+        <p>
+            本系统采用模块化设计，包含算法管理模块、VLM集成模块、可视化模块、仿真模块和评估模块，各模块协同工作，实现智能化的路径规划。
+        </p>
+
+        <h3>核心模块</h3>
+        <div class="tech-grid">
+            <div class="tech-item">
+                <h5>🧮 算法管理模块</h5>
+                <p>ESDF-RRT、Hybrid A*、经典A*等算法统一管理</p>
+            </div>
+            <div class="tech-item">
+                <h5>🤖 VLM集成模块</h5>
+                <p>视觉语言模型集成和智能路径评估</p>
+            </div>
+            <div class="tech-item">
+                <h5>📊 可视化模块</h5>
+                <p>路径可视化、对比分析和结果展示</p>
+            </div>
+            <div class="tech-item">
+                <h5>🎮 仿真模块</h5>
+                <p>Python仿真和路径验证</p>
+            </div>
+        </div>
+
+        <h3>工作流程</h3>
+        <ol>
+            <li><strong>环境感知：</strong>接收环境和障碍物信息，生成初始路径</li>
+            <li><strong>VLM评估：</strong>使用视觉语言模型从四个维度分析路径质量</li>
+            <li><strong>迭代优化：</strong>进行8轮智能优化，通过精细参数调整逐步改进路径</li>
+            <li><strong>自适应融合：</strong>动态平衡传统算法和AI模型的结果，实现最优融合</li>
+            <li><strong>双图对比：</strong>智能对比分析不同路径，提供详细评估和优化建议</li>
+            <li><strong>结果输出：</strong>生成优化路径和综合分析报告</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>技术特点</h2>
+        <div class="tech-features">
+            <div class="feature-card">
+                <h3>🎯 多算法集成</h3>
+                <ul>
+                    <li><strong>ESDF-RRT：</strong>基于欧几里得符号距离场的快速随机树算法，采样效率提升46.7%</li>
+                    <li><strong>Hybrid A*：</strong>适合车辆路径规划的混合A*算法，考虑运动学约束</li>
+                    <li><strong>经典A*：</strong>传统的最短路径算法，计算速度最快</li>
+                    <li><strong>分层规划：</strong>全局ESDF-RRT + 局部Hybrid A*协作机制</li>
+                    <li><strong>智能选择：</strong>根据环境自动选择最优算法组合</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>🤖 VLM智能优化</h3>
+                <ul>
+                    <li><strong>8轮迭代：</strong>智能路径改进和优化，总体评分提升17.6%</li>
+                    <li><strong>双图对比：</strong>智能评估两条路径的优劣，提供详细理由说明</li>
+                    <li><strong>自适应融合：</strong>动态平衡算法和VLM的权重，实现最优融合</li>
+                    <li><strong>多维度评估：</strong>安全性、平滑度、效率、转向合理性四个维度</li>
+                    <li><strong>精细调优：</strong>精确到小数点后两位的参数调整建议</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>📊 可视化分析</h3>
+                <ul>
+                    <li><strong>多维度展示：</strong>路径对比、性能分析、优化过程</li>
+                    <li><strong>交互式界面：</strong>支持用户交互和参数调整</li>
+                    <li><strong>报告生成：</strong>自动生成详细的分析报告</li>
+                    <li><strong>数据导出：</strong>支持多种格式的结果导出</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>应用场景</h2>
+        <h3>自动驾驶</h3>
+        <p>为自动驾驶车辆提供智能路径规划，确保安全、高效的行驶路径。系统能够处理复杂的城市交通环境，实时响应动态障碍物，保证行驶安全。</p>
+
+        <h3>机器人导航</h3>
+        <p>支持服务机器人、工业机器人的智能导航和路径规划。特别适用于USV等具有运动学约束的移动平台，生成的路径可直接执行。</p>
+
+        <h3>智能物流</h3>
+        <p>为物流配送、仓储管理提供优化的路径规划解决方案。通过多算法集成和智能优化，显著提升物流效率。</p>
+
+        <h3>无人机飞行</h3>
+        <p>支持无人机在复杂环境下的智能路径规划和避障。系统已在三维环境中验证，能够有效处理立体障碍物。</p>
+
+        <h3>海洋环境导航</h3>
+        <p>专门针对海洋环境的复杂性和动态性设计，支持USV在复杂海洋环境中的安全航行，包括岛屿、浅滩等静态障碍物的有效避让。</p>
+    </div>
+
+    <div class="section">
+        <h2>系统性能指标</h2>
+        <div class="highlight-box">
+            <h4>优化效果</h4>
+            <p>通过8轮迭代优化，总体评分提升17.6%，安全性提升21.3%，平滑度提升27.9%，转向合理性提升18.6%，效率提升3.7%</p>
+        </div>
+
+        <h3>技术参数</h3>
+        <div class="performance-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>参数</th>
+                        <th>指标值</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>支持算法</strong></td>
+                        <td>3种</td>
+                        <td>ESDF-RRT、Hybrid A*、经典A*</td>
+                    </tr>
+                    <tr>
+                        <td><strong>迭代轮数</strong></td>
+                        <td>8轮</td>
+                        <td>智能优化迭代次数</td>
+                    </tr>
+                    <tr>
+                        <td><strong>VLM模型</strong></td>
+                        <td>Qwen-VL、GPT-4V</td>
+                        <td>支持多种先进VLM模型</td>
+                    </tr>
+                    <tr>
+                        <td><strong>处理速度</strong></td>
+                        <td>< 5秒</td>
+                        <td>单次路径规划时间</td>
+                    </tr>
+                    <tr>
+                        <td><strong>采样效率提升</strong></td>
+                        <td>46.7%</td>
+                        <td>ESDF-RRT相比传统RRT的采样效率提升</td>
+                    </tr>
+                    <tr>
+                        <td><strong>路径安全性提升</strong></td>
+                        <td>75%</td>
+                        <td>相比传统算法的安全性提升</td>
+                    </tr>
+                    <tr>
+                        <td><strong>路径平滑度提升</strong></td>
+                        <td>40%</td>
+                        <td>相比传统算法的平滑度提升</td>
+                    </tr>
+                    <tr>
+                        <td><strong>系统鲁棒性</strong></td>
+                        <td>98%</td>
+                        <td>分层规划架构的成功率</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>预期成果</h2>
+        <p>
+            项目完成后将形成一套完整的路径规划VLM系统，包括算法库、VLM集成模块、可视化界面、仿真平台和技术文档。系统已在复杂海洋环境、动态障碍物场景和三维环境中进行了全面验证测试，证明了其在各种复杂环境下的优异性能和可靠性。
+        </p>
+        <p>
+            通过本项目的实施，成功实现了路径规划技术的重大突破：ESDF-RRT算法在采样效率、路径质量和计算效率方面均显著优于传统算法；VLM智能评估系统提供了多维度、可解释的路径质量评估；分层规划架构实现了全局最优性和局部可行性的统一。这些成果为自动驾驶、机器人导航、智能物流等领域提供了先进的技术支撑，同时推动了我国在智能路径规划技术领域的技术进步和产业化发展。
+        </p>
+    </div>
+
+    <div class="official-version">
+        <a href="https://github.com/yourusername/path-planning-vlm-system" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 4.624-5.479 4.862.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+            GitHub
+        </a>
+        <a href="README.md" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+            </svg>
+            技术文档
+        </a>
+    </div>
+
+    <div class="navigation">
+        <a href="../projects.html" class="nav-box">
+            <div class="nav-label">返回项目列表</div>
+            <div class="nav-title">查看所有项目</div>
+            <div class="nav-arrow">←</div>
+        </a>
+        <a href="../m2-beam-quality-analysis/project-detail.html" class="nav-box">
+            <div class="nav-label">相关项目</div>
+            <div class="nav-title">M²激光测量系统</div>
+            <div class="nav-arrow">→</div>
+        </a>
+    </div>
+
+    <div class="back-to-top">
+        <a href="#top">↑ 返回顶部</a>
+    </div>
+</body>
+</html>

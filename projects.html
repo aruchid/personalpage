@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宗悦 - 项目展示</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/projects.css">
+    <link rel="stylesheet" href="css/projects-featured.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="home.html">Aruchid Zong</a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="home.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="projects.html" class="nav-link active">Projects</a>
+                </li>
+                <li class="nav-item">
+                    <a href="posts.html" class="nav-link">Posts</a>
+                </li>
+                <li class="nav-item">
+                    <a href="cv.html" class="nav-link">CV</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="main-content">
+        <!-- 项目展示区域 -->
+        <section class="projects-section">
+            <div class="container">
+                <!-- 左侧过滤侧边栏 -->
+                <section class="featured-cases" aria-label="优秀案例展示">
+                    <div class="featured-header">
+                        <h2 class="featured-title">优秀案例展示</h2>
+                        <a class="featured-skip-link" href="#all-projects">跳过，查看全部项目 →</a>
+                    </div>
+                    <div class="featured-wrapper">
+                        <div class="featured-stage">
+                            <button class="featured-nav featured-prev" aria-label="上一页" type="button">‹</button>
+                            <button class="featured-nav featured-next" aria-label="下一页" type="button">›</button>
+                            <div class="featured-grid" role="region" aria-label="优秀案例" aria-live="polite">
+                        <a href="projects/m2-beam-quality-analysis/index.html" class="featured-card" aria-label="M2 Beam Quality Analysis 优秀案例">
+                            <div class="featured-thumb">
+                                <i class="fas fa-industry" style="font-size: 2rem; color: #64748b;"></i>
+                            </div>
+                            <div class="featured-info">
+                                <div class="featured-badge">Industrial AI</div>
+                                <h3 class="featured-name">M2 光束质量分析</h3>
+                                <p class="featured-desc">ISO11146计量、二矩法评估、实验/质检报告闭环。</p>
+                            </div>
+                        </a>
+                        <a href="projects/shelf-image-stitching-system/index.html" class="featured-card" aria-label="货架统计 · 货架全景拼接算法 优秀案例">
+                            <div class="featured-thumb">
+                                <i class="fas fa-eye" style="font-size: 2rem; color: #64748b;"></i>
+                            </div>
+                            <div class="featured-info">
+                                <div class="featured-badge">Computer Vision</div>
+                                <h3 class="featured-name">货架统计 · 货架全景拼接算法</h3>
+                                <p class="featured-desc">零售货架全景拼接+SKU统计，门店现场稳定实时。</p>
+                            </div>
+                        </a>
+                        <a href="projects/dental-segmentation/index.html" class="featured-card" aria-label="Dental Segmentation 优秀案例">
+                            <div class="featured-thumb">
+                                <i class="fas fa-tooth" style="font-size: 2rem; color: #64748b;"></i>
+                            </div>
+                            <div class="featured-info">
+                                <div class="featured-badge">Medical Imaging</div>
+                                <h3 class="featured-name">牙科影像分割</h3>
+                                <p class="featured-desc">临床导向，解剖先验+不确定性，CAD/CAM对接。</p>
+                            </div>
+                        </a>
+                        <a href="projects/xray-detection/index.html" class="featured-card" aria-label="Xray Detection 优秀案例">
+                            <div class="featured-thumb">
+                                <i class="fas fa-x-ray" style="font-size: 2rem; color: #64748b;"></i>
+                            </div>
+                            <div class="featured-info">
+                                <div class="featured-badge">Industrial AI</div>
+                                <h3 class="featured-name">工业X光检测</h3>
+                                <p class="featured-desc">OpenVINO端侧优化，精度+15%，速度+40%。</p>
+                            </div>
+                        </a>
+                        <a href="projects/hyperspectral-seed-sorting-device/index.html" class="featured-card" aria-label="Hyperspectral Seed Sorting Device 优秀案例">
+                            <div class="featured-thumb">
+                                <i class="fas fa-seedling" style="font-size: 2rem; color: #64748b;"></i>
+                            </div>
+                            <div class="featured-info">
+                                <div class="featured-badge">Hyperspectral</div>
+                                <h3 class="featured-name">高光谱种子分选</h3>
+                                <p class="featured-desc">软硬一体，反射率标定与实时分流，重视可解释性。</p>
+                            </div>
+                        </a>
+                        <a href="projects/rk3588-algorithm-deployment-platform/index.html" class="featured-card" aria-label="RK3588 Platform 优秀案例">
+                            <div class="featured-thumb">
+                                <i class="fas fa-microchip" style="font-size: 2rem; color: #64748b;"></i>
+                            </div>
+                            <div class="featured-info">
+                                <div class="featured-badge">Edge AI</div>
+                                <h3 class="featured-name">RK3588算法部署平台</h3>
+                                <p class="featured-desc">NPU/GPU加速、OTA与回滚、端云一体交付。</p>
+                            </div>
+                        </a>
+                        <a href="projects/stereo-vision-ranging/index.html" class="featured-card" aria-label="Stereo Vision Ranging 优秀案例">
+                            <div class="featured-thumb">
+                                <i class="fas fa-camera" style="font-size: 2rem; color: #64748b;"></i>
+                            </div>
+                            <div class="featured-info">
+                                <div class="featured-badge">Computer Vision</div>
+                                <h3 class="featured-name">DEFOM Stereo 测距</h3>
+                                <p class="featured-desc">亚像素视差，30fps，±2%深度精度。</p>
+                            </div>
+                        </a>
+                        <a href="projects/trainsphere/index.html" class="featured-card" aria-label="TrainSphere 优秀案例">
+                            <div class="featured-thumb">
+                                <i class="fas fa-brain" style="font-size: 2rem; color: #64748b;"></i>
+                            </div>
+                            <div class="featured-info">
+                                <div class="featured-badge">Distributed DL</div>
+                                <h3 class="featured-name">TrainSphere 训练平台</h3>
+                                <p class="featured-desc">多机协同与可观测性，训练效率提升3倍。</p>
+                            </div>
+                        </a>
+                        <a href="projects/vision-language-path-optimization/index.html" class="featured-card" aria-label="Vision Language Path Optimization 优秀案例">
+                            <div class="featured-thumb" ></div>
+                            <div class="featured-info">
+                                <div class="featured-badge">VLM / Planning</div>
+                                <h3 class="featured-name">视觉语言路径规划</h3>
+                                <p class="featured-desc">语义约束→代价地图，路径标注可解释。</p>
+                            </div>
+                        </a>
+                        <a href="projects/langchain-bmp-db-extraction/index.html" class="featured-card" aria-label="Langchain BMP DB Extraction 优秀案例">
+                            <div class="featured-thumb" ></div>
+                            <div class="featured-info">
+                                <div class="featured-badge">NLP / Data</div>
+                                <h3 class="featured-name">BMP-DB 文献提取</h3>
+                                <p class="featured-desc">多模态抽取+溯源，质量闸口驱动结构化知识库。</p>
+                            </div>
+                        </a>
+                        </div>
+                        </div>
+                        <div class="featured-progress" role="progressbar" aria-label="滚动进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                            <div class="featured-progress-bar"></div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 右侧项目列表 -->
+                <div class="projects-container">
+                    <div class="projects-toolbar">
+                        <h1 class="section-title">Projects</h1>
+                        <div class="filter-chips" role="group" aria-label="过滤项目">
+                            <label class="filter-chip"><input type="checkbox" checked><span>All Projects</span></label>
+                            <label class="filter-chip"><input type="checkbox"><span>Computer Vision</span></label>
+                            <label class="filter-chip"><input type="checkbox"><span>Deep Learning</span></label>
+                            <label class="filter-chip"><input type="checkbox"><span>Industrial AI</span></label>
+                            <label class="filter-chip"><input type="checkbox"><span>Medical Imaging</span></label>
+                            <label class="filter-chip"><input type="checkbox"><span>Embedded Systems</span></label>
+                            <label class="filter-chip"><input type="checkbox"><span>Algorithm Deployment</span></label>
+                            <label class="filter-chip"><input type="checkbox"><span>Training Platform</span></label>
+                            <label class="filter-chip"><input type="checkbox"><span>Signal Processing</span></label>
+                        </div>
+                    </div>
+                    <div class="projects-count">SHOWING 16 OF 16 PROJECTS</div>
+                    <div class="pagination" id="paginationTop"></div>
+                    
+                    <div id="all-projects" class="projects-grid">
+                        <a href="projects/m2-beam-quality-analysis/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">M2 Beam Quality Analysis</h3>
+                                <p class="project-description">ISO11146计量、二矩法评估、实验/质检报告闭环</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/langchain-bmp-db-extraction/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Langchain BMP DB Extraction</h3>
+                                <p class="project-description">多模态抽取+溯源，质量闸口驱动结构化知识库</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/imu-mujoco-motion-tracking/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">IMU Mujoco Motion Tracking</h3>
+                                <p class="project-description">基于IMU和Mujoco的机器人运动跟踪系统</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/game-theory-control-optimization/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Game Theory Control Optimization</h3>
+                                <p class="project-description">博弈论在控制优化中的应用研究</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/game-player-survival-analysis/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Game Player Survival Analysis</h3>
+                                <p class="project-description">游戏玩家生存分析系统</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/electromagnetic-radiation-detection/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Electromagnetic Radiation Detection</h3>
+                                <p class="project-description">电磁辐射检测与分析系统</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/dual-camera-real-time-stitching/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Dual Camera Real Time Stitching</h3>
+                                <p class="project-description">双摄像头实时图像拼接技术</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/dental-segmentation/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Dental Segmentation</h3>
+                                <p class="project-description">临床导向，解剖先验+不确定性，CAD/CAM对接</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/depression-audio-classifier/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Depression Audio Classifier</h3>
+                                <p class="project-description">基于音频的抑郁症分类器</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/deepfake-face-detection/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Deepfake Face Detection</h3>
+                                <p class="project-description">深度伪造人脸检测技术</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/box-palletizing-system/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Box Palletizing System</h3>
+                                <p class="project-description">智能箱体码垛系统</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/sam-road-segmentation/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">SAM Road Segmentation</h3>
+                                <p class="project-description">基于SAM的道路分割算法</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/TransReconstruct-SegTransformer-Neutrino-Event/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">SegTransformer Neutrino Event</h3>
+                                <p class="project-description">基于Transformer的中微子事件分割重建</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/parallel-computing-correlation-analysis/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Parallel Computing Correlation Analysis</h3>
+                                <p class="project-description">并行计算相关性分析系统</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/MADDPG/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">MADDPG</h3>
+                                <p class="project-description">多智能体深度确定性策略梯度算法</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/deep-learning-super-resolution/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Deep Learning Super Resolution</h3>
+                                <p class="project-description">深度学习超分辨率技术</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/vision-language-path-optimization/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Vision Language Path Optimization</h3>
+                                <p class="project-description">语义约束→代价地图，路径标注可解释</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/brushless-motor-drive-system/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Brushless Motor Drive System</h3>
+                                <p class="project-description">无刷电机驱动系统</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/rk3588-algorithm-deployment-platform/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">RK3588 Algorithm Deployment Platform</h3>
+                                <p class="project-description">NPU/GPU加速、OTA与回滚、端云一体交付</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/shelf-image-stitching-system/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Shelf Statistics · Shelf Panorama Stitching Algorithm</h3>
+                                <p class="project-description">Retail shelf panorama stitching + SKU statistics, stable real-time on-site in stores</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/acupuncture-point-location/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Acupuncture Point Location</h3>
+                                <p class="project-description">针灸穴位定位系统</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/xray-detection/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Xray Detection</h3>
+                                <p class="project-description">OpenVINO端侧优化，精度+15%，速度+40%</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/laser-line-scan-camera/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Laser Line Scan Camera</h3>
+                                <p class="project-description">激光线扫描相机系统</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/battery-management-system/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Battery Management System</h3>
+                                <p class="project-description">电池管理系统</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/hyperspectral-seed-sorting-device/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Hyperspectral Seed Sorting Device</h3>
+                                <p class="project-description">软硬一体，反射率标定与实时分流，重视可解释性</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/laser-beam-analyzer/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Laser Beam Analyzer</h3>
+                                <p class="project-description">激光光束分析仪</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/stereo-vision-ranging/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Stereo Vision Ranging</h3>
+                                <p class="project-description">亚像素视差，30fps，±2%深度精度</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/multi-agent-charging-system/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Multi Agent Charging System</h3>
+                                <p class="project-description">CNN + MARL + GA/IP混合框架，多目标充电站选址优化</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/madgwick-attitude-algorithm/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Madgwick Attitude Algorithm</h3>
+                                <p class="project-description">Madgwick姿态估计算法实现</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/pet-reconstruction/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">PET Reconstruction</h3>
+                                <p class="project-description">PET图像重建算法</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/afdm-waveform-analysis/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">AFDM Waveform Analysis</h3>
+                                <p class="project-description">AFDM波形分析系统</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/RTKinertion/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">RTKinertion</h3>
+                                <p class="project-description">实时运动捕捉系统</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/specim-hyperspectral-segmentation/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">SPECIM Hyperspectral Segmentation</h3>
+                                <p class="project-description">SPECIM高光谱图像分割</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/stereo-line-matching/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Stereo Line Matching</h3>
+                                <p class="project-description">立体视觉线特征匹配</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/trainsphere/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">TrainSphere</h3>
+                                <p class="project-description">多机协同与可观测性，训练效率提升3倍</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/negnn-model-improvement/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">NEGNn Model Improvement</h3>
+                                <p class="project-description">NEGNn模型改进研究</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                        <a href="projects/multi-modal-image-stitching/index.html" class="project-card project-link">
+                            <div class="project-info">
+                                <h3 class="project-title">Multi Modal Image Stitching</h3>
+                                <p class="project-description">多模态图像拼接技术</p>
+                            </div>
+                            <div class="project-arrow">></div>
+                        </a>
+                    </div>
+                    <div class="pagination" id="paginationBottom"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>ZongYue</h3>
+                <p>Copyright © ZongYue 2024 - Present. All Rights Reserved</p>
+                <p>Adapted from Astro Sphere.</p>
+                <p>Visit My 'Hidden' Space.</p>
+            </div>
+            <div class="footer-section">
+                <button class="back-to-top">Back to Top</button>
+                <div style="margin-top: 20px;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                        <div style="width: 8px; height: 8px; background: #28a745; border-radius: 50%;"></div>
+                        <span style="font-size: 0.8rem; color: #666;">All Is Well</span>
+                    </div>
+                    <div style="display: flex; gap: 16px;">
+                        <a href="mailto:aruchid@163.com" style="color: #666; text-decoration: none;">📧</a>
+                        <a href="https://github.com" style="color: #666; text-decoration: none;">🐙</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script src="js/projects-featured.js"></script>
+    <script src="js/projects-list.js"></script>
+</body>
+</html> 

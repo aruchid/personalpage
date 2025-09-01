@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RK3588算法快速部署平台 - Y Jason Young</title>
+    <link rel="stylesheet" href="../../css/project-detail.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* 简洁的项目详情页样式 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #fff;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .metadata {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: #333;
+        }
+
+        .project-authors {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .abstract-section, .tldr-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .abstract-section h2, .tldr-section h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .abstract-section p, .tldr-section p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .abstract-section p:last-child, .tldr-section p:last-child {
+            margin-bottom: 0;
+        }
+
+        .official-version {
+            margin-bottom: 2.5rem;
+        }
+
+        .official-version {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .official-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #333;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid #e0e0e0;
+            white-space: nowrap;
+        }
+
+        .official-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .btn-icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 4rem;
+        }
+
+        .nav-box {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .nav-box:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-arrow {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top {
+            text-align: center;
+            margin: 4rem 0 2rem 0;
+        }
+
+        .back-to-top a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-to-top a:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        /* 系统架构图展示区域样式 */
+        .framework-diagram {
+            margin: 4rem 0 2rem 0;
+            padding: 2rem;
+            background: #f8f8f8;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .framework-diagram h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #333;
+            text-align: center;
+        }
+
+        .diagram-container {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .framework-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 1px solid #e0e0e0;
+        }
+
+        .diagram-caption {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .diagram-caption strong {
+            color: #333;
+        }
+
+        /* 技术特点列表样式 */
+        .tech-features {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #f8f8f8;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .tech-features h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .tech-features ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
+        .tech-features li {
+            margin-bottom: 0.5rem;
+            color: #444;
+        }
+
+        /* 项目成果展示样式 */
+        .achievements {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #f8f8f8;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .achievements h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .achievements ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
+        .achievements li {
+            margin-bottom: 0.5rem;
+            color: #444;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .project-title {
+                font-size: 2rem;
+            }
+
+            .navigation {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回链接 -->
+    <a href="../projects.html" class="back-link">
+        ← Back to projects
+    </a>
+
+    <!-- 项目元信息 -->
+    <div class="metadata">
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+            <span>MAR 2024 - SEP 2024</span>
+        </div>
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span>6 MONTHS</span>
+        </div>
+    </div>
+
+    <!-- 项目标题 -->
+    <h1 class="project-title">RK3588算法快速部署平台</h1>
+
+    <!-- 项目作者 -->
+    <div class="project-authors">
+        Authors: Y Jason Young
+    </div>
+
+    <!-- 系统架构图展示区域 -->
+    <div class="framework-diagram">
+        <h2>Platform Architecture</h2>
+        <div class="diagram-container">
+            <img src="Ic5fnkDm4gwAJMRseRc5vJOHamArUk.png" alt="RK3588算法快速部署平台架构图" class="framework-image">
+        </div>
+        <div class="diagram-caption">
+            <p><strong>Figure 1:</strong> System architecture of our RK3588 algorithm rapid deployment platform. The platform supports multiple algorithm types including object detection, counting, adaptive detection bounding boxes, classification, and defect detection, deployed on RK series embedded platforms and Jetson platforms.</p>
+        </div>
+    </div>
+
+    <!-- Abstract部分 -->
+    <div class="abstract-section">
+        <h2>Abstract:</h2>
+        <p>本项目是一个基于嵌入式的算法通用平台，旨在将包括目标检测、计数、检测范围框自适应、分类、缺陷检测等算法部署在RK系列嵌入式平台上以及Jetson平台上。通过低成本化工控的方式降低了智能相机的使用门槛，为工业应用提供了经济高效的解决方案。</p>
+
+        <p>作为全栈设计师，我负责算法的重新设计和优化，以适应嵌入式设备的硬件限制。同时负责整体软硬件架构设计，并指导硬件工程师完成相关开发工作。项目采用跨部门团队协作模式，包括软件工程师、硬件工程师和质量保证专家，确保项目目标的实现。</p>
+
+        <p>平台的核心技术包括嵌入式算法优化（针对RK系列和Jetson平台的算法适配和性能优化）、多算法类型支持（目标检测、分类、缺陷检测等）、软硬件协同设计（算法与硬件的深度集成优化），以及低成本工业控制解决方案（降低智能相机使用门槛）。</p>
+
+        <p>系统支持RK系列嵌入式平台和NVIDIA Jetson平台，实现了算法的高效部署和实时推理，为工业检测、智能制造等领域提供了可靠的技术支撑。通过算法优化和平台适配，显著降低了客户的硬件成本，提高了系统的可靠性和稳定性。</p>
+    </div>
+
+    <!-- 技术特点 -->
+    <div class="tech-features">
+        <h3>主要技术特点：</h3>
+        <ul>
+            <li><strong>多平台支持</strong>: 支持RK系列嵌入式平台和NVIDIA Jetson平台</li>
+            <li><strong>多算法类型</strong>: 支持目标检测、计数、分类、缺陷检测等多种算法</li>
+            <li><strong>算法优化</strong>: 针对嵌入式设备的硬件限制进行算法重新设计和优化</li>
+            <li><strong>软硬件协同</strong>: 整体软硬件架构设计，算法与硬件深度集成</li>
+            <li><strong>低成本方案</strong>: 通过工控方式降低智能相机使用门槛</li>
+        </ul>
+    </div>
+
+    <!-- 项目成果 -->
+    <div class="achievements">
+        <h3>项目成果：</h3>
+        <ul>
+            <li><strong>算法移植成功</strong>: 成功将复杂的图像处理算法移植到嵌入式平台，显著降低了客户的硬件成本</li>
+            <li><strong>功能实现完整</strong>: 在嵌入式设备上实现了目标检测、区域定位、状态识别和缺陷检测等关键功能</li>
+            <li><strong>系统稳定性</strong>: 算法的高可靠性和系统的稳定性得到了客户的认可</li>
+            <li><strong>商业前景</strong>: 目前已有三个项目在积极接洽中，预计将进一步扩大公司在该市场的份额</li>
+        </ul>
+    </div>
+
+    <!-- 项目链接按钮 -->
+    <div class="official-version">
+        <a href="https://github.com/yourusername/rk3588-algorithm-deployment-platform" class="official-btn">
+            <i class="fab fa-github"></i>
+            GitHub
+        </a>
+        <a href="https://gitee.com/yourusername/rk3588-algorithm-deployment-platform" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.984 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.016 0zm6.09 5.333c.328 0 .593.266.593.593v1.482a.594.594 0 0 1-.593.593H9.777c-.982 0-1.778.796-1.778 1.778v5.63c0 .982.796 1.778 1.778 1.778h8.296c.982 0 1.778-.796 1.778-1.778V9.778c0-.982-.796-1.778-1.778-1.778H9.777c-.328 0-.593-.266-.593-.593V7.704c0-.328.266-.593.593-.593h8.296z"/>
+            </svg>
+            Gitee
+        </a>
+        <a href="abstruct.md" class="official-btn">
+            <i class="fas fa-download"></i>
+            下载项目摘要
+        </a>
+    </div>
+
+    <!-- TLDR部分 -->
+    <div class="tldr-section">
+        <h2>TLDR:</h2>
+        <p>我们开发了一个基于嵌入式的算法通用平台，支持将目标检测、分类、缺陷检测等多种算法部署在RK系列嵌入式平台和Jetson平台上。通过算法优化和软硬件协同设计，显著降低了智能相机的使用门槛，为客户提供了经济高效的工业检测解决方案。项目实现了算法的高效移植和系统稳定运行，得到了客户的认可，具有良好的商业前景。</p>
+    </div>
+
+    <!-- 前后导航 -->
+    <div class="navigation">
+        <a href="../langchain-bmp-db-extraction/index.html" class="nav-box">
+            <div class="nav-label">PREV</div>
+            <div class="nav-title">基于Langchain的BMP-DB文献提取软件</div>
+            <div class="nav-arrow">←</div>
+        </a>
+        <a href="../specim-hyperspectral-segmentation/index.html" class="nav-box">
+            <div class="nav-label">NEXT</div>
+            <div class="nav-title">Specim高光谱实时分割系统</div>
+            <div class="nav-arrow">→</div>
+        </a>
+    </div>
+
+    <!-- 返回顶部 -->
+    <div class="back-to-top">
+        <a href="#">
+            ↑ Back to Top
+        </a>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PER-MADDPG算法性能提升分析 - 多智能体强化学习项目</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .metadata {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: #2c2c2c;
+        }
+
+        .project-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .project-authors {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .main-image {
+            text-align: center;
+            margin: 2.5rem 0;
+            background: #fafafa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .main-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .main-image img:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-caption {
+            text-align: center;
+            color: #555;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            font-weight: 500;
+            background: #f0f0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2c2c2c;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .section h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.8rem 0;
+            color: #333;
+        }
+
+        .section p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .section ul, .section ol {
+            margin: 1rem 0 1rem 2rem;
+            color: #444;
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .highlight-box h4 {
+            color: #007bff;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .tech-item {
+            background: #f8f8f8;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .tech-item h5 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .tech-item p {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0;
+        }
+
+        .tech-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #007bff;
+        }
+
+        .feature-card h3 {
+            color: #007bff;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+
+        .feature-card ul {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+
+        .feature-card li {
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
+            color: #495057;
+        }
+
+        .performance-table {
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .performance-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .performance-table th {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .performance-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            color: #495057;
+        }
+
+        .performance-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .performance-table tr:hover {
+            background: #e3f2fd;
+        }
+
+        .performance-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .metric {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .metric .value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric .label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric .description {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 4rem;
+        }
+
+        .nav-box {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .nav-box:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-arrow {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top {
+            text-align: center;
+            margin: 4rem 0 2rem 0;
+        }
+
+        .back-to-top a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-to-top a:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .project-title {
+                font-size: 2rem;
+            }
+
+            .navigation {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回链接 -->
+    <a href="../projects.html" class="back-link">
+        ← 返回项目列表
+    </a>
+
+    <!-- 项目元信息 -->
+    <div class="metadata">
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+            <span>DEC 2024</span>
+        </div>
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span>10 MIN READ</span>
+        </div>
+    </div>
+
+    <header class="header">
+        <h1 class="project-title">PER-MADDPG算法性能提升分析</h1>
+        <p class="project-subtitle">多智能体深度确定性策略梯度算法的优先经验回放优化研究</p>
+        <div class="project-authors">
+            Author: 多智能体强化学习研究团队
+        </div>
+    </header>
+
+    <div class="section">
+        <h2>项目背景</h2>
+        <p>
+            在多智能体强化学习领域，传统的MADDPG（Multi-Agent Deep Deterministic Policy Gradient）算法在处理复杂环境时存在收敛速度慢、样本利用效率低等问题。随着多智能体系统复杂度的增加，如何提升算法性能和稳定性成为研究重点。
+        </p>
+        <p>
+            本研究提出了一种基于优先经验回放（Prioritized Experience Replay, PER）的MADDPG改进算法，通过优化经验采样策略、建立独立经验池、引入TD误差优先级和重要性采样权重等机制，显著提升了算法性能。
+        </p>
+        <p>
+            该研究在电力市场交易等复杂多智能体场景中进行了验证，证明了改进算法的有效性和实用性，为多智能体强化学习算法的优化提供了新的思路和方法。
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>技术原理</h2>
+        <div class="highlight-box">
+            <h4>PER-MADDPG核心改进</h4>
+            <p>在原始MADDPG算法基础上，实现了四个关键改进：优先经验回放机制、独立经验池、TD误差优先级更新和重要性采样权重，显著提升了算法性能。</p>
+        </div>
+
+        <h3>核心工作原理</h3>
+        <p>
+            PER-MADDPG算法通过智能化的经验选择机制，优先选择具有高TD误差的经验样本进行学习，同时为每个智能体建立独立的经验池，增强学习自主性。通过重要性采样权重维持学习稳定性，实现更高效的多智能体协调学习。
+        </p>
+
+        <!-- MADDPG算法框架图 -->
+        <div class="main-image">
+            <img src="MADDPGframework.png" alt="MADDPG算法框架" style="max-width: 100%; height: auto; border-radius: 12px;">
+            <div class="image-caption">图1：MADDPG算法框架 - 多智能体深度确定性策略梯度算法架构</div>
+        </div>
+
+        <p>
+            如图1所示，MADDPG算法采用Actor-Critic网络结构，每个智能体都有独立的策略网络和价值网络，通过集中式训练和分散式执行的方式实现多智能体协调。
+        </p>
+
+        <h3>技术架构设计</h3>
+        <ul>
+            <li><strong>网络结构：</strong>Actor-Critic双网络架构，支持连续动作空间</li>
+            <li><strong>经验回放：</strong>优先经验回放机制，智能选择高价值样本</li>
+            <li><strong>多智能体协调：</strong>集中式训练，分散式执行策略</li>
+            <li><strong>稳定性保障：</strong>重要性采样权重和独立经验池设计</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>算法改进</h2>
+        <p>
+            本研究在原始MADDPG算法基础上实现了四个关键改进，这些改进相互配合，共同提升了算法的整体性能和学习效率。
+        </p>
+
+        <h3>核心改进点</h3>
+        <div class="tech-grid">
+            <div class="tech-item">
+                <h5>🎯 优先经验回放</h5>
+                <p>基于TD误差的智能样本选择机制</p>
+            </div>
+            <div class="tech-item">
+                <h5>🏗️ 独立经验池</h5>
+                <p>为每个智能体建立专属经验存储</p>
+            </div>
+            <div class="tech-item">
+                <h5>⚡ TD误差优先级</h5>
+                <p>动态更新样本优先级权重</p>
+            </div>
+            <div class="tech-item">
+                <h5>⚖️ 重要性采样</h5>
+                <p>维持学习稳定性的权重机制</p>
+            </div>
+        </div>
+
+        <h3>改进流程</h3>
+        <ol>
+            <li><strong>经验收集：</strong>智能体与环境交互，收集经验样本</li>
+            <li><strong>优先级计算：</strong>基于TD误差计算样本优先级</li>
+            <li><strong>智能采样：</strong>优先选择高价值样本进行学习</li>
+            <li><strong>权重更新：</strong>动态调整重要性采样权重</li>
+            <li><strong>网络更新：</strong>更新Actor-Critic网络参数</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>性能提升成果</h2>
+        <div class="highlight-box">
+            <h4>显著性能提升</h4>
+            <p>PER-MADDPG算法在收敛速度、利润水平、市场稳定性等多个维度实现显著提升，相比原始算法具有明显优势。</p>
+        </div>
+
+        <h3>关键性能指标</h3>
+        <div class="metrics-grid">
+            <div class="metric">
+                <div class="value">50%</div>
+                <div class="label">收敛速度提升</div>
+                <div class="description">500步 vs 1000步</div>
+            </div>
+            <div class="metric">
+                <div class="value">100%</div>
+                <div class="label">600MW机组利润提升</div>
+                <div class="description">1500→3000元</div>
+            </div>
+            <div class="metric">
+                <div class="value">88%</div>
+                <div class="label">1000MW机组利润提升</div>
+                <div class="description">1700→3200元</div>
+            </div>
+            <div class="metric">
+                <div class="value">40%</div>
+                <div class="label">利润波动减少</div>
+                <div class="description">市场稳定性提升</div>
+            </div>
+        </div>
+
+        <!-- 性能提升分析图 -->
+        <div class="main-image">
+            <img src="tB844cV0rbLScIb64pmBeeoonCQMf7.png" alt="PER-MADDPG性能提升分析" style="max-width: 100%; height: auto; border-radius: 12px;">
+            <div class="image-caption">图2：PER-MADDPG性能提升分析 - 算法改进效果综合展示</div>
+        </div>
+
+        <p>
+            如图2所示，改进后的算法在收敛速度、利润水平、交易量稳定性等关键指标上都有显著提升，特别是在电力市场交易场景中表现出色。
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>技术特点</h2>
+        <div class="tech-features">
+            <div class="feature-card">
+                <h3>🚀 高效学习能力</h3>
+                <ul>
+                    <li><strong>智能采样：</strong>优先经验回放机制，智能选择最有价值的经验样本</li>
+                    <li><strong>快速收敛：</strong>收敛速度提升50%，学习效率显著提高</li>
+                    <li><strong>稳定训练：</strong>重要性采样权重维持学习稳定性</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>🤖 多智能体协调</h3>
+                <ul>
+                    <li><strong>独立学习：</strong>每个智能体拥有独立的经验池，增强学习自主性</li>
+                    <li><strong>协调优化：</strong>通过集中式训练实现多智能体协调优化</li>
+                    <li><strong>适应性增强：</strong>算法对环境变化的适应能力更强</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>📊 性能显著提升</h3>
+                <ul>
+                    <li><strong>利润提升：</strong>不同容量机组利润提升25%-100%</li>
+                    <li><strong>市场稳定：</strong>利润波动减少40%，市场运行更稳定</li>
+                    <li><strong>交易优化：</strong>交易量分配更加合理和稳定</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>应用场景</h2>
+        <h3>电力市场交易</h3>
+        <p>在电力市场多机组协调调度中，PER-MADDPG算法能够有效优化各机组的出力策略，实现利润最大化和市场稳定性的平衡。</p>
+
+        <h3>多智能体系统</h3>
+        <p>适用于需要多智能体协调的复杂系统，如自动驾驶车队、机器人集群、智能电网等场景。</p>
+
+        <h3>资源分配优化</h3>
+        <p>在资源有限的多智能体环境中，算法能够实现高效的资源分配和任务协调。</p>
+
+        <h3>学术研究应用</h3>
+        <p>为多智能体强化学习研究提供新的算法思路和实验验证。</p>
+    </div>
+
+    <div class="section">
+        <h2>算法性能对比</h2>
+        <div class="highlight-box">
+            <h4>全面性能提升</h4>
+            <p>PER-MADDPG算法在多个关键指标上相比原始MADDPG都有显著提升，特别是在收敛速度和市场稳定性方面表现突出。</p>
+        </div>
+
+        <h3>详细对比数据</h3>
+        <div class="performance-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>性能指标</th>
+                        <th>原始MADDPG</th>
+                        <th>PER-MADDPG</th>
+                        <th>提升幅度</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>初始利润</strong></td>
+                        <td>3700元</td>
+                        <td>3700元</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td><strong>最终利润</strong></td>
+                        <td>6800元</td>
+                        <td>7000元</td>
+                        <td style="color: #28a745; font-weight: bold;">+2.9%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>收敛步数</strong></td>
+                        <td>1000步</td>
+                        <td>500步</td>
+                        <td style="color: #28a745; font-weight: bold;">-50%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>利润波动</strong></td>
+                        <td>高</td>
+                        <td>低</td>
+                        <td style="color: #28a745; font-weight: bold;">-40%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>交易量稳定性</strong></td>
+                        <td>中等</td>
+                        <td>高</td>
+                        <td style="color: #28a745; font-weight: bold;">+30%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>项目成果</h2>
+        <p>
+            项目成功实现了MADDPG算法的性能提升，通过优先经验回放等关键改进，显著提升了算法在多智能体环境中的学习效率和性能表现。在电力市场交易场景的验证中，算法展现出优异的收敛特性和市场稳定性。
+        </p>
+        <p>
+            构建了完整的PER-MADDPG算法框架，为多智能体强化学习研究提供了新的技术路径。该项目的成功实施，为后续类似算法的优化和改进积累了宝贵经验，进一步推动了多智能体强化学习技术的发展。
+        </p>
+    </div>
+
+    <div class="navigation">
+        <a href="../projects.html" class="nav-box">
+            <div class="nav-label">返回项目列表</div>
+            <div class="nav-title">查看所有项目</div>
+            <div class="nav-arrow">←</div>
+        </a>
+        <a href="../langchain-bmp-db-extraction/project-detail.html" class="nav-box">
+            <div class="nav-label">相关项目</div>
+            <div class="nav-title">Langchain文献提取</div>
+            <div class="nav-arrow">→</div>
+        </a>
+    </div>
+
+    <div class="back-to-top">
+        <a href="#top">↑ 返回顶部</a>
+    </div>
+</body>
+</html> 

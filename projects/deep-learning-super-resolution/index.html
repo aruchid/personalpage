@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基于深度学习的傅里叶单像素成像高效率调制方法研究 - 超分辨率成像解决方案</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .metadata {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: #2c2c2c;
+        }
+
+        .project-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .project-authors {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .main-image {
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .main-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+        }
+
+        .project-overview {
+            margin: 3rem 0;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .overview-card {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .overview-card h3 {
+            color: #2c2c2c;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .overview-card p {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .tech-diagrams {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .tech-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .tech-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .tech-card p {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .performance-analysis {
+            margin: 3rem 0;
+        }
+
+        .performance-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: #f8f8f8;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .performance-table th,
+        .performance-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .performance-table th {
+            background: #2c2c2c;
+            color: white;
+            font-weight: 600;
+        }
+
+        .performance-table tr:nth-child(even) {
+            background: #f0f0f0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .highlight-box h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .highlight-box p {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .application-scenarios {
+            margin: 3rem 0;
+        }
+
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .scenario-card {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .scenario-card h4 {
+            color: #2c2c2c;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .scenario-card p {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .nav-box {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: inherit;
+            border: 1px solid #e0e0e0;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .nav-box:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c2c2c;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-arrow {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: #666;
+        }
+
+        .back-to-top {
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .back-to-top a {
+            display: inline-block;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.2s ease;
+        }
+
+        .back-to-top a:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .project-title {
+                font-size: 2rem;
+            }
+
+            .navigation {
+                grid-template-columns: 1fr;
+            }
+
+            .tech-diagrams {
+                grid-template-columns: 1fr !important;
+            }
+
+            .overview-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .scenario-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-link">
+        ← 返回项目列表
+    </a>
+
+    <div class="metadata">
+        <div class="meta-item">
+                            <span>👤 作者：aruchidzong</span>
+        </div>
+        <div class="meta-item">
+            <span>📅 项目时间：2024年</span>
+        </div>
+        <div class="meta-item">
+            <span>🔬 研究领域：计算机视觉、深度学习、光学成像</span>
+        </div>
+    </div>
+
+    <div class="header">
+        <h1 class="project-title">基于深度学习的傅里叶单像素成像高效率调制方法研究</h1>
+        <p class="project-subtitle">突破传统成像限制，实现高效率、高质量的傅里叶单像素成像技术</p>
+        <p class="project-authors">研究团队：aruchid</p>
+    </div>
+
+    <div class="main-image">
+        <img src="image.png" alt="单像素成像研究 主图" style="max-width: 100%; height: auto; border-radius: 12px;">
+    </div>
+
+    <!-- 项目概述 -->
+    <div class="project-overview">
+        <h2 style="margin-bottom: 2rem; color: #2c2c2c;">项目概述</h2>
+
+        <p style="margin-bottom: 1.5rem; color: #444; line-height: 1.7;">
+            本项目针对传统傅里叶单像素成像（FSPI）技术面临的成像帧频低、图像质量差等关键挑战，基于深度学习算法开发了三种创新方法，显著提升了FSPI的性能表现。研究解决了低采样率下的图像重构质量问题，实现了高效率、高质量的傅里叶单像素成像。
+        </p>
+
+        <div class="overview-grid">
+            <div class="overview-card">
+                <h3>🎯 研究目标</h3>
+                <p>开发基于深度学习的高效率调制方法，解决传统FSPI技术的性能瓶颈，实现快速、高质量的单像素成像。</p>
+            </div>
+            <div class="overview-card">
+                <h3>🔬 技术路线</h3>
+                <p>结合生成对抗网络、采样策略优化和几何拓扑分析，构建端到端的深度学习成像系统。</p>
+            </div>
+            <div class="overview-card">
+                <h3>📊 应用场景</h3>
+                <p>适用于遥感成像、激光雷达、实时光学成像等需要高速、高质量成像的应用领域。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 核心技术方法 -->
+    <div class="tech-diagrams">
+        <div class="tech-card">
+            <h3>🔍 在线二值化调制方法</h3>
+            <p>将灰度傅里叶基模式转换为二值模式，显著提高DMD刷新率，通过生成对抗网络（F2SPI-GAN）在低采样率下实现高质量重构。</p>
+        </div>
+        <div class="tech-card">
+            <h3>⚡ 采样策略优化网络</h3>
+            <p>设计S2O-FSPI网络，通过端到端训练自动学习和优化采样策略，结合空间注意力机制聚焦信息丰富的频域区域。</p>
+        </div>
+        <div class="tech-card">
+            <h3>📐 几何拓扑分析</h3>
+            <p>分析不同目标场景类别的最优采样策略几何拓扑结构，发现相似数据类别具有相似的几何拓扑特征。</p>
+        </div>
+    </div>
+
+    <!-- 技术实现细节 -->
+    <div class="project-overview">
+        <h2 style="margin-bottom: 2rem; color: #2c2c2c;">技术实现细节</h2>
+
+        <div style="background: #f8f8f8; padding: 2rem; border-radius: 8px; border: 1px solid #e0e0e0; margin-bottom: 2rem;">
+            <h3 style="margin-bottom: 1rem; color: #333;">F2SPI-GAN网络架构</h3>
+            <p style="margin-bottom: 1rem; color: #444;">
+                采用编码器-解码器结构，集成注意力机制，通过生成对抗网络提高低采样率下的重构质量。网络能够有效抑制振铃效应，在1-3%采样率下实现高质量图像重构。
+            </p>
+            <p style="color: #666; font-size: 0.9rem;">
+                <strong>技术特点：</strong>端到端训练、注意力机制、振铃效应抑制、低采样率适应
+            </p>
+        </div>
+
+        <div style="background: #f8f8f8; padding: 2rem; border-radius: 8px; border: 1px solid #e0e0e0; margin-bottom: 2rem;">
+            <h3 style="margin-bottom: 1rem; color: #333;">采样策略优化模块</h3>
+            <p style="margin-bottom: 1rem; color: #444;">
+                设计单阶段FSPI重构网络，包含采样策略优化模块和重构模块。通过联合训练两个模块，同时获得高质量重构结果和高效采样策略，避免传统经验主义采样策略的资源浪费。
+            </p>
+            <p style="color: #666; font-size: 0.9rem;">
+                <strong>优化策略：</strong>空间注意力机制、自动学习采样、频域信息聚焦、资源效率提升
+            </p>
+        </div>
+
+        <div style="background: #f8f8f8; padding: 2rem; border-radius: 8px; border: 1px solid #e0e0e0;">
+            <h3 style="margin-bottom: 1rem; color: #333;">二值化调制技术</h3>
+            <p style="margin-bottom: 1rem; color: #444;">
+                通过在线二值化将灰度傅里叶基模式转换为二值模式，显著提高DMD刷新率。采用阈值优化算法，在保证重构质量的前提下实现光场空间分布的高质量快速调制。
+            </p>
+            <p style="color: #666; font-size: 0.9rem;">
+                <strong>技术优势：</strong>DMD刷新率提升、内存占用减少、实时处理能力、重构质量保持
+            </p>
+        </div>
+    </div>
+
+    <!-- 应用场景与效果展示 -->
+    <div class="application-scenarios">
+        <h2 style="margin-bottom: 2rem; color: #2c2c2c;">应用场景与效果展示</h2>
+
+        <div class="scenario-grid">
+            <div class="scenario-card">
+                <h4>🚗 汽车图像重构</h4>
+                <p>在汽车数据集上训练网络模型，实现低采样率下的高质量重构，验证方法的有效性和泛化能力。</p>
+            </div>
+            <div class="scenario-card">
+                <h4>⛵ 自然场景成像</h4>
+                <p>应用于帆船、鸟类等自然场景图像重构，成功解决低采样率下的振铃效应问题。</p>
+            </div>
+            <div class="scenario-card">
+                <h4>🧸 实验验证</h4>
+                <p>以"熊"娃娃模型作为目标场景，在暗室条件下验证方法的有效性，与多种传统方法进行对比。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 技术对比与性能分析 -->
+    <div class="performance-analysis">
+        <h2 style="margin-bottom: 2rem; color: #2c2c2c;">技术对比与性能分析</h2>
+
+        <div class="highlight-box">
+            <h3>🏆 性能突破</h3>
+            <p>在1-3%低采样率下实现高质量图像重构，有效抑制振铃效应，重构质量显著优于传统方法。实验验证显示，所提方法在相同采样率下总能获得最高的PSNR和SSIM指标。</p>
+        </div>
+
+        <h3 style="margin-bottom: 1rem; color: #2c2c2c;">重构时间对比分析</h3>
+        <table class="performance-table">
+            <thead>
+                <tr>
+                    <th>方法</th>
+                    <th>数据采集时间</th>
+                    <th>傅里叶逆变换</th>
+                    <th>重构算法时间</th>
+                    <th>总时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>SPDS</strong></td>
+                    <td>1.311s</td>
+                    <td>0.004s</td>
+                    <td>-</td>
+                    <td>1.314s</td>
+                </tr>
+                <tr>
+                    <td><strong>SGDS</strong></td>
+                    <td>7.864s</td>
+                    <td>0.004s</td>
+                    <td>-</td>
+                    <td>7.868s</td>
+                </tr>
+                <tr>
+                    <td><strong>DGA</strong></td>
+                    <td>2.621s</td>
+                    <td>0.004s</td>
+                    <td>-</td>
+                    <td>2.625s</td>
+                </tr>
+                <tr>
+                    <td><strong>传统FSPI</strong></td>
+                    <td>9.039s</td>
+                    <td>0.004s</td>
+                    <td>1s</td>
+                    <td>9.043s</td>
+                </tr>
+                <tr style="background: #e8f4fd;">
+                    <td><strong>我们的方法</strong></td>
+                    <td>1.311s</td>
+                    <td>0.004s</td>
+                    <td>0.014s</td>
+                    <td><strong>1.329s</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="background: #f8f8f8; padding: 2rem; border-radius: 8px; border: 1px solid #e0e0e0; margin: 2rem 0;">
+            <h3 style="margin-bottom: 1rem; color: #333;">性能优势总结</h3>
+            <ul style="color: #444; line-height: 1.7; padding-left: 1.5rem;">
+                <li><strong>重构效率：</strong>相比传统FSPI方法，重构时间从9.043s降低到1.329s，提升约6.8倍</li>
+                <li><strong>采样率要求：</strong>在1-3%低采样率下实现高质量重构，显著降低数据采集需求</li>
+                <li><strong>图像质量：</strong>有效抑制振铃效应，重构质量在PSNR和SSIM指标上均优于传统方法</li>
+                <li><strong>泛化能力：</strong>在汽车数据集上训练的网络模型成功应用于其他自然图像重构</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 项目总结与未来展望 -->
+    <div class="project-overview" style="margin: 3rem 0;">
+        <h2 style="margin-bottom: 2rem; color: #2c2c2c;">项目总结与未来展望</h2>
+
+        <div style="background: #f8f8f8; padding: 2rem; border-radius: 8px; border: 1px solid #e0e0e0; margin-bottom: 2rem;">
+            <h3 style="margin-bottom: 1rem; color: #333;">项目成果总结</h3>
+            <p style="margin-bottom: 1rem; color: #444;">
+                本项目成功构建了一套完整的基于深度学习的傅里叶单像素成像高效率调制系统，通过创新的算法设计和网络架构，在成像速度、重构质量和采样效率等方面都取得了显著突破。系统成功解决了传统FSPI技术在低采样率下的性能瓶颈问题。
+            </p>
+            <p style="color: #666; font-size: 0.9rem;">
+                <strong>主要成果：</strong>重构效率提升6.8倍、低采样率适应（1-3%）、振铃效应抑制、成功应用于多种场景
+            </p>
+        </div>
+
+        <div style="background: #f8f8f8; padding: 2rem; border-radius: 8px; border: 1px solid #e0e0e0; margin-bottom: 2rem;">
+            <h3 style="margin-bottom: 1rem; color: #333;">技术创新点</h3>
+            <p style="margin-bottom: 1rem; color: #444;">
+                项目的主要技术创新包括：F2SPI-GAN网络架构设计、采样策略自动优化、二值化调制技术、几何拓扑分析等。这些创新使得FSPI技术在保持高精度的同时，实现了显著的性能提升和效率优化。
+            </p>
+            <p style="color: #666; font-size: 0.9rem;">
+                <strong>创新亮点：</strong>深度学习集成、采样策略优化、二值化调制、几何拓扑分析、端到端训练
+            </p>
+        </div>
+
+        <div style="background: #f8f8f8; padding: 2rem; border-radius: 8px; border: 1px solid #e0e0e0;">
+            <h3 style="margin-bottom: 1rem; color: #333;">未来发展方向</h3>
+            <p style="margin-bottom: 1rem; color: #444;">
+                未来计划进一步优化网络架构，探索更先进的深度学习模型在FSPI中的应用，提升系统在更复杂环境下的鲁棒性。同时，计划扩展应用场景，包括医疗影像、工业检测、安全监控等领域，为更多行业提供高性能成像解决方案。
+            </p>
+            <p style="color: #666; font-size: 0.9rem;">
+                <strong>发展方向：</strong>网络架构优化、多场景应用、鲁棒性提升、行业扩展、实时处理能力增强
+            </p>
+        </div>
+    </div>
+
+    <!-- 项目特色与优势 -->
+    <div class="project-overview" style="margin: 3rem 0;">
+        <h2 style="text-align: center; margin-bottom: 2rem; color: #2c2c2c;">项目特色与优势</h2>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                <h3 style="margin-bottom: 0.5rem;">🎯 高效率重构</h3>
+                <p style="font-size: 0.9rem; opacity: 0.9;">重构效率提升6.8倍，显著降低成像时间</p>
+            </div>
+            <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                <h3 style="margin-bottom: 0.5rem;">⚡ 低采样率适应</h3>
+                <p style="font-size: 0.9rem; opacity: 0.9;">在1-3%采样率下实现高质量重构</p>
+            </div>
+            <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                <h3 style="margin-bottom: 0.5rem;">🔍 振铃效应抑制</h3>
+                <p style="font-size: 0.9rem; opacity: 0.9;">有效抑制传统方法的振铃效应问题</p>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+            <div style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                <h3 style="margin-bottom: 0.5rem;">🧠 智能采样优化</h3>
+                <p style="font-size: 0.9rem; opacity: 0.9;">自动学习最优采样策略，提高资源利用效率</p>
+            </div>
+            <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                <h3 style="margin-bottom: 0.5rem;">📐 几何拓扑分析</h3>
+                <p style="font-size: 0.9rem; opacity: 0.9;">深入分析采样策略的几何拓扑结构</p>
+            </div>
+            <div style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #333; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                <h3 style="margin-bottom: 0.5rem;">💡 端到端训练</h3>
+                <p style="font-size: 0.9rem; opacity: 0.8;">完整的深度学习训练和推理流程</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <a href="../index.html" class="nav-box">
+            <div class="nav-label">返回主页</div>
+            <div class="nav-title">查看所有项目</div>
+            <div class="nav-arrow">←</div>
+        </a>
+        <a href="../shelf-image-stitching-system/index.html" class="nav-box">
+            <div class="nav-label">相关项目</div>
+            <div class="nav-title">图像全景拼接算法系统</div>
+            <div class="nav-arrow">→</div>
+        </a>
+    </div>
+
+    <div class="back-to-top">
+        <a href="#top">↑ 返回顶部</a>
+    </div>
+</body>
+</html> 

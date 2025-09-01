@@ -1,0 +1,583 @@
+/* 项目详情页样式 - 重新设计的布局 */
+
+/* 顶部操作区域 */
+.project-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.action-btn:hover {
+    background: #f0f0f0;
+    color: #333;
+    transform: translateY(-1px);
+}
+
+.action-btn.github {
+    background: #24292e;
+    color: white;
+}
+
+.action-btn.github:hover {
+    background: #1a1e22;
+    transform: translateY(-2px);
+}
+
+.action-btn.download {
+    background: #007bff;
+    color: white;
+}
+
+.action-btn.download:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+}
+
+.project-status {
+    display: flex;
+    align-items: center;
+}
+
+.status-badge {
+    padding: 0.5rem 1rem;
+    background: #28a745;
+    color: white;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+/* 项目框架图展示区域 */
+.project-framework {
+    margin-bottom: 3rem;
+    text-align: center;
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.framework-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.framework-caption {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    color: #666;
+    font-style: italic;
+}
+
+/* 主要内容区域 - 两栏布局 */
+.main-content-wrapper {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
+}
+
+/* 左侧主要内容 */
+.left-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* 右侧详细信息 */
+.right-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.sidebar-section {
+    margin-bottom: 2.5rem;
+}
+
+.sidebar-section:last-child {
+    margin-bottom: 0;
+}
+
+.sidebar-section h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: #2c2c2c;
+    font-weight: 600;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 0.5rem;
+}
+
+.tech-list {
+    list-style: none;
+    padding: 0;
+}
+
+.tech-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.tech-list li:last-child {
+    border-bottom: none;
+}
+
+.project-meta-sidebar {
+    background: #f8f8f8;
+    padding: 1.5rem;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+}
+
+.meta-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.meta-item:last-child {
+    border-bottom: none;
+}
+
+.meta-label {
+    font-weight: 500;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.meta-value {
+    color: #333;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* 项目头部样式 */
+.project-header {
+    margin-bottom: 3rem;
+    padding: 2rem 0;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.project-meta {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.project-date, .project-category {
+    background: #f8f8f8;
+    padding: 0.4rem 1rem;
+    border-radius: 3px;
+    font-weight: 500;
+    color: #666;
+}
+
+.project-title {
+    font-size: 2.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #2c2c2c;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.project-authors {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 2rem;
+    font-weight: 500;
+}
+
+.project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+.tag {
+    background: #f0f0f0;
+    color: #555;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: 1px solid #e0e0e0;
+}
+
+/* 项目概览样式 */
+.project-overview {
+    margin-bottom: 4rem;
+}
+
+.project-overview h2 {
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+    color: #2c2c2c;
+    font-weight: 600;
+}
+
+.project-description {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #444;
+    margin-bottom: 2.5rem;
+    max-width: 800px;
+}
+
+.project-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 2rem;
+    background: #fafafa;
+    padding: 2.5rem;
+    border-radius: 6px;
+    border: 1px solid #f0f0f0;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-value {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+}
+
+/* 技术实现样式 */
+.project-implementation {
+    margin-bottom: 4rem;
+}
+
+.project-implementation h2 {
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+    color: #2c2c2c;
+    font-weight: 600;
+}
+
+.tech-stack, .algorithm-details {
+    margin-bottom: 2.5rem;
+}
+
+.tech-stack h3, .algorithm-details h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #444;
+    font-weight: 600;
+}
+
+.tech-stack ul {
+    list-style: none;
+    padding: 0;
+}
+
+.tech-stack li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.tech-stack li:last-child {
+    border-bottom: none;
+}
+
+.algorithm-details p {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #444;
+    margin-bottom: 1rem;
+}
+
+/* 项目成果样式 */
+.project-results {
+    margin-bottom: 4rem;
+}
+
+.project-results h2 {
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+    color: #2c2c2c;
+    font-weight: 600;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.result-item {
+    background: #fafafa;
+    padding: 2rem;
+    border-radius: 6px;
+    border: 1px solid #f0f0f0;
+    text-align: center;
+}
+
+.result-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #666;
+}
+
+.result-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    color: #333;
+}
+
+.result-description {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.5;
+}
+
+/* 项目图片展示区域 */
+.project-gallery {
+    margin-bottom: 3rem;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.gallery-header {
+    padding: 1.5rem 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.gallery-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.gallery-header p {
+    margin: 0.5rem 0 0 0;
+    opacity: 0.9;
+    font-size: 0.95rem;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    padding: 2rem;
+}
+
+.gallery-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.gallery-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.gallery-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.gallery-caption {
+    padding: 1rem;
+    background: white;
+}
+
+.gallery-caption h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.gallery-caption p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.4;
+}
+
+/* 项目链接样式 */
+.project-links {
+    margin-bottom: 4rem;
+}
+
+.project-links h2 {
+    font-size: 1.6rem;
+    margin-bottom: 2rem;
+    color: #2c2c2c;
+    font-weight: 600;
+}
+
+.links-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+}
+
+.project-link {
+    display: inline-block;
+    background: #f8f8f8;
+    color: #555;
+    padding: 0.8rem 1.5rem;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid #e0e0e0;
+}
+
+.project-link:hover {
+    background: #f0f0f0;
+    color: #333;
+    border-color: #ccc;
+}
+
+/* 返回按钮样式 */
+.back-to-projects {
+    text-align: center;
+    margin: 4rem 0;
+}
+
+.back-btn {
+    display: inline-block;
+    background: #f8f8f8;
+    color: #555;
+    padding: 1rem 2.5rem;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid #e0e0e0;
+}
+
+.back-btn:hover {
+    background: #f0f0f0;
+    color: #333;
+    border-color: #ccc;
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+    .main-content-wrapper {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .right-sidebar {
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .project-actions {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .action-buttons {
+        justify-content: center;
+    }
+    
+    .project-title {
+        font-size: 2.2rem;
+    }
+    
+    .project-stats {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        padding: 2rem;
+    }
+    
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .gallery-grid {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+    
+    .gallery-item {
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .project-actions {
+        padding: 1.5rem 0;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .project-title {
+        font-size: 1.8rem;
+    }
+    
+    .project-stats {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+    }
+    
+    .gallery-header {
+        padding: 1rem;
+    }
+    
+    .gallery-header h2 {
+        font-size: 1.25rem;
+    }
+} 

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宗悦 - 个人博客</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/posts.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="home.html">Aruchid Zong</a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="home.html" class="nav-link">Home</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="projects.html" class="nav-link">Projects</a>
+                </li>
+                <li class="nav-item">
+                    <a href="posts.html" class="nav-link active">Posts</a>
+                </li>
+                <li class="nav-item">
+                    <a href="cv.html" class="nav-link">CV</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="main-content">
+        <!-- 博客页面头部 -->
+        <section class="posts-header">
+            <div class="container">
+                <h1 class="page-title">Blog Posts</h1>
+                <p class="page-subtitle">Thoughts, insights, and research updates from my journey in AI</p>
+            </div>
+        </section>
+
+        <!-- 博客文章列表 -->
+        <section class="posts-section">
+            <div class="container">
+                <!-- 文章过滤选项 -->
+                <div class="posts-filter">
+                    <h3>Filter by Category</h3>
+                    <div class="filter-tags">
+                        <span class="filter-tag active" data-category="all">All</span>
+                        <span class="filter-tag" data-category="ai">AI Research</span>
+                        <span class="filter-tag" data-category="ml">Machine Learning</span>
+                        <span class="filter-tag" data-category="nlp">NLP</span>
+                        <span class="filter-tag" data-category="thoughts">Thoughts</span>
+                    </div>
+                </div>
+
+                <!-- 文章列表 -->
+                <div class="posts-grid">
+                    <!-- 文章卡片 1 -->
+                    <article class="post-card" data-category="ai">
+                        <div class="post-meta">
+                            <span class="post-date">JUN 25, 2024</span>
+                            <span class="post-category">AI Research</span>
+                        </div>
+                        <h2 class="post-title">The Future of AI Evaluation: A Comprehensive Approach</h2>
+                        <p class="post-excerpt">Exploring innovative methodologies for evaluating artificial intelligence systems, from traditional metrics to cutting-edge assessment techniques that capture the true capabilities of AI.</p>
+                        <div class="post-tags">
+                            <span class="tag">AI Evaluation</span>
+                            <span class="tag">Research</span>
+                            <span class="tag">Methodology</span>
+                        </div>
+                        <a href="#" class="read-more">Read More →</a>
+                    </article>
+
+                    <!-- 文章卡片 2 -->
+                    <article class="post-card" data-category="ml">
+                        <div class="post-meta">
+                            <span class="post-date">JUN 20, 2024</span>
+                            <span class="post-category">Machine Learning</span>
+                        </div>
+                        <h2 class="post-title">Neural Architecture Search: Beyond Traditional Methods</h2>
+                        <p class="post-excerpt">A deep dive into the latest developments in neural architecture search, exploring how AI can design better AI architectures and the implications for the future of machine learning.</p>
+                        <div class="post-tags">
+                            <span class="tag">NAS</span>
+                            <span class="tag">Neural Networks</span>
+                            <span class="tag">Architecture</span>
+                        </div>
+                        <a href="#" class="read-more">Read More →</a>
+                    </article>
+
+                    <!-- 文章卡片 3 -->
+                    <article class="post-card" data-category="nlp">
+                        <div class="post-meta">
+                            <span class="post-date">JUN 15, 2024</span>
+                            <span class="post-category">NLP</span>
+                        </div>
+                        <h2 class="post-title">Sequence Modeling in the Age of Transformers</h2>
+                        <p class="post-excerpt">Examining the evolution of sequence modeling approaches, from RNNs to modern transformer architectures, and their applications in natural language processing tasks.</p>
+                        <div class="post-tags">
+                            <span class="tag">Transformers</span>
+                            <span class="tag">Sequence Modeling</span>
+                            <span class="tag">NLP</span>
+                        </div>
+                        <a href="#" class="read-more">Read More →</a>
+                    </article>
+
+                    <!-- 文章卡片 4 -->
+                    <article class="post-card" data-category="thoughts">
+                        <div class="post-meta">
+                            <span class="post-date">JUN 10, 2024</span>
+                            <span class="post-category">Thoughts</span>
+                        </div>
+                        <h2 class="post-title">The Intersection of AI and Human Creativity</h2>
+                        <p class="post-excerpt">Reflecting on how artificial intelligence can augment human creativity rather than replace it, and the collaborative future of human-AI partnerships in creative endeavors.</p>
+                        <div class="post-tags">
+                            <span class="tag">Creativity</span>
+                            <span class="tag">Human-AI</span>
+                            <span class="tag">Philosophy</span>
+                        </div>
+                        <a href="#" class="read-more">Read More →</a>
+                    </article>
+
+                    <!-- 文章卡片 5 -->
+                    <article class="post-card" data-category="ai">
+                        <div class="post-meta">
+                            <span class="post-date">JUN 05, 2024</span>
+                            <span class="post-category">AI Research</span>
+                        </div>
+                        <h2 class="post-title">Evaluating Large Language Models: Challenges and Solutions</h2>
+                        <p class="post-excerpt">A comprehensive analysis of the challenges in evaluating large language models, including bias detection, factual accuracy, and ethical considerations in AI assessment.</p>
+                        <div class="post-tags">
+                            <span class="tag">LLMs</span>
+                            <span class="tag">Evaluation</span>
+                            <span class="tag">Ethics</span>
+                        </div>
+                        <a href="#" class="read-more">Read More →</a>
+                    </article>
+
+                    <!-- 文章卡片 6 -->
+                    <article class="post-card" data-category="ml">
+                        <div class="post-meta">
+                            <span class="post-date">MAY 30, 2024</span>
+                            <span class="post-category">Machine Learning</span>
+                        </div>
+                        <h2 class="post-title">Graph Neural Networks: Applications in AI Architecture Design</h2>
+                        <p class="post-excerpt">Exploring how graph neural networks can be leveraged to design and optimize neural network architectures, with practical examples and implementation insights.</p>
+                        <div class="post-tags">
+                            <span class="tag">GNN</span>
+                            <span class="tag">Architecture Design</span>
+                            <span class="tag">Graphs</span>
+                        </div>
+                        <a href="#" class="read-more">Read More →</a>
+                    </article>
+                </div>
+
+                <!-- 分页 -->
+                <div class="pagination">
+                    <span class="page-info">Showing 1-6 of 6 posts</span>
+                    <div class="page-numbers">
+                        <span class="page-number active">1</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Y Jason Young</h3>
+                <p>Copyright © Zhengxin Yang 2024 - Present. All Rights Reserved</p>
+                <p>Adapted from Astro Sphere.</p>
+                <p>Visit My 'Hidden' Space.</p>
+            </div>
+            <div class="footer-section">
+                <button class="back-to-top">Back to Top</button>
+                <div style="margin-top: 20px;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                        <div style="width: 8px; height: 8px; background: #28a745; border-radius: 50%;"></div>
+                        <span style="font-size: 0.8rem; color: #666;">All Is Well</span>
+                    </div>
+                    <div style="display: flex; gap: 16px;">
+                        <a href="mailto:contact@example.com" style="color: #666; text-decoration: none;">📧</a>
+                        <a href="https://github.com" style="color: #666; text-decoration: none;">🐙</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script src="js/posts.js"></script>
+</body>
+</html> 

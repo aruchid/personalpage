@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电磁辐射检波电路算法优化系统 - 基于Kalman滤波的信号稳定性提升研究</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .metadata {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: #2c2c2c;
+        }
+
+        .project-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .project-authors {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .main-image {
+            text-align: center;
+            margin: 2.5rem 0;
+            background: #fafafa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .main-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .main-image img:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-caption {
+            text-align: center;
+            color: #555;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            font-weight: 500;
+            background: #f0f0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2c2c2c;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .section h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.8rem 0;
+            color: #333;
+        }
+
+        .section p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .section ul, .section ol {
+            margin: 1rem 0 1rem 2rem;
+            color: #444;
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .highlight-box h4 {
+            color: #007bff;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .tech-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #007bff;
+        }
+
+        .feature-card h3 {
+            color: #007bff;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+
+        .feature-card ul {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+
+        .feature-card li {
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
+            color: #495057;
+        }
+
+        .performance-table {
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .performance-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .performance-table th {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .performance-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            color: #495057;
+        }
+
+        .performance-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .performance-table tr:hover {
+            background: #e3f2fd;
+        }
+
+        .performance-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .research-objectives {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .research-objectives h4 {
+            color: #007bff;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .research-objectives p {
+            margin-bottom: 1rem;
+            color: #495057;
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 4rem;
+        }
+
+        .nav-box {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .nav-box:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-arrow {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top {
+            text-align: center;
+            margin: 4rem 0 2rem 0;
+        }
+
+        .back-to-top a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-to-top a:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .timeline {
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #007bff;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 60px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            background: #007bff;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 3px #007bff;
+        }
+
+        .timeline-date {
+            font-weight: 600;
+            color: #007bff;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-content {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid #007bff;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .project-title {
+                font-size: 2rem;
+            }
+
+            .navigation {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回链接 -->
+    <a href="../projects.html" class="back-link">
+        ← 返回项目列表
+    </a>
+
+    <!-- 项目元信息 -->
+    <div class="metadata">
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+            <span>JAN 2018 - APR 2018</span>
+        </div>
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span>4 MONTHS</span>
+        </div>
+    </div>
+
+    <header class="header">
+        <h1 class="project-title">电磁辐射检波电路算法优化系统</h1>
+        <p class="project-subtitle">基于Kalman滤波的信号稳定性提升研究</p>
+        <div class="project-authors">
+            Author: aruchidzong
+        </div>
+    </header>
+
+    <div class="section">
+        <h2>研究背景</h2>
+        <p>
+            电磁辐射检波电路在环境监测、工业检测、安全防护等领域具有重要应用价值。传统检波电路存在信号波动较大、测量精度不稳定等问题，严重影响了系统的可靠性和实用性。
+        </p>
+        <p>
+            本研究旨在通过嵌入式算法优化和硬件改进，解决检波电路中信号波动大的技术难题。通过引入Kalman滤波算法，实现对检波信号的平滑处理，显著提升系统的测量精度和稳定性。
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>技术方案</h2>
+        <div class="highlight-box">
+            <h4>研究思路</h4>
+            <p>系统基于新唐8位微控制器平台，采用Kalman滤波算法对检波信号进行实时处理，结合硬件电路优化和LCD显示驱动移植，构建完整的电磁辐射检测解决方案。</p>
+        </div>
+
+        <h3>核心原理</h3>
+        <p>
+            Kalman滤波器是一种递归估计算法，能够有效处理包含噪声的测量数据。在电磁辐射检测中，检波电路输出的信号往往包含各种噪声和干扰，通过Kalman滤波算法可以实时估计真实信号值，滤除噪声成分。
+        </p>
+        <p>
+            系统采用嵌入式架构，在微控制器上实现实时信号处理算法，通过LCD点阵屏实时显示检测结果，为用户提供直观的测量数据展示。
+        </p>
+
+        <div class="main-image">
+            <img src="pYif6zuPI1KegN0jJ10vmLXuMKjcZj.png" alt="电磁辐射检波电路系统架构图" class="main-image">
+            <div class="image-caption">图1：电磁辐射检波电路系统架构图</div>
+        </div>
+
+        <h3>技术特点</h3>
+        <div class="tech-features">
+            <div class="feature-card">
+                <h3>🔧 硬件优化</h3>
+                <ul>
+                    <li>检波电路设计与调试</li>
+                    <li>新唐8位微控制器平台</li>
+                    <li>LCD点阵屏驱动移植</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>⚡ 算法优化</h3>
+                <ul>
+                    <li>Kalman滤波信号处理</li>
+                    <li>实时数据平滑算法</li>
+                    <li>嵌入式算法部署</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>📊 系统集成</h3>
+                <ul>
+                    <li>完整测试验证体系</li>
+                    <li>Matlab数据分析</li>
+                    <li>硬件软件协同调试</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>系统组成</h2>
+        <h3>硬件系统</h3>
+        <ul>
+            <li>电磁辐射检波电路模块</li>
+            <li>新唐(Nuvoton)8位微控制器</li>
+            <li>LCD点阵显示屏</li>
+            <li>信号调理和放大电路</li>
+        </ul>
+
+        <h3>软件系统</h3>
+        <ul>
+            <li>C/C++嵌入式程序</li>
+            <li>Kalman滤波算法实现</li>
+            <li>LCD显示驱动程序</li>
+            <li>数据采集和处理模块</li>
+        </ul>
+
+        <div class="main-image">
+
+            <div class="image-caption">图2：系统硬件组成和电路设计图</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>性能指标</h2>
+        <div class="performance-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>性能参数</th>
+                        <th>指标值</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>信号稳定性</strong></td>
+                        <td>显著提升</td>
+                        <td>通过Kalman滤波减少信号波动</td>
+                    </tr>
+                    <tr>
+                        <td><strong>测量精度</strong></td>
+                        <td>明显改善</td>
+                        <td>检波电路测量精度得到提升</td>
+                    </tr>
+                    <tr>
+                        <td><strong>响应时间</strong></td>
+                        <td>实时处理</td>
+                        <td>嵌入式算法实时响应</td>
+                    </tr>
+                    <tr>
+                        <td><strong>系统稳定性</strong></td>
+                        <td>高稳定性</td>
+                        <td>硬件软件协同优化</td>
+                    </tr>
+                    <tr>
+                        <td><strong>开发周期</strong></td>
+                        <td>4个月</td>
+                        <td>从设计到完成的总时间</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>应用价值</h2>
+        <p>
+            本研究在电磁辐射检测、环境监测、工业安全等领域具有重要应用价值。通过提供稳定可靠的检测解决方案，为相关领域的科研工作和实际应用提供了技术支撑。
+        </p>
+
+        <h3>主要应用方向</h3>
+        <ul>
+            <li><strong>环境监测</strong>: 电磁辐射环境监测、污染源检测</li>
+            <li><strong>工业检测</strong>: 电磁设备检测、安全防护</li>
+            <li><strong>科研实验</strong>: 电磁辐射研究、信号处理算法验证</li>
+            <li><strong>安全防护</strong>: 电磁辐射安全评估、防护设备检测</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>技术优势</h2>
+        <h3>算法优势</h3>
+        <ul>
+            <li>Kalman滤波算法有效减少信号噪声</li>
+            <li>实时信号处理，响应速度快</li>
+            <li>嵌入式实现，资源占用少</li>
+        </ul>
+
+        <h3>系统优势</h3>
+        <ul>
+            <li>硬件软件协同优化设计</li>
+            <li>完整的测试验证体系</li>
+            <li>模块化架构，便于维护扩展</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>项目进展</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-date">2018年1月</div>
+                <div class="timeline-content">
+                    <strong>项目启动</strong><br>
+                    检波电路设计、硬件平台选型、技术方案制定
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">2018年2月</div>
+                <div class="timeline-content">
+                    <strong>算法开发</strong><br>
+                    Kalman滤波算法实现、嵌入式程序开发
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">2018年3月</div>
+                <div class="timeline-content">
+                    <strong>系统集成</strong><br>
+                    硬件调试、软件集成、LCD驱动移植
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">2018年4月</div>
+                <div class="timeline-content">
+                    <strong>测试验证</strong><br>
+                    系统测试、性能验证、文档整理
+                </div>
+            </div>
+        </div>
+
+        <div class="research-objectives">
+            <h4>📋 项目成果</h4>
+            <p>成功解决了检波电路信号波动问题，实现了电磁辐射的精确测量，完成了LCD点阵屏的驱动移植，建立了完整的测试验证体系，为后续产品开发奠定了技术基础。</p>
+        </div>
+    </div>
+
+    <!-- 导航 -->
+    <div class="navigation">
+        <a href="../projects.html" class="nav-box">
+            <div class="nav-label">← 返回</div>
+            <div class="nav-title">项目列表</div>
+            <div class="nav-arrow">←</div>
+        </a>
+        <a href="../projects.html" class="nav-box">
+            <div class="nav-label">下一个项目 →</div>
+            <div class="nav-title">IMU-MuJoCo运动跟踪系统</div>
+            <div class="nav-arrow">→</div>
+        </a>
+    </div>
+
+    <!-- 返回顶部 -->
+    <div class="back-to-top">
+        <a href="#">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/>
+            </svg>
+            返回顶部
+        </a>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,14 @@
+# 基于深度学习的智能充电站选址优化系统
+# Intelligent Charging Station Location Optimization System Based on Deep Learning
+
+## 中文摘要
+本项目提出了一种基于深度学习的智能充电站选址优化系统，该系统结合了卷积神经网络（CNN）和强化学习算法，通过分析卫星图像和GPS轨迹数据来识别适合建设充电站的停车点。系统首先使用ResNet50、Inception V3和ShuffleNet V2等预训练模型对卫星图像进行特征提取和分类，识别出适合、不适合和非常适合建设充电站的区域；然后利用多智能体强化学习（MARL）算法对候选站点进行优化排序，综合考虑距离、覆盖范围、建设成本等多个目标函数；最后通过遗传算法和整数规划方法求解最优选址方案。实验结果表明，该系统在停车点类型识别方面达到了较高的准确率，在充电站选址优化方面能够有效平衡多个目标，为智能交通和绿色出行提供了技术支撑。
+
+## English Abstract
+This project proposes an intelligent charging station location optimization system based on deep learning, which combines convolutional neural networks (CNN) and reinforcement learning algorithms to identify suitable parking points for charging station construction through satellite image and GPS trajectory data analysis. The system first uses pre-trained models such as ResNet50, Inception V3, and ShuffleNet V2 to extract features and classify satellite images, identifying areas that are suitable, unsuitable, or highly suitable for charging station construction; then employs multi-agent reinforcement learning (MARL) algorithms to optimize the ranking of candidate sites, comprehensively considering multiple objective functions such as distance, coverage range, and construction costs; finally, it solves the optimal location scheme through genetic algorithms and integer programming methods. Experimental results show that the system achieves high accuracy in parking point type recognition and can effectively balance multiple objectives in charging station location optimization, providing technical support for intelligent transportation and green travel.
+
+## 技术关键词
+深度学习、卷积神经网络、强化学习、多智能体系统、卫星图像处理、GPS轨迹分析、充电站选址、遗传算法、整数规划、多目标优化、智能交通、绿色出行
+
+## Technical Keywords
+Deep Learning, Convolutional Neural Networks, Reinforcement Learning, Multi-Agent Systems, Satellite Image Processing, GPS Trajectory Analysis, Charging Station Location, Genetic Algorithm, Integer Programming, Multi-Objective Optimization, Intelligent Transportation, Green Travel 

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTK+IMU SLAM框架 - 高精度定位导航解决方案</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .metadata {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: #2c2c2c;
+        }
+
+        .project-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .project-authors {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .main-image {
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .main-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+        }
+
+        .abstract-section, .tldr-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .abstract-section h2, .tldr-section h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2c2c2c;
+        }
+
+        .abstract-section p, .tldr-section p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .abstract-section p:last-child, .tldr-section p:last-child {
+            margin-bottom: 0;
+        }
+
+        .official-version {
+            margin-bottom: 2.5rem;
+        }
+
+        .official-version {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .official-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #333;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid #e0e0e0;
+            white-space: nowrap;
+        }
+
+        .official-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .btn-icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 4rem;
+        }
+
+        .nav-box {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .nav-box:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-arrow {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top {
+            text-align: center;
+            margin: 4rem 0 2rem 0;
+        }
+
+        .back-to-top a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-to-top a:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .project-title {
+                font-size: 2rem;
+            }
+
+            .navigation {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回链接 -->
+    <a href="../index.html" class="back-link">
+        ← 返回主页
+    </a>
+
+    <!-- 项目元信息 -->
+    <div class="metadata">
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+            <span>DEC 28, 2024</span>
+        </div>
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span>6 MIN READ</span>
+        </div>
+    </div>
+
+    <header class="header">
+        <h1 class="project-title">RTK+IMU SLAM框架</h1>
+        <p class="project-subtitle">高精度定位导航智能解决方案</p>
+        <div class="project-authors">
+            Author: Y Jason Young
+        </div>
+    </header>
+
+    <div class="main-image">
+        <img src="HPRmv3gBEYsSLW4oPI1xhRd4Wh4B0K.png" alt="RTK+IMU SLAM框架主图" style="max-width: 100%; height: auto; border-radius: 12px;">
+    </div>
+
+    <div class="abstract-section">
+        <h2>Abstract:</h2>
+        <p>
+            RTK+IMU SLAM框架是一个基于RTK-GPS和IMU融合的高精度定位导航系统，采用紧耦合融合策略，实现了厘米级定位精度和实时性能。该框架在自动驾驶、无人机导航、机器人定位等高精度应用场景中发挥着关键作用，为复杂环境下的可靠导航提供了强有力的技术支撑。
+        </p>
+        <p>
+            通过深入的多传感器融合技术研究，我在我领导的指导下复现并维护了一套完整的SLAM系统，具有高精度定位、实时处理能力和强鲁棒性等核心特性。该系统采用统一的扩展卡尔曼滤波器框架，实现了RTK-GPS、IMU和可选视觉传感器的紧耦合融合，通过多传感器冗余显著提高了系统可靠性。
+        </p>
+        <p>
+            核心技术包括多传感器数据预处理、紧耦合融合算法（EKF/UKF）、误差建模与补偿、实时优化算法等。系统采用滑动窗口优化和稀疏矩阵求解技术，实现了高效的实时计算。通过精确的GNSS误差模型（对流层、电离层、多径）和IMU误差模型（零偏、尺度因子、轴间耦合），有效降低了系统误差。
+        </p>
+        <p>
+            该框架成功解决了传统单传感器定位系统在复杂环境下的精度不足和可靠性问题，实现了室内外无缝导航能力。通过优化的计算架构和并行计算设计，系统在保持高精度的同时实现了实时性能，为高精度定位导航应用提供了完整的解决方案。
+        </p>
+        <p>
+            <strong>技术突破：</strong>我的紧耦合融合算法在复杂城市环境下实现了厘米级定位精度，相比传统松耦合方法提升了3-5倍精度。在实时性能方面，系统处理延迟控制在50ms以内，支持100Hz的高频率输出，满足了室外割草机等高动态应用场景的严格要求。
+        </p>
+
+    </div>
+
+    <div class="official-version">
+        <a href="https://github.com/yourusername/rtk-imu-slam" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 4.624-5.479 4.862.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+            GitHub
+        </a>
+        <a href="https://gitee.com/yourusername/rtk-imu-slam" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.984 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.016 0zm6.09 5.333c.328 0 .593.266.593.593v1.482a.594.594 0 0 1-.593.593H9.777c-.982 0-1.778.796-1.778 1.778v5.63c0 .982.796 1.778 1.778 1.778h8.296c.982 0 1.778-.796 1.778-1.778V9.778c0-.982-.796-1.778-1.778-1.778H9.777c-.328 0-.593-.266-.593-.593V7.704c0-.328.266-.593.593-.593h8.296z"/>
+            </svg>
+            Gitee
+        </a>
+        <a href="README.md" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+            </svg>
+            技术文档
+        </a>
+    </div>
+
+    <div class="tldr-section">
+        <h2>TLDR:</h2>
+        <p>
+            基于RTK-GPS和IMU融合的SLAM框架，采用紧耦合融合策略实现厘米级定位精度。通过多传感器融合、统一EKF/UKF框架和实时优化算法，系统在复杂城市环境下实现了3-5倍精度提升。支持100Hz高频率输出，处理延迟控制在50ms以内，满足室外割草机等高动态应用要求。具备室内外无缝导航能力，支持多平台部署，为高精度定位导航应用提供完整解决方案。
+        </p>
+    </div>
+
+    <div class="navigation">
+        <a href="../index.html" class="nav-box">
+            <div class="nav-label">返回主页</div>
+            <div class="nav-title">查看所有项目</div>
+            <div class="nav-arrow">←</div>
+        </a>
+        <a href="../shelf-image-stitching-system/index.html" class="nav-box">
+            <div class="nav-label">相关项目</div>
+            <div class="nav-title">图像全景拼接算法系统</div>
+            <div class="nav-arrow">→</div>
+        </a>
+    </div>
+
+    <div class="back-to-top">
+        <a href="#top">↑ 返回顶部</a>
+    </div>
+</body>
+</html> 

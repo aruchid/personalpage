@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基于Langchain的BMP-DB文献提取软件 - 智能化科研文献数据处理解决方案</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .metadata {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: #2c2c2c;
+        }
+
+        .project-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .project-authors {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .main-image {
+            text-align: center;
+            margin: 2.5rem 0;
+            background: #fafafa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .main-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .main-image img:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-caption {
+            text-align: center;
+            color: #555;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            font-weight: 500;
+            background: #f0f0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2c2c2c;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .section h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.8rem 0;
+            color: #333;
+        }
+
+        .section p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .section ul, .section ol {
+            margin: 1rem 0 1rem 2rem;
+            color: #444;
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .highlight-box h4 {
+            color: #007bff;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .tech-item {
+            background: #f8f8f8;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .tech-item h5 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .tech-item p {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0;
+        }
+
+        .tech-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #007bff;
+        }
+
+        .feature-card h3 {
+            color: #007bff;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+
+        .feature-card ul {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+
+        .feature-card li {
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
+            color: #495057;
+        }
+
+        .performance-table {
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .performance-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .performance-table th {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .performance-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            color: #495057;
+        }
+
+        .performance-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .performance-table tr:hover {
+            background: #e3f2fd;
+        }
+
+        .performance-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .official-version {
+            margin-bottom: 2.5rem;
+        }
+
+        .official-version {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .official-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #333;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid #e0e0e0;
+            white-space: nowrap;
+        }
+
+        .official-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .btn-icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 4rem;
+        }
+
+        .nav-box {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .nav-box:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-arrow {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top {
+            text-align: center;
+            margin: 4rem 0 2rem 0;
+        }
+
+        .back-to-top a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-to-top a:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .project-title {
+                font-size: 2rem;
+            }
+
+            .navigation {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回链接 -->
+    <a href="../projects.html" class="back-link">
+        ← 返回项目列表
+    </a>
+
+    <!-- 项目元信息 -->
+    <div class="metadata">
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+            <span>JUL 2023</span>
+        </div>
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span>8 MIN READ</span>
+        </div>
+    </div>
+
+    <header class="header">
+        <h1 class="project-title">基于Langchain的BMP-DB文献提取软件</h1>
+        <p class="project-subtitle">智能化科研文献数据处理解决方案</p>
+        <div class="project-authors">
+            Author: aruchidzong
+        </div>
+    </header>
+
+    <div class="section">
+        <h2>项目背景</h2>
+        <p>
+            在环境工程研究领域，研究人员需要从大量科学文献中提取BMP（生物甲烷潜力）相关的数据，包括表格、文本和图表信息。传统的人工提取方式效率低下，容易出错，且无法处理海量文献数据。
+        </p>
+        <p>
+            随着科研文献数量的快速增长和人工智能技术的成熟，开发一个智能化的文献数据提取软件成为迫切需求。该项目旨在通过Langchain框架和先进的NLP技术，实现文献数据的自动化提取和处理，为环境工程研究提供强有力的数据支持。
+        </p>
+        <p>
+            通过构建BMP-DB专业数据库，整合提取的科研数据，显著提高研究工作的效率和数据质量，推动整个领域的技术进步。
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>技术原理</h2>
+        <div class="highlight-box">
+            <h4>Langchain框架优势</h4>
+            <p>Langchain是一个强大的LLM应用开发框架，能够构建智能化的数据处理流程，支持多模态数据理解和结构化信息提取。</p>
+        </div>
+
+        <h3>核心工作原理</h3>
+        <p>
+            系统采用多阶段处理流程：首先将PDF文献转换为Markdown格式，提取其中的图片和文本内容；然后使用Langchain框架结合GPT模型进行智能信息提取；最后将提取的数据结构化存储到BMP-DB数据库中。
+        </p>
+
+        <!-- Streamlit文献提取页面主界面 -->
+        <div class="main-image">
+            <img src="Ru0vOtLysYbI7Rf8akKErUAKDcDJFc.png" alt="Streamlit文献提取软件主界面" style="max-width: 100%; height: auto; border-radius: 12px;">
+            <div class="image-caption">图1：Streamlit文献提取软件主界面 - 支持多文件批量处理</div>
+        </div>
+
+        <p>
+            如图1所示，软件提供了直观的用户界面，支持PDF文件上传、批量处理和实时进度监控。用户可以通过简单的操作完成复杂的文献数据提取任务。
+        </p>
+
+        <h3>技术架构设计</h3>
+        <ul>
+            <li><strong>前端界面：</strong>基于Streamlit框架，提供用户友好的交互体验</li>
+            <li><strong>后端处理：</strong>Python + Langchain + 多线程并行处理</li>
+            <li><strong>AI模型：</strong>集成GPT模型进行智能信息提取和分类</li>
+            <li><strong>数据存储：</strong>定制化BMP-DB数据库，支持结构化数据管理</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>系统架构</h2>
+        <p>
+            本系统采用模块化设计，包含文献解析模块、数据提取模块、智能处理模块、数据库管理模块和用户界面模块，各模块协同工作，实现文献数据的智能化提取和处理。
+        </p>
+
+        <h3>核心模块</h3>
+        <div class="tech-grid">
+            <div class="tech-item">
+                <h5>📄 文献解析模块</h5>
+                <p>PDF转Markdown、图片提取和内容解析</p>
+            </div>
+            <div class="tech-item">
+                <h5>🤖 智能提取模块</h5>
+                <p>基于Langchain的AI信息提取</p>
+            </div>
+            <div class="tech-item">
+                <h5>🖼️ 图像处理模块</h5>
+                <p>图片分类、数据提取和图表分析</p>
+            </div>
+            <div class="tech-item">
+                <h5>💾 数据库模块</h5>
+                <p>BMP-DB数据存储和管理</p>
+            </div>
+        </div>
+
+        <h3>处理流程</h3>
+        <ol>
+            <li><strong>文件上传：</strong>支持PDF文件批量上传和队列管理</li>
+            <li><strong>格式转换：</strong>PDF转Markdown，提取文本和图片内容</li>
+            <li><strong>图片下载：</strong>自动下载和分类文献中的图片资源</li>
+            <li><strong>AI提取：</strong>使用GPT模型提取结构化信息</li>
+            <li><strong>数据存储：</strong>将提取的数据存储到BMP-DB数据库</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>技术特点</h2>
+        <div class="tech-features">
+            <div class="feature-card">
+                <h3>🚀 高效处理能力</h3>
+                <ul>
+                    <li><strong>多线程处理：</strong>采用multiprocess库实现并行处理，显著提升处理速度</li>
+                    <li><strong>批量处理：</strong>支持多文件同时处理，提高整体工作效率</li>
+                    <li><strong>实时监控：</strong>提供处理进度显示和状态跟踪</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>🧠 智能化提取</h3>
+                <ul>
+                    <li><strong>AI驱动：</strong>集成GPT模型，实现智能信息识别和提取</li>
+                    <li><strong>多模态处理：</strong>支持文本、表格、图表等多种数据格式</li>
+                    <li><strong>自适应学习：</strong>通过Langchain框架优化提取策略</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>📊 专业数据库</h3>
+                <ul>
+                    <li><strong>BMP-DB：</strong>专门针对生物甲烷潜力研究的数据存储</li>
+                    <li><strong>结构化存储：</strong>支持复杂查询和数据分析</li>
+                    <li><strong>数据导出：</strong>提供多种格式的数据导出功能</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>应用场景</h2>
+        <h3>环境工程研究</h3>
+        <p>为生物甲烷潜力研究提供数据支持，加速相关科研项目的进展。</p>
+
+        <h3>文献数据挖掘</h3>
+        <p>支持大规模文献数据的自动化提取和分析，提高研究效率。</p>
+
+        <h3>科研数据管理</h3>
+        <p>构建专业数据库，为科研机构提供数据管理和分析工具。</p>
+
+        <h3>学术研究支持</h3>
+        <p>为研究生和科研人员提供便捷的文献数据处理工具。</p>
+    </div>
+
+    <div class="section">
+        <h2>系统性能指标</h2>
+        <div class="highlight-box">
+            <h4>处理效率</h4>
+            <p>支持批量处理，多线程并行执行，显著提升文献数据处理速度，相比传统人工方式效率提升10倍以上。</p>
+        </div>
+
+        <h3>技术参数</h3>
+        <div class="performance-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>参数</th>
+                        <th>指标值</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>支持格式</strong></td>
+                        <td>PDF、Markdown</td>
+                        <td>主流文献格式支持</td>
+                    </tr>
+                    <tr>
+                        <td><strong>处理能力</strong></td>
+                        <td>批量处理</td>
+                        <td>支持多文件同时处理</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AI模型</strong></td>
+                        <td>GPT + Langchain</td>
+                        <td>先进的AI信息提取技术</td>
+                    </tr>
+                    <tr>
+                        <td><strong>数据存储</strong></td>
+                        <td>BMP-DB</td>
+                        <td>专业数据库支持</td>
+                    </tr>
+                    <tr>
+                        <td><strong>用户界面</strong></td>
+                        <td>Streamlit</td>
+                        <td>现代化Web界面</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>项目成果</h2>
+        <p>
+            项目成功实现了文献中BMP相关数据的自动化提取，包括表格、文本和图表信息，大幅提高了数据提取的准确性和效率。通过软件工具的应用，显著提升了环境工程领域研究的工作效率和数据质量。
+        </p>
+        <p>
+            构建了定制数据库BMP-DB，整合提取的数据，为科学研究提供了可靠的数据支持。该项目的成功实施，为后续类似项目积累了宝贵经验，进一步巩固了在NLP、ML和全栈开发方面的技术能力。
+        </p>
+    </div>
+
+    <div class="official-version">
+        <a href="基于Langchain的BMP-DB文献提取软件项目概述.md" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+            </svg>
+            项目概述
+        </a>
+        <a href="Streamlit 文献提取页面简介.md" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+            </svg>
+            界面介绍
+        </a>
+    </div>
+
+    <div class="navigation">
+        <a href="../projects.html" class="nav-box">
+            <div class="nav-label">返回项目列表</div>
+            <div class="nav-title">查看所有项目</div>
+            <div class="nav-arrow">←</div>
+        </a>
+        <a href="../m2-beam-quality-analysis/project-detail.html" class="nav-box">
+            <div class="nav-label">相关项目</div>
+            <div class="nav-title">M²激光测量系统</div>
+            <div class="nav-arrow">→</div>
+        </a>
+    </div>
+
+    <div class="back-to-top">
+        <a href="#top">↑ 返回顶部</a>
+    </div>
+</body>
+</html> 

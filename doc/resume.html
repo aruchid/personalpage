@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>宗悦 - 算法工程师简历</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+	<style>
+		:root{
+			--bg:#f7f9fc;
+			--card:#ffffff;
+			--ink:#0f172a;
+			--muted:#64748b;
+			--primary:#0ea5e9;
+			--accent:#e2f3ff;
+			--chip:#eef2ff;
+		}
+		html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+		.container{max-width:1080px;margin:40px auto;padding:0 24px;}
+		.header{display:flex;align-items:center;gap:28px;margin-bottom:28px;}
+		.avatar{width:180px;height:180px;border-radius:1000px;overflow:hidden;box-shadow:0 6px 24px rgba(15,23,42,.12);} 
+		.avatar img{width:100%;height:100%;object-fit:cover;}
+		.hgroup h1{font-weight:800;font-size:42px;line-height:1;margin:0 0 8px 0;}
+		.hgroup .subtitle{font-size:20px;color:var(--muted);} 
+		.hrow{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;}
+		.link-btn{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:#fff;text-decoration:none;padding:10px 14px;border-radius:10px;font-weight:700;box-shadow:0 6px 18px rgba(15,23,42,.18);}
+		.link-btn:hover{background:#0b1329;}
+		.link-btn .url{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-weight:600;}
+		@media (max-width:640px){.hrow{grid-template-columns:1fr;}.link-btn{justify-content:center;}}
+		.grid{display:grid;grid-template-columns:1fr;gap:18px;margin-top:20px;}
+		.contacts{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;color:var(--muted);}
+		.contacts a{color:var(--ink);text-decoration:none;font-weight:700;}
+		.contacts .item{background:#f1f5f9;border-radius:10px;padding:6px 10px;}
+		@media (max-width:640px){.contacts{gap:8px;}}
+		.card{background:var(--card);border-radius:18px;padding:20px 22px;box-shadow:0 6px 24px rgba(15,23,42,.06);transition:box-shadow .2s ease, transform .2s ease;} 
+		.card:hover{box-shadow:0 10px 28px rgba(15,23,42,.10);transform:translateY(-1px);} 
+		.section-title{font-size:22px;font-weight:700;margin:0 0 14px 0;}
+		.row{display:flex;flex-wrap:wrap;gap:12px;}
+		.badge{background:var(--chip);color:#1e293b;padding:10px 14px;border-radius:12px;font-weight:600;transition:background-color .2s ease, transform .2s ease;}
+		.badge:hover{background:#e6eaff;transform:translateY(-1px);} 
+		.pill{background:#ecfeff;color:#0369a1;padding:8px 12px;border-radius:999px;font-weight:600;}
+		.columns-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+		.columns-2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+		.kv{display:grid;grid-template-columns:140px 1fr;gap:10px;font-size:14px;color:var(--muted);} 
+		.kv strong{color:var(--ink);} 
+		ul{margin:8px 0 0 16px;padding:0;}
+		li{margin:4px 0;}
+		.small{font-size:13px;color:var(--muted);} 
+		.footer{color:var(--muted);text-align:center;margin:28px 0 8px 0;font-size:12px;}
+		.hero{display:grid;grid-template-columns:260px 1fr;gap:28px;align-items:center;margin-bottom:10px;}
+		.divider{height:1px;background:#e5e7eb;margin:10px 0 0 0;}
+		.tag{background:var(--accent);color:#0c4a6e;font-weight:700;padding:6px 10px;border-radius:10px;}
+		.grid-chips{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
+		.block-title{font-weight:800;color:#0b253a;margin:12px 0 6px 0;}
+		.experience{display:grid;grid-template-columns:1fr 3fr;gap:12px;margin:10px 0 6px 0;}
+		.time{color:var(--muted);font-size:13px;}
+		.job h4{margin:2px 0 6px 0;}
+		.fab{position:fixed;right:24px;bottom:24px;width:56px;height:56px;border-radius:999px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 10px 28px rgba(14,165,233,.35);transition:transform .2s ease, box-shadow .2s ease;}
+		.fab:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(14,165,233,.45);} 
+		.fab svg{width:26px;height:26px;fill:#fff;}
+		@media print{
+			.container{max-width:none;margin:0;padding:0;}
+			.header{margin:0 0 10px 0;}
+			.card{box-shadow:none;border:1px solid #e5e7eb;}
+			body{background:#fff;}
+			.footer{display:none;}
+			.fab{display:none;}
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="header">
+			<div class="avatar">
+				<img src="https://cdn.mathpix.com/cropped/2025_08_10_1f323168e93b1d07043fg-1.jpg?height=250&width=258&top_left_y=88&top_left_x=1726" alt="个人照片">
+			</div>
+			<div class="hgroup">
+				<h1>ZongYue</h1>
+				<div class="hrow">
+					<div class="subtitle">Senior Algorithm Engineer · 9 Years experience</div>
+					<a class="link-btn" href="https://aruchid.github.io" target="_blank" rel="noopener noreferrer">
+						<span>Visit</span>
+						<span class="url">aruchid.github.io</span>
+					</a>
+				</div>
+				<div class="contacts">
+					<div class="item">17301834235</div>
+					<div class="item"><a href="mailto:aruchid@163.com">aruchid@163.com</a></div>
+					<div class="item"><a href="https://aruchid.github.io" target="_blank" rel="noopener">aruchid.github.io</a></div>
+					<div class="item">上海</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="grid">
+			<div class="card">
+				<div class="section-title">Tech Overview</div>
+				<div class="grid-chips">
+					<div class="badge">C++ · Python · CUDA · PyTorch · TensorRT · OpenVINO · ONNX</div>
+					<div class="badge">3D Vision / Stereo · Segmentation · Detection · Tracking</div>
+					<div class="badge">Real‑time Optimization · Quantization/Compression · Embedded/Edge AI</div>
+					<div class="badge">Distributed Training · MLOps · Sensor Calibration</div>
+				</div>
+			</div>
+
+			<div class="card">
+				<div class="section-title">Profile</div>
+				<p class="small">具备极强的自我学习能力，几乎全部技术能力来源于系统自学与工程实践而非课堂。近年经手项目逾百、成功落地数十，覆盖计算机视觉、深度学习、嵌入式与工业检测等方向，能独立完成从算法研究到产品化的全流程闭环。大多数项目均已整理并归档于个人网站，欢迎点击访问查看完整案例与技术细节：<a href="https://aruchid.github.io" target="_blank">aruchid.github.io</a>。</p>
+			</div>
+
+			<div class="card">
+				<div class="section-title">Experience</div>
+				<div class="experience">
+					<div class="time">2024.09 - 2025.08</div>
+					<div class="job">
+						<h4>太易检测设备有限公司 · 算法工程师</h4>
+						<ul>
+							<li>深度学习模型部署优化、OpenVINO推理与工业X光检测研发</li>
+							<li>并行训练平台建设，训练效率提升3倍，边缘端满足实时性</li>
+						</ul>
+					</div>
+				</div>
+				<div class="experience">
+					<div class="time">2021.06 - 2024.09</div>
+					<div class="job">
+						<h4>上海昊量光电设备有限公司 · 算法工程师</h4>
+						<ul>
+							<li>从零组建15人算法团队，搭建研发体系与项目管理流程</li>
+							<li>完成8个核心项目（光学测量、工业检测、嵌入式平台与智能系统）</li>
+						</ul>
+					</div>
+				</div>
+				<div class="experience">
+					<div class="time">2018.11 - 2021.05</div>
+					<div class="job">
+						<h4>广州图匠数据科技（上海） · 图像算法工程师</h4>
+						<ul>
+							<li>全景拼接算法研发，移动端移植，货架SKU系统10+ FPS</li>
+							<li>改进特征提取与对齐，端到端优化视觉流程</li>
+						</ul>
+					</div>
+				</div>
+				<div class="experience">
+					<div class="time">2016.03 - 2018.11</div>
+					<div class="job">
+						<h4>上海邦鼓思电子科技 · 嵌入式软件工程师</h4>
+						<ul>
+							<li>硬件/嵌入式开发与算法移植，构建完整嵌入式算法能力</li>
+							<li>实现双摄拼接在MCU平台落地</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="card">
+				<div class="section-title">Selected Projects</div>
+				<ul>
+					<li>
+						<strong>DEFOM‑Stereo立体测距</strong>
+						<div class="small">Abstract: 基于可变形卷积的立体匹配网络构建亚像素级视差估计管线，结合多尺度代价体与置信度回归，在复杂光照与动态场景下保持稳定深度感知。系统实现0.5–100 m量程、30 fps 实时性能与<33 ms端到端延迟，深度精度±2%，相较传统SGBM精度提升3–5倍。整体流程包含相机标定与极线校正、特征金字塔提取、可变形3D卷积匹配、视差回归与后处理滤波，并提供点云重建与可视化模块，面向ADAS/机器人等应用。</div>
+					</li>
+					<li>
+						<strong>SegTransformer中微子重建</strong>
+						<div class="small">Abstract: 面向中微子事件的方向与顶点重建，设计融合物理归纳偏置的SegTransformer框架与多任务联合优化策略，引入结构先验与拓扑一致性约束以降低系统误差。通过层次化特征聚合与不确定性加权损失，显著提升空间定位鲁棒性，顶点RMS由170 mm降至150 mm（≈12%），方向估计稳定性同步增强。方法在有限标注下仍具良好泛化能力，适配不同探测器工况。</div>
+					</li>
+					<li>
+						<strong>TrainSphere分布式训练平台</strong>
+						<div class="small">Abstract: 基于主从+调度器的分布式训练系统，采用消息队列与WebSocket构建高吞吐低延迟的指令/心跳通道，内置线程管理器、12类队列与任务状态机实现弹性调度与容错恢复。平台支持多节点自动发现、负载均衡、断点续训与实时可视化监控，统一模型/数据/权重的生命周期管理，在典型CV/NLP工作负载下训练效率提升约3×，显著缩短实验迭代周期。</div>
+					</li>
+					<li>
+						<strong>SPECIM高光谱实时分割</strong>
+						<div class="small">Abstract: 面向Specim FX17/FX10+FX50的SWIR线扫场景，构建C++/CUDA优化的实时分割与同步回归系统，支持多种深度学习/机器学习模型加载与标准化接口。系统提供线扫数据API、光谱校正与特征降维管线，以Unet语义分割为核心实现30+ fps在线推理，并输出与分割一致的定量回归结果；跨PC与嵌入式平台稳定运行，满足工业检测与成分分析需求。</div>
+					</li>
+					<li>
+						<strong>SAM‑Road道路分割</strong>
+						<div class="small">Abstract: 在仅200张训练图的严格数据约束下，提出层次化道路提取、全局一致性优化、双解码主干/支路分割与Graph Transformer拓扑推理等六项核心改进，优先高召回策略以保障道路连通性。通过8组件自适应损失、结构先验正则与孤立点智能修复，平均完成度达91%，精度提升约1.73%且召回保持>70%，在多样道路拓扑上展现稳健泛化能力。</div>
+					</li>
+					<li>
+						<strong>零售货架全景拼接与SKU盘点（图匠·全景核心项目）</strong>
+						<div class="small">Abstract: 在图匠负责并落地的全景拼接核心项目，针对近距货架拍摄的畸变与拼接误差，重构注册/匹配/几何变换模块，结合KNN‑RANSAC、单应估计、最大流割缝与金字塔融合，打造稳定高质量的全景拼接管线；在移动端实现实时全景与自动SKU计数，处理速度提升约3×并显著降低算力消耗，支撑零售巡检与盘点业务。</div>
+					</li>
+					<li>
+						<strong>RK3588算法快速部署平台</strong>
+						<div class="small">Abstract: 面向RK3588/Jetson等边缘设备的通用部署平台，支持检测/计数/分类/缺陷等多算法，提供模型压缩与量化、软硬件协同优化与跨平台移植，低成本实现实时推理并已服务多行业工控场景。</div>
+					</li>
+					<li>
+						<strong>激光光束质量分析仪</strong>
+						<div class="small">Abstract: 高精度M²/光斑直径/发散角/椭圆率/指向稳定性测量方案，结合刀口/狭缝/相机多测量法与实时数据处理，覆盖400–2000 nm与1 μW–10 W功率范围，M²精度±5%、光斑直径±2%，面向工业/科研质控。</div>
+					</li>
+					<li>
+						<strong>Deepfake人脸伪造检测</strong>
+						<div class="small">Abstract: 基于多任务解耦网络与Wavelet‑CLIP融合，构建纹理/频域/语义一致性三分支检测框架，在FaceForensics++格式评测上达Acc 95.2%、P 94.8%、R 96.1%、F1 95.4%，25 FPS推理、45 MB模型体量，适配实时媒资鉴伪。</div>
+					</li>
+				</ul>
+			</div>
+
+			<div class="card">
+				<div class="section-title">Education & Certificates</div>
+				<ul>
+					<li>上海应用技术大学 · 电气工程及其自动化（本科）</li>
+					<li>PMP（PMI） · IELTS 6.5 · 高级工程师 · CET‑6 · 普通话二甲 · 日语N4</li>
+				</ul>
+			</div>
+
+			<!-- 联系方式已移至抬头区域，移除原 Contact 卡片 -->
+		</div>
+
+		<div class="footer">© ZongYue · 简历</div>
+		<a class="fab" href="https://aruchid.github.io" target="_blank" rel="noopener noreferrer" aria-label="访问个人网站">
+			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm7.93 9h-3.11a15.82 15.82 0 0 0-1.06-5.02A8.03 8.03 0 0 1 19.93 11zM12 4.07c1.1 1.53 1.9 3.52 2.23 5.93H9.77C10.1 7.59 10.9 5.6 12 4.07zM4.07 13h3.11c.17 1.76.6 3.45 1.26 4.98A8.03 8.03 0 0 1 4.07 13zM7.18 11H4.07a8.03 8.03 0 0 1 4.37-5.02A15.82 15.82 0 0 0 7.18 11zm2.59 0h4.46c-.17 1.65-.56 3.26-1.16 4.73-.3.74-.63 1.4-.99 1.96-.36-.56-.69-1.22-.99-1.96-.6-1.47-.99-3.08-1.16-4.73zM12 19.93c-1.1-1.53-1.9-3.52-2.23-5.93h4.46c-.33 2.41-1.13 4.4-2.23 5.93zM16.56 17.98c.66-1.53 1.09-3.22 1.26-4.98h3.11a8.03 8.03 0 0 1-4.37 4.98z"/></svg>
+		</a>
+	</div>
+</body>
+</html> 

@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高光谱智能分选系统 - 种子质量检测与智能分选解决方案</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .metadata {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: #2c2c2c;
+        }
+
+        .project-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .project-authors {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .main-image {
+            text-align: center;
+            margin: 2.5rem 0;
+            background: #fafafa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .main-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .main-image img:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-caption {
+            text-align: center;
+            color: #555;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            font-weight: 500;
+            background: #f0f0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2c2c2c;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .section h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.8rem 0;
+            color: #333;
+        }
+
+        .section p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .section ul, .section ol {
+            margin: 1rem 0 1rem 2rem;
+            color: #444;
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #f8f9fa;
+            border-left: 4px solid #28a745;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .highlight-box h4 {
+            color: #28a745;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .tech-item {
+            background: #f8f8f8;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .tech-item h5 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .tech-item p {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0;
+        }
+
+        .tech-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #28a745;
+        }
+
+        .feature-card h3 {
+            color: #28a745;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+
+        .feature-card ul {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+
+        .feature-card li {
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
+            color: #495057;
+        }
+
+        .performance-table {
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .performance-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .performance-table th {
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .performance-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            color: #495057;
+        }
+
+        .performance-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .performance-table tr:hover {
+            background: #e8f5e8;
+        }
+
+        .performance-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .official-version {
+            margin-bottom: 2.5rem;
+        }
+
+        .official-version {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .official-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #333;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid #e0e0e0;
+            white-space: nowrap;
+        }
+
+        .official-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .btn-icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 4rem;
+        }
+
+        .nav-box {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .nav-box:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-arrow {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top {
+            text-align: center;
+            margin: 4rem 0 2rem 0;
+        }
+
+        .back-to-top a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-to-top a:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .project-title {
+                font-size: 2rem;
+            }
+
+            .navigation {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回链接 -->
+    <a href="../projects.html" class="back-link">
+        ← 返回项目列表
+    </a>
+
+    <!-- 项目元信息 -->
+    <div class="metadata">
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+            <span>DEC 28, 2024</span>
+        </div>
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span>8 MIN READ</span>
+        </div>
+    </div>
+
+    <header class="header">
+        <h1 class="project-title">高光谱智能分选系统</h1>
+        <p class="project-subtitle">种子质量检测与智能分选解决方案</p>
+        <div class="project-authors">
+            Author: aruchidzong
+        </div>
+    </header>
+
+    <div class="section">
+        <h2>项目背景</h2>
+        <p>
+            高光谱成像技术作为一种先进的光学检测手段，能够同时获取目标的空间信息和光谱信息，在农业种子质量检测领域具有巨大应用潜力。传统的种子分选方法主要依赖人工目视检测和简单的物理特性分析，存在检测精度低、效率低下、主观性强等问题。
+        </p>
+        <p>
+            随着精准农业和智能制造的快速发展，对种子质量检测的自动化、智能化和精准化提出了更高要求。高光谱技术能够检测种子内部化学成分、水分含量、病害情况等肉眼无法观察到的特征，为种子质量评估提供了全新的技术手段。
+        </p>
+        <p>
+            本项目旨在开发一套完整的高光谱智能分选系统，集成先进的机器学习算法和实时数据处理能力，实现种子质量的自动化检测和智能分选，为农业生产提供可靠的质量保障工具。
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>系统架构</h2>
+        <p>
+            系统采用分层架构设计，集成数据采集、处理、分析和控制等核心模块，实现从高光谱数据采集到智能分选决策的完整流程。系统分为训练框架和部署框架两个核心模块，支持从数据标注到模型训练再到生产部署的完整工作流程。
+        </p>
+
+        <!-- 系统架构图 -->
+        <div class="main-image">
+            <img src="ZbTK21mkPZuKVZc9rb7IJJZ6ZSJA9o.png" alt="高光谱智能分选系统架构图" style="max-width: 100%; height: auto; border-radius: 8px;">
+            <div class="image-caption">图1：高光谱智能分选系统完整架构设计</div>
+        </div>
+
+        <h3>核心模块</h3>
+        <div class="tech-grid">
+            <div class="tech-item">
+                <h5>🔬 数据采集模块</h5>
+                <p>高光谱相机、光源系统、传送带控制</p>
+            </div>
+            <div class="tech-item">
+                <h5>⚙️ 数据处理模块</h5>
+                <p>光谱预处理、特征提取、数据增强</p>
+            </div>
+            <div class="tech-item">
+                <h5>🤖 智能分析模块</h5>
+                <p>深度学习模型、分类算法、决策系统</p>
+            </div>
+            <div class="tech-item">
+                <h5>🎯 分选控制模块</hh5>
+                <p>执行器控制、分选逻辑、实时监控</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>技术特点</h2>
+        <div class="tech-features">
+            <div class="feature-card">
+                <h3>🎯 高精度光谱分析</h3>
+                <ul>
+                    <li><strong>波长范围：</strong>支持400-3000nm波段范围的高精度光谱曲线显示</li>
+                    <li><strong>多模式显示：</strong>包括单像素、区域平均和多点对比模式</li>
+                    <li><strong>光谱指数：</strong>内置NDVI、SAVI、EVI等15种植被指数计算</li>
+                    <li><strong>主成分分析：</strong>自动计算前3个主成分进行3D可视化</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>✏️ 智能标注系统</h3>
+                <ul>
+                    <li><strong>多工具标注：</strong>集成点选、矩形、多边形、画笔、填充等8种标注工具</li>
+                    <li><strong>智能算法辅助：</strong>基于SAM光谱角度映射、SLIC超像素分割、K-means聚类等算法</li>
+                    <li><strong>效率提升：</strong>标注效率提升80%，大幅减少人工标注工作量</li>
+                    <li><strong>质量控制：</strong>提供标注一致性检查、交叉验证、主动学习等机制</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>🤖 本地模型训练</h3>
+                <ul>
+                    <li><strong>多框架支持：</strong>原生支持PyTorch、TensorFlow框架</li>
+                    <li><strong>模型架构：</strong>内置ResNet、CNN、RNN、Transformer等经典模型架构</li>
+                    <li><strong>训练优化：</strong>支持分布式训练、断点续训、自动调参和早停机制</li>
+                    <li><strong>实时监控：</strong>提供损失曲线、准确率跟踪、资源使用监控等全面的训练过程可视化</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>训练框架 (Training Framework)</h2>
+        <div class="highlight-box">
+            <h4>核心功能</h4>
+            <p>提供完整的数据标注、模型训练和优化环境，支持多种深度学习框架和算法，帮助用户快速构建高精度的种子分类模型。</p>
+        </div>
+
+        <p>
+            训练框架专为高光谱种子分选应用设计，集成了先进的光谱数据可视化、智能标注工具和本地模型训练功能。软件参考perClass Mira的成熟架构，结合现代深度学习技术，为农业研究人员和技术人员提供完整的高光谱种子数据处理解决方案。
+        </p>
+
+        <!-- 训练软件界面 -->
+        <div class="main-image">
+            <img src="ulwkQH7XjATsv6Rli07AWD4ZFLwZie.png" alt="高光谱训练标注软件界面原型图" style="max-width: 100%; height: auto; border-radius: 8px;">
+            <div class="image-caption">图2：高光谱训练标注软件界面设计原型图</div>
+        </div>
+
+        <h3>技术架构</h3>
+        <ul>
+            <li><strong>前端框架：</strong>Qt6/PyQt6 + QML跨平台UI，集成OpenGL硬件加速渲染</li>
+            <li><strong>后端语言：</strong>Python 3.9+，集成NumPy、SciPy、Pandas等科学计算库</li>
+            <li><strong>机器学习：</strong>PyTorch + TensorFlow + Scikit-learn，支持多种深度学习模型</li>
+            <li><strong>图像处理：</strong>OpenCV + PIL + Scikit-image，提供专业的图像分析功能</li>
+            <li><strong>光谱处理：</strong>SpectralPython + PySptools，专门针对高光谱数据处理</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>部署框架 (Deployment Framework)</h2>
+        <p>
+            部署框架为农业生产环境中的实时高光谱种子分选提供流线型解决方案，提供多平台部署能力，包括Jetson边缘设备、工业GPU工作站和嵌入式农业机械系统。
+        </p>
+
+        <h3>部署特性</h3>
+        <ul>
+            <li><strong>优化推理引擎：</strong>集成TensorRT和ONNX模型优化，提升推理性能</li>
+            <li><strong>实时光谱分析：</strong>种子质量评估的实时光谱分析，支持实时决策</li>
+            <li><strong>自动化分选决策：</strong>种子活力检测、病害识别和损伤评估的准确率超过95%</li>
+            <li><strong>连续运行能力：</strong>恶劣农业环境中的连续运行，内置监控、告警和远程管理功能</li>
+        </ul>
+
+        <h3>支持平台</h3>
+        <div class="tech-grid">
+            <div class="tech-item">
+                <h5>🚀 边缘计算</h5>
+                <p>Jetson Nano/Xavier、树莓派等边缘设备</p>
+            </div>
+            <div class="tech-item">
+                <h5>💻 工业工作站</h5>
+                <p>工控N卡设备、工业PC等高性能平台</p>
+            </div>
+            <div class="tech-item">
+                <h5>☁️ 云端部署</h5>
+                <p>AWS、Azure、阿里云等云平台</p>
+            </div>
+            <div class="tech-item">
+                <h5>📱 移动设备</h5>
+                <p>iOS、Android移动应用</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>应用场景</h2>
+        <h3>种子分选与质量检测</h3>
+        <p>检测种子活力、病虫害、破损率，支持多种作物种子，提高种子质量和发芽率。</p>
+
+        <h3>食品安全检测</h3>
+        <p>检测异物污染、品质分级、营养成分分析，涵盖水果、蔬菜、肉类等食品类别。</p>
+
+        <h3>农业遥感分析</h3>
+        <p>作物长势监测、病虫害识别、产量预测，支持无人机和卫星高光谱数据处理。</p>
+
+        <h3>工业质量控制</h3>
+        <p>表面缺陷检测、材料成分分析、涂层厚度测量，适用于半导体、纺织、涂料等工业领域。</p>
+    </div>
+
+    <div class="section">
+        <h2>系统性能指标</h2>
+        <div class="highlight-box">
+            <h4>测量精度</h4>
+            <p>光谱分辨率：0.1nm，空间分辨率：1000×1000×500像素，标注效率提升80%，分选准确率超过95%</p>
+        </div>
+
+        <h3>技术参数</h3>
+        <div class="performance-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>参数</th>
+                        <th>指标值</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>波长范围</strong></td>
+                        <td>400nm - 3000nm</td>
+                        <td>覆盖可见光到近红外</td>
+                    </tr>
+                    <tr>
+                        <td><strong>光谱分辨率</strong></td>
+                        <td>0.1nm</td>
+                        <td>高精度光谱分析</td>
+                    </tr>
+                    <tr>
+                        <td><strong>空间分辨率</strong></td>
+                        <td>1000×1000×500</td>
+                        <td>支持大规模数据处理</td>
+                    </tr>
+                    <tr>
+                        <td><strong>标注效率提升</strong></td>
+                        <td>80%</td>
+                        <td>智能算法辅助标注</td>
+                    </tr>
+                    <tr>
+                        <td><strong>分选准确率</strong></td>
+                        <td>>95%</td>
+                        <td>高精度种子分类</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>项目价值</h2>
+        <p>
+            本软件为高光谱数据处理领域提供了从数据标注到模型训练再到生产部署的完整解决方案，特别适用于农业、食品、工业、科研等领域的质量检测和分类任务。通过集成先进的机器学习和计算机视觉技术，显著提高了高光谱数据处理的效率和准确性。
+        </p>
+        <p>
+            软件采用模块化设计，具有良好的扩展性和维护性，支持团队协作和云端集成，能够满足不同规模和需求的用户群体。其本地化部署特性确保了数据安全和隐私保护，同时云端模型仓库为用户提供了丰富的预训练模型资源。
+        </p>
+    </div>
+
+    <div class="official-version">
+        <a href="项目Abstract.md" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+            </svg>
+            项目摘要
+        </a>
+        <a href="软件设计.md" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+            </svg>
+            软件设计
+        </a>
+        <a href="高光谱训练标注软件完整设计说明.md" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+            </svg>
+            训练标注软件设计
+        </a>
+        <a href="高光谱智能分选系统软件开发合同.md" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+            </svg>
+            开发合同
+        </a>
+    </div>
+
+    <div class="navigation">
+        <a href="../m2-beam-quality-analysis/project-detail.html" class="nav-box">
+            <div class="nav-label">PREV</div>
+            <div class="nav-title">M²激光测量系统</div>
+            <div class="nav-arrow">←</div>
+        </a>
+        <a href="#" class="nav-box">
+            <div class="nav-label">NEXT</div>
+            <div class="nav-title">Advanced AI Systems</div>
+            <div class="nav-arrow">→</div>
+        </a>
+    </div>
+
+    <div class="back-to-top">
+        <a href="#top">↑ 返回顶部</a>
+    </div>
+</body>
+</html> 

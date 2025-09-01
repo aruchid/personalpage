@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMU-MuJoCo运动跟踪系统 - 基于物理引擎的实时骨骼驱动研究</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .metadata {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: #2c2c2c;
+        }
+
+        .project-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .project-authors {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .main-image {
+            text-align: center;
+            margin: 2.5rem 0;
+            background: #fafafa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .main-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .main-image img:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-caption {
+            text-align: center;
+            color: #555;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            font-weight: 500;
+            background: #f0f0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2c2c2c;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .section h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.8rem 0;
+            color: #333;
+        }
+
+        .section p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .section ul, .section ol {
+            margin: 1rem 0 1rem 2rem;
+            color: #444;
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .highlight-box h4 {
+            color: #007bff;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .tech-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #007bff;
+        }
+
+        .feature-card h3 {
+            color: #007bff;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+
+        .feature-card ul {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+
+        .feature-card li {
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
+            color: #495057;
+        }
+
+        .performance-table {
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .performance-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .performance-table th {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .performance-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            color: #495057;
+        }
+
+        .performance-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .performance-table tr:hover {
+            background: #e3f2fd;
+        }
+
+        .performance-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .research-objectives {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .research-objectives h4 {
+            color: #007bff;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .research-objectives p {
+            margin-bottom: 1rem;
+            color: #495057;
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 4rem;
+        }
+
+        .nav-box {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .nav-box:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-arrow {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top {
+            text-align: center;
+            margin: 4rem 0 2rem 0;
+        }
+
+        .back-to-top a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-to-top a:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .project-title {
+                font-size: 2rem;
+            }
+
+            .navigation {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回链接 -->
+    <a href="../projects.html" class="back-link">
+        ← 返回项目列表
+    </a>
+
+    <!-- 项目元信息 -->
+    <div class="metadata">
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+            <span>DEC 28, 2024</span>
+        </div>
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span>6 MIN READ</span>
+        </div>
+    </div>
+
+    <header class="header">
+        <h1 class="project-title">IMU-MuJoCo运动跟踪系统</h1>
+        <p class="project-subtitle">基于物理引擎的实时骨骼驱动研究</p>
+        <div class="project-authors">
+            Author: aruchidzong
+        </div>
+    </header>
+
+    <div class="section">
+        <h2>研究背景</h2>
+        <p>
+            基于惯性测量单元（IMU）的运动捕捉技术在人体运动分析领域具有重要应用价值。传统光学运动捕捉系统存在遮挡问题、环境要求高等限制，而IMU技术具有便携性好、不受环境光照影响等优势。
+        </p>
+        <p>
+            本研究旨在探索如何将IMU传感器数据与MuJoCo物理引擎结合，实现对人体骨骼运动的实时跟踪和仿真。通过多传感器数据融合和物理约束建模，提高运动捕捉的精度和可靠性。
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>技术方案</h2>
+        <div class="highlight-box">
+            <h4>研究思路</h4>
+            <p>系统通过17个IMU传感器采集人体运动数据，结合四元数解算和骨骼映射算法，驱动MuJoCo物理引擎中的数字人体模型，实现实时运动仿真。</p>
+        </div>
+
+        <h3>核心原理</h3>
+        <p>
+            系统基于惯性导航原理，通过多个IMU传感器同时采集人体不同部位的三轴加速度、三轴角速度和三轴磁场数据。这些原始数据经过卡尔曼滤波和四元数融合算法处理后，转换为各关节的旋转四元数。
+        </p>
+        <p>
+            四元数数据通过预训练的骨骼映射模型，映射到MuJoCo物理引擎中的人体骨骼模型。MuJoCo引擎基于刚体动力学和约束求解，实时计算骨骼模型的运动状态。
+        </p>
+
+        <div class="main-image">
+            <img src="oprZ1NKPWX4gMWWHKAJWF5NaYnXOO0.png" alt="IMU-MuJoCo运动跟踪系统架构图" style="max-width: 100%; height: auto; border-radius: 8px;">
+            <div class="image-caption">图1：IMU-MuJoCo运动跟踪系统架构图</div>
+        </div>
+
+        <h3>技术特点</h3>
+        <div class="tech-features">
+            <div class="feature-card">
+                <h3>🎯 高精度测量</h3>
+                <ul>
+                    <li>采用高精度9轴IMU传感器</li>
+                    <li>先进的卡尔曼滤波算法</li>
+                    <li>深度学习优化的骨骼映射模型</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>⚡ 实时性能</h3>
+                <ul>
+                    <li>系统延迟≤50ms</li>
+                    <li>支持≥60Hz数据更新频率</li>
+                    <li>多线程架构设计</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>🔧 可扩展性</h3>
+                <ul>
+                    <li>支持17个以上IMU模块</li>
+                    <li>实现35个以上关节角度解算</li>
+                    <li>模块化设计架构</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>系统组成</h2>
+        <h3>硬件系统</h3>
+        <ul>
+            <li>17个9轴IMU传感器，安装在人体关键关节位置</li>
+            <li>支持蓝牙5.0和USB-C接口的数据采集模块</li>
+            <li>可充电锂电池，支持8小时连续工作</li>
+        </ul>
+
+        <h3>软件系统</h3>
+        <ul>
+            <li>Python多线程数据采集程序</li>
+            <li>四元数解算、滤波和骨骼映射算法</li>
+            <li>基于MuJoCo引擎的人体运动仿真</li>
+            <li>实时运动显示和数据分析工具</li>
+        </ul>
+
+        <div class="main-image">
+            <img src="FEr3jGFgEGwMZsKXH5s7zh3BklZ4EW.png" alt="系统硬件组成和传感器布局示意图" style="max-width: 100%; height: auto; border-radius: 8px;">
+            <div class="image-caption">图2：系统硬件组成和传感器布局示意图</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>性能指标</h2>
+        <div class="performance-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>性能参数</th>
+                        <th>指标值</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>系统延迟</strong></td>
+                        <td>≤50ms</td>
+                        <td>从数据采集到运动显示的总延迟</td>
+                    </tr>
+                    <tr>
+                        <td><strong>更新频率</strong></td>
+                        <td>≥60Hz</td>
+                        <td>运动数据更新和显示频率</td>
+                    </tr>
+                    <tr>
+                        <td><strong>角度精度</strong></td>
+                        <td>≤±2°</td>
+                        <td>关节角度解算的绝对误差</td>
+                    </tr>
+                    <tr>
+                        <td><strong>传感器数量</strong></td>
+                        <td>≥17个</td>
+                        <td>支持同时接入的IMU模块数量</td>
+                    </tr>
+                    <tr>
+                        <td><strong>关节覆盖</strong></td>
+                        <td>≥35个</td>
+                        <td>可解算的关节角度数量</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>应用价值</h2>
+        <p>
+            本研究在运动医学、虚拟现实、机器人控制等领域具有重要应用价值。通过提供高精度、实时的运动捕捉解决方案，可为相关领域的科研工作和技术发展提供支持。
+        </p>
+
+        <h3>主要应用方向</h3>
+        <ul>
+            <li><strong>运动医学研究</strong>: 康复训练评估、运动损伤分析、步态分析</li>
+            <li><strong>虚拟现实技术</strong>: 全身动作捕捉、虚拟角色控制</li>
+            <li><strong>机器人学</strong>: 人机协作、远程操作、机器人学习</li>
+            <li><strong>生物力学研究</strong>: 人体运动学研究、运动控制机制分析</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>技术优势</h2>
+        <h3>算法优势</h3>
+        <ul>
+            <li>多传感器数据融合算法，减少单一传感器误差</li>
+            <li>先进的卡尔曼滤波和四元数融合算法</li>
+            <li>基于物理约束的运动仿真，确保运动合理性</li>
+        </ul>
+
+        <h3>系统优势</h3>
+        <ul>
+            <li>低延迟设计，满足实时交互需求</li>
+            <li>高帧率支持，提供流畅的运动显示</li>
+            <li>模块化架构，便于功能扩展和优化</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>研究进展</h2>
+        <div class="research-objectives">
+            <h4>📋 当前状态</h4>
+            <p>项目已完成技术方案设计，正在进行核心算法开发和系统集成。预计将在2025年Q2完成全部开发工作。</p>
+        </div>
+
+        <h3>已完成工作</h3>
+        <ul>
+            <li>系统架构设计和硬件选型</li>
+            <li>IMU数据采集模块开发</li>
+            <li>四元数解算算法实现</li>
+        </ul>
+
+        <h3>正在进行</h3>
+        <ul>
+            <li>骨骼映射算法优化</li>
+            <li>MuJoCo物理引擎集成</li>
+            <li>实时可视化界面开发</li>
+        </ul>
+    </div>
+
+    <!-- 导航 -->
+    <div class="navigation">
+        <a href="../projects.html" class="nav-box">
+            <div class="nav-label">← 返回</div>
+            <div class="nav-title">项目列表</div>
+            <div class="nav-arrow">←</div>
+        </a>
+        <a href="../projects.html" class="nav-box">
+            <div class="nav-label">下一个项目 →</div>
+            <div class="nav-title">M²激光测量系统</div>
+            <div class="nav-arrow">→</div>
+        </a>
+    </div>
+
+    <!-- 返回顶部 -->
+    <div class="back-to-top">
+        <a href="#">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/>
+            </svg>
+            返回顶部
+        </a>
+    </div>
+</body>
+</html> 

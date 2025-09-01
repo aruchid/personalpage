@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stereo Line Matching - Y Jason Young</title>
+    <link rel="stylesheet" href="../../css/project-detail.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* 简洁的项目详情页样式 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #fff;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .metadata {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: #2c2c2c;
+        }
+
+        .project-authors {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .abstract-section, .tldr-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .abstract-section h2, .tldr-section h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2c2c2c;
+        }
+
+        .abstract-section p, .tldr-section p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .abstract-section p:last-child, .tldr-section p:last-child {
+            margin-bottom: 0;
+        }
+
+        .official-version {
+            margin-bottom: 2.5rem;
+        }
+
+        .official-version {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .official-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #333;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid #e0e0e0;
+            white-space: nowrap;
+        }
+
+        .official-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .official-btn .btn-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 4rem;
+        }
+
+        .nav-box {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .nav-box:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-arrow {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top {
+            text-align: center;
+            margin: 4rem 0 2rem 0;
+        }
+
+        .back-to-top a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f8f8f8;
+            color: #666;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-to-top a:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        /* 系统架构图样式 */
+        .framework-diagram {
+            margin: 4rem 0 2rem 0;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+        }
+
+        .framework-diagram h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #2c2c2c;
+            text-align: center;
+        }
+
+        .diagram-container {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .framework-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 1px solid #e0e0e0;
+        }
+
+        .diagram-caption {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .diagram-caption strong {
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .project-title {
+                font-size: 2rem;
+            }
+
+            .navigation {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 返回链接 -->
+    <a href="../projects.html" class="back-link">
+        ← Back to projects
+    </a>
+
+    <!-- 项目元信息 -->
+    <div class="metadata">
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+            <span>DEC 28, 2024</span>
+        </div>
+        <div class="meta-item">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span>5 MIN READ</span>
+        </div>
+    </div>
+
+    <!-- 项目标题 -->
+    <h1 class="project-title">Robust Stereo Line Feature Matching Framework</h1>
+
+    <!-- 项目作者 -->
+    <div class="project-authors">
+        Authors: Y Jason Young
+    </div>
+
+    <!-- 系统架构图展示区域 -->
+    <div class="framework-diagram">
+        <h2>System Architecture Diagram</h2>
+        <div class="diagram-container">
+            <img src="SChxKVDV8wQJ1tikEmrb3U7cFxC0Y4.png" alt="Stereo Line Matching 系统架构图" class="framework-image">
+        </div>
+        <div class="diagram-caption">
+            <p><strong>Figure 1:</strong> System architecture diagram of our stereo line feature matching framework. The framework implements a multi-stage matching pipeline with descriptor-based similarity metrics, epipolar and geometric consistency constraints, and local disparity optimization.</p>
+        </div>
+    </div>
+
+    <!-- Abstract部分 -->
+    <div class="abstract-section">
+        <h2>Abstract:</h2>
+        <p>Stereo vision has become a fundamental technique in robotic perception and autonomous systems, offering dense depth estimation based on geometric disparities between stereo image pairs. However, traditional point-based feature matching approaches are often sensitive to textureless regions, illumination changes, and repetitive patterns, leading to degraded performance in challenging environments.</p>
+
+        <p>In this project, we implemented a line feature matching framework for stereo vision systems. Our method extracts geometric line segments from rectified stereo images using edge detection and line fitting algorithms. These line features provide structural information that can be more stable than point features in certain conditions.</p>
+
+        <p>We implemented a multi-stage matching pipeline that includes:</p>
+        <ul style="margin-left: 2rem; margin-bottom: 1rem;">
+            <li>Descriptor-based similarity metrics for initial line candidate selection,</li>
+            <li>Epipolar and geometric consistency constraints for false match rejection,</li>
+            <li>Local disparity optimization for refinement.</li>
+        </ul>
+
+        <p>The matched line segments are used to guide dense disparity map generation for depth estimation. We tested our framework on public datasets to evaluate its performance compared to point-based methods.</p>
+
+        <p>This work explores the use of line features in stereo vision systems for applications such as autonomous driving, SLAM, and 3D scene reconstruction.</p>
+    </div>
+
+    <!-- 项目链接按钮 -->
+    <div class="official-version">
+        <a href="https://github.com/yourusername/stereo-line-matching" class="official-btn">
+            <i class="fab fa-github"></i>
+            GitHub
+        </a>
+        <a href="https://gitee.com/yourusername/stereo-line-matching" class="official-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.984 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.016 0zm6.09 5.333c.328 0 .593.266.593.593v1.482a.594.594 0 0 1-.593.593H9.777c-.982 0-1.778.796-1.778 1.778v5.63c0 .982.796 1.778 1.778 1.778h8.296c.982 0 1.778-.796 1.778-1.778V9.778c0-.982-.796-1.778-1.778-1.778H9.777c-.328 0-.593-.266-.593-.593V7.704c0-.328.266-.593.593-.593h8.296z"/>
+            </svg>
+            Gitee
+        </a>
+        <a href="abstruct.md" class="official-btn">
+            <i class="fas fa-download"></i>
+            下载项目摘要
+        </a>
+    </div>
+
+    <!-- TLDR部分 -->
+    <div class="tldr-section">
+        <h2>TLDR:</h2>
+        <p>We implemented a stereo line feature matching framework that uses geometric line segments extracted from stereo images through edge detection and line fitting. The framework includes a multi-stage matching pipeline with descriptor-based similarity, epipolar constraints, and local disparity optimization. We tested this approach for depth estimation in stereo vision applications.</p>
+    </div>
+
+    <!-- 前后导航 -->
+    <div class="navigation">
+        <a href="../TransReconstruct-SegTransformer-Neutrino-Event/index.html" class="nav-box">
+            <div class="nav-label">PREV</div>
+            <div class="nav-title">TransReconstruct: SegTransformer-based Neutrino Event Reconstruction</div>
+            <div class="nav-arrow">←</div>
+        </a>
+        <a href="#" class="nav-box">
+            <div class="nav-label">NEXT</div>
+            <div class="nav-title">Computer Vision Applications</div>
+            <div class="nav-arrow">→</div>
+        </a>
+    </div>
+
+    <!-- 返回顶部 -->
+    <div class="back-to-top">
+        <a href="#">
+            ↑ Back to Top
+        </a>
+    </div>
+</body>
+</html> 
