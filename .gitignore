@@ -1,0 +1,6 @@
+# Local TLS credentials must never be committed.
+*.pem
+*.key
+*.p12
+*.pfx
+__pycache__/
